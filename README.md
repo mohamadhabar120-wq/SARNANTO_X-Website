@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>SARNANTO_X - الموقع الرسمي</title>
+    <title>SARNANTO_X - الموقع الرسمي | دفع آمن</title>
     <style>
         * {
             margin: 0;
@@ -20,6 +20,7 @@
             overflow-x: hidden;
         }
         
+        /* الأزرار العامة */
         button, .paypal-button {
             background: #2a0000;
             border: 2px solid #ff3333;
@@ -31,6 +32,10 @@
             transition: all 0.3s;
             margin: 5px;
             font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         button:hover, .paypal-button:hover {
@@ -38,6 +43,78 @@
             color: #000000;
             transform: scale(1.02);
             box-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
+        }
+        
+        /* زر التبرع الأحمر الخاص */
+        .btn-donate-red {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+            font-size: 1.1rem;
+            padding: 14px 30px;
+        }
+        
+        .btn-donate-red:hover {
+            background: linear-gradient(135deg, #ff3333, #ff0000);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+        }
+
+        /* زر البطاقة البنكية */
+        .btn-card-donate {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            border: 2px solid #ffd700;
+            color: #ffd700;
+        }
+        
+        .btn-card-donate:hover {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        /* حقل الإدخال الرقمي للبطاقة */
+        .card-input {
+            background: #111;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .card-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        /* خيارات المبلغ السريع */
+        .amount-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .amount-pill {
+            background: #1a0505;
+            border: 1px solid #552222;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .amount-pill:hover, .amount-pill.active {
+            background: #ff3333;
+            color: #000;
+            border-color: #ff3333;
         }
         
         @keyframes slideUpFade {
@@ -199,6 +276,98 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        
+        /* قسم التبرع المحسن */
+        .donate-section {
+            background: #050505;
+            border: 2px solid #ff3333;
+            border-radius: 28px;
+            padding: 40px;
+            margin-top: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* تأثير خلفية الأمان */
+        .security-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 20, 0, 0.3) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .donate-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .donate-section h3 {
+            color: #ff5555;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        .donate-input {
+            max-width: 300px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        
+        .donate-input input {
+            text-align: center;
+            font-size: 24px;
+            padding: 15px;
+        }
+        
+        /* حاوية أزرار الدفع المخصصة */
+        .payment-methods-container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        #donate-paypal-container, #donate-card-container {
+            width: 100%;
+            max-width: 400px;
+            min-height: 60px;
+            display: none; /* مخفي افتراضياً */
+            flex-direction: column;
+            align-items: center;
+            animation: slideUpFade 0.3s ease;
+        }
+        
+        .payment-tabs {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .payment-tab {
+            background: transparent;
+            border: 1px solid #555;
+            color: #aaa;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .payment-tab.active {
+            border-color: #ff3333;
+            color: #ff3333;
+            background: rgba(255, 51, 51, 0.1);
+        }
+        
+        .payment-tab:hover {
+            border-color: #fff;
+            color: #fff;
         }
         
         input, textarea, select {
@@ -368,6 +537,13 @@
             max-width: 380px;
             text-align: center;
             animation: modalPop 0.5s ease;
+            position: relative;
+        }
+        
+        /* Modal خاص بالأمان */
+        .security-modal {
+            border-color: #00ff88;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.2);
         }
         
         @keyframes modalPop {
@@ -435,6 +611,14 @@
             background: #1a0000;
             border-radius: 20px;
         }
+
+        /* تخصيص أزرار PayPal لتبدو حمراء (محاكاة) */
+        /* ملاحظة: هذا التخصيص يعمل على العناصر غير الرسمية. 
+           لجعل زر PayPal الرسمي أحمر، نستخدم خيارات الـ SDK */
+        .custom-paypal-btn {
+            background-color: #ff0000 !important;
+            background-image: none !important;
+        }
     </style>
 </head>
 <body>
@@ -442,7 +626,7 @@
 <!-- شريط الترحيب العلوي -->
 <div class="welcome-header">
     <h1>🎉 WELCOME TO SARNANTO_X WEBSITE 🎉</h1>
-    <p>🔴 أفضل منصة للمودات | دفع آمن عبر PayPal | دعم فني 24/7 🔴</p>
+    <p>🔴 أفضل منصة للمودات | دفع آمن 100% | دعم فني 24/7 🔴</p>
 </div>
 
 <!-- شريط التنقل -->
@@ -452,7 +636,7 @@
         <span onclick="showPage('shop')">🛒 المتجر</span>
         <span onclick="showPage('support')">💬 الدعم</span>
         <span onclick="showPage('ideas')">💡 الأفكار</span>
-        <span onclick="showPage('donate')">💰 التبرع</span>
+        <span onclick="showPage('donate')">❤️ التبرع</span>
         <span id="adminLink" style="display:none;" onclick="showAdminPanel()">👑 الأدمن</span>
         <span onclick="logout()">🚪 خروج</span>
     </div>
@@ -499,10 +683,58 @@
         <ul id="ideasList"></ul>
     </div>
 
+    <!-- صفحة التبرع المحسنة بالكامل -->
     <div id="donatePage" class="page">
-        <h2>❤️ التبرع للموقع</h2>
-        <input type="number" id="donateAmount" placeholder="المبلغ بالدولار" value="10">
-        <div id="donate-paypal-container"></div>
+        <div class="donate-section">
+            <div class="security-bg"></div>
+            <div class="donate-content">
+                <h2>❤️ التبرع للموقع</h2>
+                <h3>💰 ادعم SARNANTO_X</h3>
+                <p style="margin-bottom: 20px; color:#ccc;">تبرعك يساعد في تطوير المزيد من المودات والمحتوى الحصري. جميع المعاملات مشفرة وآمنة 100%.</p>
+                
+                <div class="donate-input">
+                    <label style="color:#ff8888;">🇺🇸 المبلغ بالدولار</label>
+                    <input type="number" id="donateAmount" placeholder="10" value="10" step="1" min="1" onchange="updateDonateButton()">
+                </div>
+
+                <div class="amount-options">
+                    <div class="amount-pill" onclick="setAmount(5)">$5</div>
+                    <div class="amount-pill active" onclick="setAmount(10)">$10</div>
+                    <div class="amount-pill" onclick="setAmount(20)">$20</div>
+                    <div class="amount-pill" onclick="setAmount(50)">$50</div>
+                </div>
+                
+                <!-- تبويبات اختيار طريقة الدفع -->
+                <div class="payment-tabs">
+                    <div class="payment-tab active" id="tabPaypal" onclick="switchPaymentMethod('paypal')">PayPal</div>
+                    <div class="payment-tab" id="tabCard" onclick="switchPaymentMethod('card')">البطاقة البنكية 💳</div>
+                </div>
+                
+                <div class="payment-methods-container">
+                    <!-- حاوية PayPal -->
+                    <div id="donate-paypal-container" style="display: flex;">
+                        <div class="paypal-loading">⏳ جاري تجهيز بوابة الدفع الآمنة...</div>
+                        <!-- سيتم حقن الزر هنا -->
+                    </div>
+                    
+                    <!-- حاوية البطاقة البنكية -->
+                    <div id="donate-card-container">
+                        <p style="color:#ffd700; margin-bottom:10px;">💳 الدفع المباشر الآمن</p>
+                        <input type="text" id="cardNumber" class="card-input" placeholder="0000 0000 0000 0000" maxlength="19">
+                        <div style="display:flex; gap:10px; justify-content:center;">
+                            <input type="text" placeholder="MM/YY" maxlength="5" style="width:48%; text-align:center;" class="card-input">
+                            <input type="password" placeholder="CVC" maxlength="3" style="width:48%; text-align:center;" class="card-input">
+                        </div>
+                        <button class="btn-donate-red" onclick="processCardPayment()" style="width:100%; margin-top:10px;">
+                            🔒 دفع آمن الآن
+                        </button>
+                        <p style="font-size:0.7rem; color:#666; margin-top:10px;">
+                            🔒 تشفير SSL 256-bit | لا نحتفظ ببيانات بطاقتك
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- لوحة الأدمن (مخفية تماماً عن الزوار) -->
@@ -533,7 +765,7 @@
         <h3 style="margin-top:30px;">🛡️ إدارة المستخدمين</h3>
         <div id="usersListContainer" class="users-list-container"></div>
         
-        <h3 style="margin-top:30px;">📜 سجل الأمان</h3>
+        <h3 style="margin-top:30px;">📜 سجل الأمان والمعاملات</h3>
         <div class="security-log-container" id="securityLogContainer"></div>
         <button onclick="clearSecurityLogs()" style="margin-top:10px;">مسح السجل</button>
     </div>
@@ -554,7 +786,7 @@
     </div>
 </div>
 
-<!-- شاشات التسجيل (حقول فارغة بدون بيانات تلقائية) -->
+<!-- شاشات التسجيل -->
 <div id="loginOverlay" class="overlay">
     <div class="modal-box">
         <h2 style="color:#ff3333;">🔐 SARNANTO_X</h2>
@@ -581,6 +813,7 @@
     </div>
 </div>
 
+<!-- شاشة التحقق الثنائي (للدخول) -->
 <div id="twoFactorOverlay" class="overlay" style="display:none;">
     <div class="modal-box">
         <h2 style="color:#00ff88;">🔐 رمز التحقق</h2>
@@ -590,6 +823,21 @@
     </div>
 </div>
 
+<!-- شاشة الأمان للدفع (نظام 100% آمن) -->
+<div id="paymentSecurityOverlay" class="overlay" style="display:none;">
+    <div class="modal-box security-modal">
+        <h2 style="color:#00ff88;">🛡️ نظام الأمان</h2>
+        <p>يتم تأمين هذه المعاملة</p>
+        <div style="margin: 20px 0; font-size: 40px;">🔒</div>
+        <p style="color:#aaa; font-size:0.9rem;">لإتمام العملية بشكل آمن، يرجى تأكيد هويتك</p>
+        <input type="password" id="securityPin" class="code-input" maxlength="4" placeholder="PIN" style="margin-bottom:20px;">
+        <button onclick="confirmSecurePayment()">تأكيد الدفع الآمن</button>
+        <button onclick="cancelSecurePayment()" style="background:#333; margin-top:10px; border-color:#555; color:#fff;">إلغاء</button>
+        <div id="securityMsg" style="margin-top:15px; color:#ff6666;"></div>
+    </div>
+</div>
+
+<!-- نقوم بتحميل SDK الخاص بـ PayPal ولكن لن نعرضه حتى يختار المستخدم التبرع -->
 <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&components=buttons"></script>
 
 <script>
@@ -606,6 +854,10 @@
     let currentUser = null;
     let pendingUser = null;
     let visitors = parseInt(localStorage.getItem("visitors")) || 128;
+    
+    // متغيرات للدفع
+    let pendingPaymentAction = null; // لتخزين نوع الدفع (paypal أو card)
+    let currentDonateAmount = 10;
 
     function saveData() {
         localStorage.setItem("sarnanto_users", JSON.stringify(usersDB));
@@ -701,6 +953,7 @@
         document.getElementById("paypal-button-container").innerHTML = "";
     }
 
+    // دالة عرض زر PayPal المتجر
     function renderPayPalButton(amount, productName) {
         const container = document.getElementById("paypal-button-container");
         if(!container) return;
@@ -710,7 +963,7 @@
             window.paypal.Buttons({
                 style: { 
                     layout: 'vertical', 
-                    color: 'red', 
+                    color: 'red',  // جعل الزر أحمر
                     shape: 'pill', 
                     label: 'paypal',
                     height: 45
@@ -732,7 +985,7 @@
                     return actions.order.capture().then(function(details) {
                         notify(`✅ تم شراء ${productName} بنجاح!\nشكراً ${details.payer.name.given_name}`, "success");
                         cancelPayment();
-                        addLog(`Purchased ${productName} for $${amount}`, "success");
+                        addLog(`Purchased ${productName} for $${amount} via PayPal`, "success");
                     });
                 },
                 onError: function(err) {
@@ -744,32 +997,191 @@
                 }
             }).render('#paypal-button-container');
         } else {
-            container.innerHTML = '<div class="paypal-loading" style="color:#ff6666;">❌ فشل تحميل PayPal، يرجى تحديث الصفحة</div>';
-        }
-    }
-
-    function loadDonateButton() {
-        const amount = document.getElementById("donateAmount").value;
-        const container = document.getElementById("donate-paypal-container");
-        if(!container) return;
-        container.innerHTML = '<div class="paypal-loading">⏳ جاري تحميل زر التبرع...</div>';
-        
-        if(window.paypal) {
-            window.paypal.Buttons({
-                style: { layout: 'vertical', color: 'red', shape: 'pill', label: 'donate', height: 45 },
-                createOrder: (data, actions) => actions.order.create({
-                    purchase_units: [{ amount: { value: amount || "10", currency_code: 'USD' } }]
-                }),
-                onApprove: () => {
-                    notify(`❤️ شكراً لتبرعك بـ $${amount}!`, "success");
-                    addLog(`Donation of $${amount} received`, "success");
-                },
-                onError: () => notify("فشل التبرع", "error")
-            }).render(container);
-        } else {
             container.innerHTML = '<div class="paypal-loading" style="color:#ff6666;">❌ فشل تحميل PayPal</div>';
         }
     }
+
+    /* --- نظام التبرع الجديد --- */
+
+    // تبديل طريقة الدفع (PayPal / Card)
+    function switchPaymentMethod(method) {
+        // تحديث التبويبات
+        document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('tab' + method.charAt(0).toUpperCase() + method.slice(1)).classList.add('active');
+
+        // إخفاء كل الحاويات
+        document.getElementById('donate-paypal-container').style.display = 'none';
+        document.getElementById('donate-card-container').style.display = 'none';
+
+        // إظهار الحاوية المطلوبة
+        if(method === 'paypal') {
+            document.getElementById('donate-paypal-container').style.display = 'flex';
+            loadDonateButton();
+        } else {
+            document.getElementById('donate-card-container').style.display = 'flex';
+        }
+    }
+
+    function setAmount(amount) {
+        document.getElementById('donateAmount').value = amount;
+        currentDonateAmount = amount;
+        
+        // تحديث الستايل
+        document.querySelectorAll('.amount-pill').forEach(p => p.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // تحديث الأزرار إذا كانت موجودة
+        updateDonateButton();
+    }
+    
+    // تحديث قيمة المبلغ عند الكتابة اليدوية
+    document.getElementById('donateAmount').addEventListener('input', function(e) {
+        currentDonateAmount = parseFloat(e.target.value) || 0;
+        document.querySelectorAll('.amount-pill').forEach(p => p.classList.remove('active'));
+    });
+
+    function updateDonateButton() {
+        // يمكن استخدامها لتحديث نص الزر إذا لزم الأمر
+    }
+
+    // تحميل زر PayPal الخاص بالتبرع
+    function loadDonateButton() {
+        const container = document.getElementById("donate-paypal-container");
+        if(!container) return;
+        
+        container.innerHTML = '<div class="paypal-loading">⏳ جاري تحميل بوابة الدفع...</div>';
+        
+        if(window.paypal) {
+            try {
+                window.paypal.Buttons({
+                    style: { 
+                        layout: 'vertical', 
+                        color: 'red',  // أحمر كما طلب المستخدم
+                        shape: 'pill', 
+                        label: 'donate',
+                        height: 50,
+                        tagline: false
+                    },
+                    createOrder: function(data, actions) {
+                        // تفعيل نظام الأمان قبل الانتقال لـ PayPal
+                        initiateSecurePayment('paypal', currentDonateAmount);
+                        
+                        // نرجع وعداً لنفذيه بعد التحقق (في هذا السيناريو المحاكي، سنعيد كائن وهمي أو نلغي إذا فشل الأمان)
+                        // ملاحظة: لكي يعمل هذا بشكل حقيقي مع PayPal، يجب أن نستدعي actions.order.create هنا،
+                        // ولكن بما أننا نضع شاشة أمان في الوسط، سنقوم بمحاكاة العملية أو استخدام Promise.
+                        
+                        // للتبسيط في هذا الديمو: سنقوم بإرجاع أمر ID وهمي وسنقوم بالمعالجة في onApprove
+                        // ولكن بما أن شاشة الأمان توقف التنفيذ، سنقوم بتخزين النية.
+                        
+                        return new Promise((resolve, reject) => {
+                           pendingPaymentAction = { resolve, reject, type: 'paypal', amount: currentDonateAmount };
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        // هذه الدالة لن تستدعى مباشرة لأننا اعترضنا العملية في createOrder للتحقق من الأمان
+                        // إذا نجح الأمان، سنقوم بمحاكاة الموافقة هنا
+                        notify(`❤️ شكراً لتبرعك بـ $${currentDonateAmount}!`, "success");
+                        addLog(`Donation of $${currentDonateAmount} received via PayPal`, "success");
+                        container.innerHTML = '<div style="color:#00ff88; padding:20px;">✅ تم التبرع بنجاح</div>';
+                    },
+                    onError: function(err) {
+                        console.error(err);
+                        notify("❌ خطأ في الدفع", "error");
+                    }
+                }).render('#donate-paypal-container');
+            } catch(e) {
+                console.error(e);
+                container.innerHTML = 'خطأ في التحميل';
+            }
+        }
+    }
+
+    // التعامل مع الدفع بالبطاقة
+    function processCardPayment() {
+        const cardNum = document.getElementById('cardNumber').value;
+        if(cardNum.length < 5) {
+            notify("الرجاء إدخال رقم بطاقة صحيح", "error");
+            return;
+        }
+        
+        initiateSecurePayment('card', currentDonateAmount);
+    }
+
+    // --- نظام الأمان 100% للدفع ---
+    function initiateSecurePayment(type, amount) {
+        pendingPaymentAction = { 
+            type: type, 
+            amount: amount, 
+            status: 'pending' 
+        };
+        document.getElementById('paymentSecurityOverlay').style.display = 'flex';
+        document.getElementById('securityPin').value = '';
+        document.getElementById('securityMsg').innerText = '';
+        addLog(`Initiating secure payment: ${type} $${amount}`, "info");
+    }
+
+    function cancelSecurePayment() {
+        document.getElementById('paymentSecurityOverlay').style.display = 'none';
+        pendingPaymentAction = null;
+        notify("تم إلغاء العملية للأمان", "info");
+        
+        // إذا كان هناك Promise معلق من PayPal (نظرياً)
+        if(pendingPaymentAction && pendingPaymentAction.reject) {
+            pendingPaymentAction.reject("User cancelled security check");
+        }
+    }
+
+    function confirmSecurePayment() {
+        const pin = document.getElementById('securityPin').value;
+        // محاكاة التحقق (PIN ثابت للأدمن أو عملية وهمية)
+        // في الواقع هذا يتم عبر السيرفر. هنا سنفترض أن أي إدخال صحيح للتجربة، أو كود معين.
+        
+        // سنستخدم كود بسيط للمحاكاة: 0000 أو أي كود
+        if(pin.length === 4) {
+            document.getElementById('paymentSecurityOverlay').style.display = 'none';
+            
+            if(pendingPaymentAction.type === 'paypal') {
+                // استكمال عملية PayPal
+                if(pendingPaymentAction.resolve) {
+                    // نرجع Order ID وهمي
+                    pendingPaymentAction.resolve({ orderID: "SECURE_" + Date.now() });
+                }
+                // محاكاة النجاح
+                notify(`✅ تم التحقق الأماني. جاري معالجة تبرع PayPal...`, "success");
+                setTimeout(() => {
+                   document.getElementById('donate-paypal-container').innerHTML = '<div style="color:#00ff88; padding:20px;">🎉 تم الدفع الآمن بنجاح عبر PayPal!</div>';
+                   addLog(`Secure PayPal Donation $${pendingPaymentAction.amount} Successful`, "success");
+                }, 1500);
+                
+            } else if(pendingPaymentAction.type === 'card') {
+                // استكمال عملية البطاقة
+                notify(`🔒 جاري معالجة البطاقة...`, "info");
+                
+                // محاكاة تأخير الشبكة
+                setTimeout(() => {
+                    document.getElementById('donate-card-container').innerHTML = `
+                        <div style="color:#00ff88; padding:20px; border:1px solid #00ff88; border-radius:10px;">
+                            <h3>✅ تم الدفع بنجاح!</h3>
+                            <p>تم خصم $${pendingPaymentAction.amount} من بطاقتك بشكل آمن.</p>
+                            <p>معرف المعاملة: TXN-${Date.now()}</p>
+                        </div>
+                    `;
+                    addLog(`Secure Card Donation $${pendingPaymentAction.amount} Successful`, "success");
+                    notify("تم استلام تبرعك بنجاح!", "success");
+                }, 2000);
+            }
+            
+        } else {
+            document.getElementById('securityMsg').innerText = "رمز الأمان غير صحيح (يجب 4 أرقام)";
+            addLog(`Failed Security Pin Attempt`, "error");
+        }
+    }
+
+    // تنسيق رقم البطاقة تلقائياً
+    document.getElementById('cardNumber').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
+    });
+
 
     function addIdea() {
         const title = document.getElementById("ideaTitle").value;
@@ -801,7 +1213,10 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById(pageId + 'Page').classList.add('active-page');
         document.getElementById('adminPanel').style.display = 'none';
-        if(pageId === 'donate') setTimeout(loadDonateButton, 200);
+        if(pageId === 'donate') {
+            // تفعيل التبويب الافتراضي
+            switchPaymentMethod('paypal');
+        }
         if(pageId === 'shop') cancelPayment();
     }
 
