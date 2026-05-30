@@ -2,497 +2,545 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>SARNANTO_X - الموقع الرسمي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>SARNANTO_X - الدفع المباشر</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
         }
+        
         body {
-            background-color: #000000;
+            background: #000000;
             color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
         }
-        /* الثيم الأحمر */
-        h1, h2, h3, .logo { color: #ff3333 !important; }
-        .border-red, .card, .mod-card, input, textarea, button, .nav-btn {
-            border-color: #ff3333 !important;
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px;
         }
-        button, .nav-btn {
-            background: #2a0000;
-            border: 2px solid #ff3333;
+        
+        .welcome-header {
+            background: linear-gradient(135deg, #1a0000, #0a0000);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid #ff3333;
+            margin-bottom: 20px;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .welcome-header h1 {
+            font-size: 1.3rem;
+            color: #ff3333;
+        }
+        
+        .welcome-header p {
+            font-size: 0.8rem;
             color: #ff8888;
-            padding: 10px 20px;
+            margin-top: 5px;
+        }
+        
+        .navbar {
+            background: #050505;
+            padding: 10px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .nav-link {
+            background: #1a0000;
+            border: 1px solid #ff3333;
+            color: #ff8888;
+            padding: 8px 16px;
             border-radius: 30px;
             cursor: pointer;
+            font-size: 14px;
             font-weight: bold;
-            transition: 0.2s;
-        }
-        button:hover, .nav-btn:hover {
-            background: #ff3333;
-            color: #000000;
-            transform: scale(1.02);
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        /* الهيدر */
-        .header {
+            transition: 0.3s;
             text-align: center;
-            padding: 30px 20px;
-            border-bottom: 2px solid #ff3333;
-            margin-bottom: 30px;
+            flex: 1;
+            min-width: 70px;
         }
-        .header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+        
+        .nav-link:hover, .nav-link.active {
+            background: #ff3333;
+            color: #000;
         }
-        /* أزرار التنقل */
-        .nav-links {
-            display: flex;
+        
+        .stats-bar {
+            background: #0f0f0f;
+            padding: 10px;
+            border-radius: 20px;
+            display: none;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        .nav-btn {
-            padding: 10px 25px;
+        
+        .stat-card {
+            background: #1a1a1a;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid #ff3333;
+            font-size: 14px;
         }
-        /* الأقسام */
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-card {
+            background: #0a0a0a;
+            border: 1px solid #ff3333;
+            border-radius: 20px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.3);
+        }
+        
+        .dashboard-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
         .section {
             display: none;
             background: #0a0a0a;
             border: 1px solid #ff3333;
-            border-radius: 25px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 20px;
             margin-top: 20px;
             animation: fadeIn 0.3s ease;
         }
-        .section.active { display: block; }
+        
+        .section.active {
+            display: block;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* المتجر */
+        
         .mods-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
-            justify-content: center;
             margin-top: 20px;
         }
+        
         .mod-card {
-            background: #111;
+            background: #1a1010;
             border: 1px solid #ff3333;
             border-radius: 20px;
             padding: 20px;
-            width: 260px;
             text-align: center;
         }
+        
         .mod-price {
+            font-size: 28px;
             color: #ff5555;
-            font-size: 24px;
-            font-weight: bold;
             margin: 15px 0;
+            font-weight: bold;
         }
-        /* التبرع */
-        .donate-box {
-            text-align: center;
-            padding: 20px;
-        }
-        .donate-link {
+        
+        /* زر الدفع المباشر */
+        .paypal-direct-btn {
             display: inline-block;
-            background: #ff0000;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: white;
-            padding: 15px 40px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            border-radius: 50px;
-            text-decoration: none;
-            margin: 20px 0;
-            transition: 0.3s;
             border: none;
-        }
-        .donate-link:hover {
-            transform: scale(1.05);
-            background: #cc0000;
-        }
-        /* الأدمن */
-        .admin-panel {
-            background: #1a0000;
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
-        .file-upload {
-            background: #0a0a0a;
-            border: 2px dashed #ff3333;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin: 15px 0;
+            padding: 14px 25px;
+            border-radius: 50px;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 100%;
+            text-decoration: none;
+            text-align: center;
         }
-        input, textarea {
+        
+        .paypal-direct-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+        
+        button, .btn {
+            background: #2a0000;
+            border: 2px solid #ff3333;
+            color: #ff8888;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        
+        button:hover {
+            background: #ff3333;
+            color: #000;
+        }
+        
+        input, textarea, select {
             background: #1a1a1a;
             border: 1px solid #ff3333;
             color: white;
             padding: 12px;
             border-radius: 30px;
             width: 100%;
-            margin: 10px 0;
+            margin: 8px 0;
         }
-        footer {
+        
+        .file-upload-area {
+            border: 2px dashed #ff3333;
+            background: #0a0505;
+            padding: 20px;
+            border-radius: 20px;
             text-align: center;
-            padding: 30px;
-            margin-top: 50px;
-            border-top: 1px solid #222;
-            color: #666;
+            margin: 15px 0;
+            cursor: pointer;
         }
-        .youtube-btn {
+        
+        .admin-panel {
+            background: #0c0a0a;
+            border: 2px solid #ff5555;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .users-list {
+            background: #000;
+            border-radius: 15px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .user-item.banned {
+            border: 1px solid #ff0000;
+            background: #1a0000;
+        }
+        
+        .donate-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            text-decoration: none;
+            margin: 15px 0;
+            transition: 0.3s;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            border-top: 1px solid #222;
+        }
+        
+        .youtube-link {
             background: #ff0000;
             color: white;
             padding: 10px 25px;
-            border-radius: 30px;
+            border-radius: 40px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 10px;
         }
-        @media (max-width: 768px) {
-            .mod-card { width: 100%; max-width: 300px; }
+        
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .login-box {
+            background: #0a0a0a;
+            border: 2px solid #ff3333;
+            border-radius: 30px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            border-right: 4px solid #ff3333;
+            z-index: 99999;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar { gap: 5px; }
+            .nav-link { padding: 6px 10px; font-size: 12px; }
+            .mods-grid { grid-template-columns: 1fr; }
+            .mod-price { font-size: 22px; }
+        }
+        
+        .note {
+            color: #888;
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #111;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
+    <div class="welcome-header">
         <h1>🎉 WELCOME TO SARNANTO_X WEBSITE 🎉</h1>
-        <p>🔴 أفضل منصة للمودات | دفع آمن | دعم فني 🔴</p>
+        <p>🔴 أفضل منصة للمودات | دفع مباشر عبر PayPal | حساب: mohamadhabar120@gmail.com 🔴</p>
     </div>
-
-    <div class="nav-links">
-        <div class="nav-btn" onclick="showSection('shop')">🛒 المتجر</div>
-        <div class="nav-btn" onclick="showSection('support')">💬 الدعم</div>
-        <div class="nav-btn" onclick="showSection('ideas')">💡 الأفكار</div>
-        <div class="nav-btn" onclick="showSection('donate')">💰 التبرع</div>
-        <div class="nav-btn" id="adminBtn" style="display:none;" onclick="showSection('admin')">👑 الأدمن</div>
+    
+    <div class="navbar">
+        <div class="nav-link" onclick="showSection('shop')">🛒 المتجر</div>
+        <div class="nav-link" onclick="showSection('support')">💬 الدعم</div>
+        <div class="nav-link" onclick="showSection('ideas')">💡 الأفكار</div>
+        <div class="nav-link" onclick="showSection('donate')">💰 التبرع</div>
+        <div class="nav-link" id="adminNav" style="display:none;" onclick="showSection('admin')">👑 الأدمن</div>
     </div>
-
-    <!-- المتجر -->
+    
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-card">👥 المستخدمين: <span id="userCount">0</span></div>
+        <div class="stat-card">🌐 الزوار: <span id="visitorCount">0</span></div>
+        <div class="stat-card">📦 المودات: <span id="modCount">0</span></div>
+    </div>
+    
+    <div class="dashboard">
+        <div class="dashboard-card" onclick="showSection('shop')"><h3>🛍️ المتجر</h3><p>مودات حصرية</p></div>
+        <div class="dashboard-card" onclick="showSection('support')"><h3>🎧 الدعم</h3><p>مساعدة فورية</p></div>
+        <div class="dashboard-card" onclick="showSection('ideas')"><h3>💡 الأفكار</h3><p>اقترح مودات</p></div>
+        <div class="dashboard-card" onclick="showSection('donate')"><h3>❤️ التبرع</h3><p>ادعمنا</p></div>
+    </div>
+    
+    <!-- المتجر مع رابط دفع مباشر -->
     <div id="shopSection" class="section active">
-        <h2>🛒 متجر المودات</h2>
-        <div class="mods-grid" id="modsContainer"></div>
+        <h2>🛒 متجر المودات - اضغط للشراء المباشر</h2>
+        <div id="modsList" class="mods-grid"></div>
+        <div class="note">
+            💡 ملاحظة: عند الضغط على "شراء الآن"، سيتم نقلك إلى PayPal لإتمام الدفع.
+        </div>
     </div>
-
-    <!-- الدعم -->
+    
     <div id="supportSection" class="section">
         <h2>📞 مركز الدعم</h2>
         <textarea id="supportMsg" rows="4" placeholder="اكتب مشكلتك بالتفصيل..."></textarea>
-        <button onclick="sendSupport()">📨 إرسال</button>
+        <button onclick="sendSupport()">📨 إرسال التذكرة</button>
     </div>
-
-    <!-- الأفكار -->
+    
     <div id="ideasSection" class="section">
-        <h2>💡 اقتراح أفكار</h2>
+        <h2>💡 اقتراح أفكار جديدة</h2>
         <input type="text" id="ideaTitle" placeholder="عنوان الفكرة">
         <textarea id="ideaDesc" rows="3" placeholder="شرح الفكرة..."></textarea>
-        <button onclick="addIdea()">✨ إرسال</button>
-        <h3 style="margin-top:20px;">📌 الأفكار السابقة</h3>
-        <ul id="ideasList"></ul>
+        <button onclick="addIdea()">✨ إرسال الفكرة</button>
+        <h3 style="margin-top:20px;">📌 الأفكار المقترحة</h3>
+        <ul id="ideasList" style="padding-right:20px;"></ul>
     </div>
-
-    <!-- التبرع -->
+    
     <div id="donateSection" class="section">
-        <div class="donate-box">
+        <div style="text-align:center;">
             <h2>❤️ ادعم SARNANTO_X</h2>
-            <p>تبرعك يساعد في تطوير المزيد من المودات والمحتوى الحصري</p>
-            <!-- رابط التبرع المباشر - استبدله برابط PayPal الخاص بك -->
-            <a href="https://www.paypal.com/donate/?hosted_button_id=YOUR_BUTTON_ID" target="_blank" class="donate-link">
+            <p>تبرعك يساعد في تطوير المزيد من المودات</p>
+            <a href="https://www.paypal.com/paypalme/mohamadhabar120" target="_blank" class="donate-btn">
                 🔴 تبرع الآن عبر PayPal 🔴
             </a>
-            <p style="color:#888; margin-top:15px;">🔒 سيتم نقلك إلى موقع PayPal الرسمي</p>
+            <p style="color:#888; margin-top:15px; font-size:0.8rem;">🔒 سيتم نقلك إلى PayPal</p>
         </div>
     </div>
-
-    <!-- لوحة الأدمن (مخفية تماماً) -->
+    
     <div id="adminSection" class="section">
         <h2>👑 لوحة تحكم الأدمن</h2>
         
-        <!-- إضافة مود مع رفع ملف -->
         <div class="admin-panel">
             <h3>➕ إضافة مود جديد (رفع ملف)</h3>
-            <input type="text" id="modName" placeholder="اسم المود">
-            <input type="text" id="modPrice" placeholder="السعر ($)">
-            <textarea id="modDesc" placeholder="وصف المود"></textarea>
+            <input type="text" id="newModName" placeholder="اسم المود">
+            <input type="text" id="newModPrice" placeholder="السعر ($)">
+            <textarea id="newModDesc" placeholder="وصف المود"></textarea>
             
-            <!-- حقل رفع الملف -->
-            <div class="file-upload" onclick="document.getElementById('modFile').click()">
-                📂 اضغط لاختيار ملف المود (ZIP, RAR, JAR)
+            <div class="file-upload-area" onclick="document.getElementById('modFile').click()">
+                📂 اختر ملف المود (ZIP, RAR, JAR)
                 <input type="file" id="modFile" accept=".zip,.rar,.jar" style="display:none;" onchange="updateFileName()">
-                <div id="fileNameDisplay" style="color:#00ff88; margin-top:10px; font-size:14px;"></div>
+                <div id="fileNameDisplay" style="color:#00ff88; margin-top:10px;"></div>
             </div>
             
-            <button onclick="addNewMod()" style="width:100%; margin-top:15px;">✨ نشر المود</button>
+            <button onclick="addNewMod()" style="width:100%; margin-top:10px;">✨ نشر المود</button>
         </div>
         
-        <!-- قائمة المودات -->
         <h3>📋 المودات الحالية</h3>
         <div id="adminModsList"></div>
         
-        <!-- إدارة المستخدمين -->
-        <h3 style="margin-top:30px;">🛡️ إدارة المستخدمين</h3>
-        <div id="usersListContainer" style="background:#000; border-radius:10px; padding:15px; max-height:250px; overflow-y:auto;"></div>
+        <h3 style="margin-top:25px;">🛡️ إدارة المستخدمين</h3>
+        <div class="users-list" id="usersList"></div>
+        
+        <h3 style="margin-top:25px;">📜 سجل الأمان</h3>
+        <div class="users-list" id="logsList" style="height:150px;"></div>
+        <button onclick="clearLogs()" style="margin-top:10px;">مسح السجل</button>
     </div>
 </div>
 
-<footer>
-    <a href="https://www.youtube.com/@SARNANTO_X120" target="_blank" class="youtube-btn">
+<div class="footer">
+    <a href="https://www.youtube.com/@SARNANTO_X120" target="_blank" class="youtube-link">
         ▶️ اشترك في قناة SARNANTO_X على YouTube
     </a>
-    <div style="margin-top:20px;">© 2025 SARNANTO_X | جميع الحقوق محفوظة</div>
-</footer>
+    <div style="margin-top:15px; color:#666;">© 2025 SARNANTO_X | جميع الحقوق محفوظة</div>
+</div>
 
-<!-- شاشة تسجيل الدخول -->
-<div id="loginOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.97); display:flex; justify-content:center; align-items:center; z-index:10000; backdrop-filter:blur(10px);">
-    <div style="background:#0a0a0a; border:2px solid #ff3333; border-radius:30px; padding:40px; width:90%; max-width:350px; text-align:center;">
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
         <h2 style="color:#ff3333;">🔐 SARNANTO_X</h2>
-        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" style="width:100%; margin:10px 0;">
-        <input type="password" id="loginPass" placeholder="كلمة المرور" style="width:100%; margin:10px 0;">
-        <button onclick="doLogin()" style="width:100%;">دخول</button>
-        <button onclick="showRegister()" style="width:100%; margin-top:10px; background:#111;">إنشاء حساب</button>
+        <p style="margin-bottom:15px;">تسجيل الدخول</p>
+        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+        <input type="password" id="loginPass" placeholder="كلمة المرور">
+        <button onclick="doLogin()" style="width:100%; margin-bottom:10px;">دخول</button>
+        <button onclick="showRegisterForm()" style="width:100%; background:#111;">إنشاء حساب جديد</button>
         <button onclick="guestLogin()" style="width:100%; margin-top:10px; background:#0a0a0a;">دخول كزائر</button>
         <div id="loginError" style="margin-top:15px; color:#ff6666;"></div>
     </div>
 </div>
 
 <script>
-    // ==================== البيانات الأساسية ====================
+    // حساب PayPal الخاص بك
+    const PAYPAL_EMAIL = "mohamadhabar120@gmail.com";
+    
+    // رابط الدفع المباشر عبر PayPal
+    function getPaypalLink(amount, productName) {
+        // رابط الدفع المباشر عبر PayPal.Me
+        return `https://www.paypal.com/paypalme/mohamadhabar120/${amount}?amount=${amount}&currency=USD&locale.x=en_US`;
+    }
+    
+    // فتح نافذة الدفع
+    function openPaypal(amount, productName) {
+        const link = getPaypalLink(amount, productName);
+        window.open(link, '_blank');
+        addLog(`محاولة شراء: ${productName} بـ $${amount}`, "info");
+        showToast(`🔴 جاري تحويلك إلى PayPal لشراء ${productName}`, "info");
+    }
+    
+    // البيانات
     let users = [
-        { name: "Admin", email: "mohamadhabar120@gmail.com", password: "admin123", isAdmin: true, banned: false }
+        { name: "Administrator", email: "mohamadhabar120@gmail.com", password: "admin123", isAdmin: true, banned: false }
     ];
     let mods = [
-        { id: 1, name: "مود السرعة", price: "4.99", desc: "تسريع اللعب", fileName: "speed.zip" },
+        { id: 1, name: "مود السرعة", price: "4.99", desc: "تسريع اللعب 2x", fileName: "speed.zip" },
         { id: 2, name: "مود الطيران", price: "6.50", desc: "تحليق في السماء", fileName: "fly.zip" },
-        { id: 3, name: "مود الأسلحة", price: "9.99", desc: "أسلحة جديدة", fileName: "weapons.zip" }
+        { id: 3, name: "مود الأسلحة", price: "9.99", desc: "أسلحة جديدة ومتطورة", fileName: "weapons.zip" }
     ];
     let ideas = [];
+    let logs = [];
     let currentUser = null;
+    let visitors = parseInt(localStorage.getItem("visitors")) || 128;
     let selectedFile = null;
-
-    // حفظ وتحميل البيانات
-    function saveData() {
+    
+    function saveAll() {
         localStorage.setItem("sarnanto_users", JSON.stringify(users));
         localStorage.setItem("sarnanto_mods", JSON.stringify(mods));
         localStorage.setItem("sarnanto_ideas", JSON.stringify(ideas));
+        localStorage.setItem("sarnanto_logs", JSON.stringify(logs));
+        localStorage.setItem("visitors", visitors);
     }
     
-    function loadData() {
+    function loadAll() {
         let u = localStorage.getItem("sarnanto_users");
         if(u) users = JSON.parse(u);
         let m = localStorage.getItem("sarnanto_mods");
         if(m) mods = JSON.parse(m);
         let i = localStorage.getItem("sarnanto_ideas");
         if(i) ideas = JSON.parse(i);
+        let l = localStorage.getItem("sarnanto_logs");
+        if(l) logs = JSON.parse(l);
     }
-
-    // ==================== عرض المودات ====================
-    function displayMods() {
-        let container = document.getElementById("modsContainer");
+    
+    function addLog(msg, type) {
+        let log = { time: new Date().toLocaleString(), msg, type: type || "info" };
+        logs.unshift(log);
+        if(logs.length > 30) logs.pop();
+        saveAll();
+        renderLogs();
+    }
+    
+    function renderLogs() {
+        let container = document.getElementById("logsList");
         if(!container) return;
-        container.innerHTML = mods.map(m => `
-            <div class="mod-card">
-                <h3>${escapeHtml(m.name)}</h3>
-                <p>${escapeHtml(m.desc)}</p>
-                <div class="mod-price">$${m.price}</div>
-                <button onclick="alert('🔴 للشراء، يرجى التواصل مع الدعم. شكراً لك!')">💳 شراء</button>
+        container.innerHTML = logs.map(l => `
+            <div style="margin-bottom:5px; padding:5px; border-bottom:1px solid #222; font-size:11px;">
+                <span style="color:${l.type === 'error' ? '#ff6666' : '#00ff88'}">[${l.type}]</span>
+                ${escapeHtml(l.msg)} <span style="color:#555; float:left;">${l.time}</span>
             </div>
         `).join('');
     }
     
-    function displayIdeas() {
-        let list = document.getElementById("ideasList");
-        if(list) list.innerHTML = ideas.map(i => `<li style="margin:10px 0;">${escapeHtml(i)}</li>`).join('');
+    function clearLogs() {
+        if(currentUser?.isAdmin) { logs = []; saveAll(); renderLogs(); showToast("تم مسح السجل", "success"); }
     }
     
-    // ==================== لوحة الأدمن ====================
-    function displayAdminMods() {
-        let container = document.getElementById("adminModsList");
-        if(!container) return;
-        container.innerHTML = mods.map((m, idx) => `
-            <div style="background:#1a0a0a; padding:12px; margin:8px 0; border-radius:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                <div><strong>${escapeHtml(m.name)}</strong> - $${m.price}<br><small style="color:#888;">📁 ${escapeHtml(m.fileName || 'بدون ملف')}</small></div>
-                <button onclick="deleteMod(${idx})" style="background:#500; padding:5px 15px;">🗑️ حذف</button>
-            </div>
-        `).join('');
-    }
-    
-    function displayUsers() {
-        let container = document.getElementById("usersListContainer");
-        if(!container) return;
-        container.innerHTML = users.map((u, idx) => `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:12px; margin:5px 0; border-radius:8px; flex-wrap:wrap; gap:10px;">
-                <div>
-                    <strong>${escapeHtml(u.name)}</strong> ${u.isAdmin ? '👑' : ''}
-                    <div style="font-size:12px; color:#888;">${u.email}</div>
-                </div>
-                <div>
-                    ${!u.isAdmin && u.email !== currentUser?.email ? `
-                        <button onclick="toggleBan(${idx})" style="background:${u.banned ? '#002200' : '#500'}; padding:5px 15px;">
-                            ${u.banned ? 'فك الحظر' : 'حظر'}
-                        </button>
-                    ` : '<span style="color:#555;">(أنت)</span>'}
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    // إضافة مود جديد مع رفع ملف
-    function addNewMod() {
-        let name = document.getElementById("modName").value;
-        let price = document.getElementById("modPrice").value;
-        let desc = document.getElementById("modDesc").value;
-        
-        if(!name || !price) {
-            alert("⚠️ الرجاء إدخال اسم المود والسعر");
-            return;
-        }
-        
-        let fileName = "بدون ملف";
-        if(selectedFile) {
-            fileName = selectedFile.name;
-        }
-        
-        mods.push({
-            id: Date.now(),
-            name: name,
-            price: price,
-            desc: desc || "بدون وصف",
-            fileName: fileName
-        });
-        
-        saveData();
-        displayMods();
-        displayAdminMods();
-        
-        // تنظيف الحقول
-        document.getElementById("modName").value = "";
-        document.getElementById("modPrice").value = "";
-        document.getElementById("modDesc").value = "";
-        document.getElementById("modFile").value = "";
-        document.getElementById("fileNameDisplay").innerHTML = "";
-        selectedFile = null;
-        
-        alert("✅ تم إضافة المود بنجاح!");
-    }
-    
-    function updateFileName() {
-        let file = document.getElementById("modFile").files[0];
-        if(file) {
-            selectedFile = file;
-            document.getElementById("fileNameDisplay").innerHTML = `📎 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
-        } else {
-            selectedFile = null;
-            document.getElementById("fileNameDisplay").innerHTML = "";
-        }
-    }
-    
-    function deleteMod(index) {
-        if(confirm("🗑️ هل أنت متأكد من حذف هذا المود؟")) {
-            mods.splice(index, 1);
-            saveData();
-            displayMods();
-            displayAdminMods();
-            alert("تم الحذف");
-        }
-    }
-    
-    function toggleBan(index) {
-        if(!currentUser?.isAdmin) return;
-        let user = users[index];
-        if(confirm(`هل تريد ${user.banned ? 'فك حظر' : 'حظر'} ${user.name}؟`)) {
-            user.banned = !user.banned;
-            saveData();
-            displayUsers();
-            alert(`✅ تم ${user.banned ? 'حظر' : 'فك حظر'} المستخدم`);
-        }
-    }
-    
-    // ==================== بقية الوظائف ====================
-    function addIdea() {
-        let title = document.getElementById("ideaTitle").value;
-        let desc = document.getElementById("ideaDesc").value;
-        if(!title) { alert("أدخل عنوان الفكرة"); return; }
-        ideas.push(`${title}: ${desc || "بدون تفاصيل"}`);
-        saveData();
-        displayIdeas();
-        document.getElementById("ideaTitle").value = "";
-        document.getElementById("ideaDesc").value = "";
-        alert("✅ تم إرسال الفكرة!");
-    }
-    
-    function sendSupport() {
-        let msg = document.getElementById("supportMsg").value;
-        if(!msg) { alert("اكتب رسالتك"); return; }
-        alert("✅ تم إرسال تذكرتك، سنرد قريباً");
-        document.getElementById("supportMsg").value = "";
-    }
-    
-    function showSection(section) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(section + 'Section').classList.add('active');
-    }
-    
-    // ==================== تسجيل الدخول ====================
-    function doLogin() {
-        let email = document.getElementById("loginEmail").value;
-        let pass = document.getElementById("loginPass").value;
-        let user = users.find(u => u.email === email && u.password === pass);
-        
-        if(user && !user.banned) {
-            currentUser = user;
-            document.getElementById("loginOverlay").style.display = "none";
-            if(user.isAdmin) {
-                document.getElementById("adminBtn").style.display = "inline-block";
-                displayAdminMods();
-                displayUsers();
-            }
-            alert(`مرحباً ${user.name}`);
-            showSection('shop');
-        } else if(user?.banned) {
-            document.getElementById("loginError").innerText = "⛔ هذا الحساب محظور";
-        } else {
-            document.getElementById("loginError").innerText = "❌ بريد أو كلمة مرور خاطئة";
-        }
-    }
-    
-    function showRegister() {
-        let name = prompt("👤 الاسم الكامل:");
-        if(!name) return;
-        let email = prompt("📧 البريد الإلكتروني:");
-        if(!email) return;
-        let pass = prompt("🔑 كلمة المرور:");
-        if(!pass) return;
-        if(users.find(u => u.email === email)) {
-            alert("❌ البريد موجود مسبقاً");
-            return;
-        }
-        users.push({ name, email, password: pass, isAdmin: false, banned: false });
-        saveData();
-        alert("✅ تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن");
-    }
-    
-    function guestLogin() {
-        currentUser = null;
-        document.getElementById("loginOverlay").style.display = "none";
-        document.getElementById("adminBtn").style.display = "none";
-        alert("👋 أهلاً بك كزائر");
-        showSection('shop');
+    function showToast(msg, type) {
+        let toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerHTML = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     }
     
     function escapeHtml(str) {
@@ -505,12 +553,182 @@
         });
     }
     
-    // ==================== تشغيل الموقع ====================
-    loadData();
+    // عرض المودات مع زر دفع مباشر
+    function displayMods() {
+        let container = document.getElementById("modsList");
+        if(!container) return;
+        
+        container.innerHTML = mods.map(m => `
+            <div class="mod-card">
+                <h3>${escapeHtml(m.name)}</h3>
+                <p>${escapeHtml(m.desc)}</p>
+                <div class="mod-price">$${m.price}</div>
+                <button class="paypal-direct-btn" onclick="openPaypal(${m.price}, '${escapeHtml(m.name)}')">
+                    💳 شراء الآن بـ PayPal
+                </button>
+            </div>
+        `).join('');
+        
+        document.getElementById("modCount").innerText = mods.length;
+    }
+    
+    function displayIdeas() {
+        let list = document.getElementById("ideasList");
+        if(list) list.innerHTML = ideas.map(i => `<li style="margin:10px 0;">${escapeHtml(i)}</li>`).join('');
+    }
+    
+    function displayAdminMods() {
+        let container = document.getElementById("adminModsList");
+        if(!container) return;
+        container.innerHTML = mods.map((m, idx) => `
+            <div style="background:#1a0a0a; padding:12px; margin:8px 0; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div><strong>${escapeHtml(m.name)}</strong> - $${m.price}<div style="font-size:11px; color:#888;">📁 ${escapeHtml(m.fileName)}</div></div>
+                <button onclick="deleteMod(${idx})" style="background:#500; padding:5px 15px;">حذف</button>
+            </div>
+        `).join('');
+    }
+    
+    function displayUsers() {
+        let container = document.getElementById("usersList");
+        if(!container) return;
+        container.innerHTML = users.map((u, idx) => `
+            <div class="user-item ${u.banned ? 'banned' : ''}">
+                <div><strong>${escapeHtml(u.name)}</strong> ${u.isAdmin ? '👑' : ''}<div style="font-size:11px;">${u.email}</div></div>
+                <div>${!u.isAdmin && u.email !== currentUser?.email ? `<button onclick="toggleBan(${idx})" style="background:${u.banned ? '#002200' : '#500'}; padding:5px 15px;">${u.banned ? 'فك الحظر' : 'حظر'}</button>` : '<span style="color:#555;">(أنت)</span>'}</div>
+            </div>
+        `).join('');
+    }
+    
+    function addNewMod() {
+        let name = document.getElementById("newModName").value;
+        let price = document.getElementById("newModPrice").value;
+        let desc = document.getElementById("newModDesc").value;
+        if(!name || !price) { showToast("الاسم والسعر مطلوبان", "error"); return; }
+        let fileName = selectedFile ? selectedFile.name : "بدون ملف";
+        mods.push({ id: Date.now(), name, price, desc: desc || "بدون وصف", fileName });
+        saveAll();
+        displayMods();
+        displayAdminMods();
+        document.getElementById("newModName").value = "";
+        document.getElementById("newModPrice").value = "";
+        document.getElementById("newModDesc").value = "";
+        document.getElementById("modFile").value = "";
+        document.getElementById("fileNameDisplay").innerHTML = "";
+        selectedFile = null;
+        showToast("✅ تم إضافة المود!", "success");
+        addLog(`إضافة مود: ${name}`, "info");
+    }
+    
+    function updateFileName() {
+        let file = document.getElementById("modFile").files[0];
+        if(file) { selectedFile = file; document.getElementById("fileNameDisplay").innerHTML = `📎 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
+        else { selectedFile = null; document.getElementById("fileNameDisplay").innerHTML = ""; }
+    }
+    
+    function deleteMod(idx) { 
+        if(confirm("حذف هذا المود؟")) { 
+            let n = mods[idx].name; 
+            mods.splice(idx,1); 
+            saveAll(); 
+            displayMods(); 
+            displayAdminMods(); 
+            showToast("تم الحذف","success"); 
+            addLog(`حذف مود: ${n}`,"info"); 
+        } 
+    }
+    
+    function toggleBan(idx) { 
+        if(!currentUser?.isAdmin) return; 
+        let u = users[idx]; 
+        if(confirm(`${u.banned ? 'فك حظر' : 'حظر'} ${u.name}؟`)) { 
+            u.banned = !u.banned; 
+            saveAll(); 
+            displayUsers(); 
+            showToast(`تم ${u.banned ? 'حظر' : 'فك حظر'} المستخدم`,"success"); 
+            addLog(`${u.banned ? 'حظر' : 'فك حظر'}: ${u.email}`,"info"); 
+        } 
+    }
+    
+    function addIdea() { 
+        let t = document.getElementById("ideaTitle").value; 
+        let d = document.getElementById("ideaDesc").value; 
+        if(!t) { showToast("أدخل عنوان الفكرة","error"); return; } 
+        ideas.push(`${t}: ${d||"بدون تفاصيل"}`); 
+        saveAll(); 
+        displayIdeas(); 
+        document.getElementById("ideaTitle").value = ""; 
+        document.getElementById("ideaDesc").value = ""; 
+        showToast("✅ تم إرسال الفكرة!","success"); 
+    }
+    
+    function sendSupport() { 
+        let m = document.getElementById("supportMsg").value; 
+        if(!m) { showToast("اكتب رسالتك","error"); return; } 
+        showToast("✅ تم إرسال التذكرة","success"); 
+        addLog(`تذكرة دعم: ${m.substring(0,50)}...`,"info"); 
+        document.getElementById("supportMsg").value = ""; 
+    }
+    
+    function showSection(s) { 
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
+        document.getElementById(s + 'Section').classList.add('active'); 
+    }
+    
+    function doLogin() {
+        let email = document.getElementById("loginEmail").value;
+        let pass = document.getElementById("loginPass").value;
+        let user = users.find(u => u.email === email && u.password === pass);
+        if(user && !user.banned) {
+            currentUser = user;
+            document.getElementById("loginOverlay").style.display = "none";
+            if(user.isAdmin) { 
+                document.getElementById("adminNav").style.display = "inline-block"; 
+                document.getElementById("statsBar").style.display = "flex"; 
+                displayAdminMods(); 
+                displayUsers(); 
+                renderLogs(); 
+            }
+            visitors++; saveAll();
+            document.getElementById("userCount").innerText = users.length;
+            document.getElementById("visitorCount").innerText = visitors;
+            showToast(`مرحباً ${user.name}`, "success");
+            addLog(`تسجيل دخول: ${user.email}`, "success");
+            showSection('shop');
+        } else if(user?.banned) { 
+            document.getElementById("loginError").innerText = "⛔ هذا الحساب محظور";
+        } else { 
+            document.getElementById("loginError").innerText = "❌ بريد أو كلمة مرور خاطئة"; 
+        }
+    }
+    
+    function showRegisterForm() {
+        let name = prompt("👤 الاسم الكامل:"); if(!name) return;
+        let email = prompt("📧 البريد الإلكتروني:"); if(!email) return;
+        let pass = prompt("🔑 كلمة المرور:"); if(!pass) return;
+        if(users.find(u => u.email === email)) { alert("❌ البريد موجود مسبقاً"); return; }
+        users.push({ name, email, password: pass, isAdmin: false, banned: false });
+        saveAll();
+        alert("✅ تم إنشاء الحساب!");
+        addLog(`حساب جديد: ${email}`, "info");
+    }
+    
+    function guestLogin() {
+        currentUser = null;
+        document.getElementById("loginOverlay").style.display = "none";
+        document.getElementById("adminNav").style.display = "none";
+        document.getElementById("statsBar").style.display = "none";
+        visitors++; saveAll();
+        document.getElementById("visitorCount").innerText = visitors;
+        showToast("أهلاً بك كزائر", "info");
+        addLog("دخول زائر", "info");
+        showSection('shop');
+    }
+    
+    loadAll();
     displayMods();
     displayIdeas();
-    
-    // ملء حساب الأدمن تلقائياً لتسهيل الدخول
+    document.getElementById("userCount").innerText = users.length;
+    document.getElementById("visitorCount").innerText = visitors;
     document.getElementById("loginEmail").value = "mohamadhabar120@gmail.com";
     document.getElementById("loginPass").value = "admin123";
 </script>
