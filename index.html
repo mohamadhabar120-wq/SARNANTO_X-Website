@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>SARNANTO_X - الدفع المباشر</title>
+    <title>SARNANTO_X - الموقع الرسمي</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -162,7 +163,16 @@
             font-weight: bold;
         }
         
-        /* زر الدفع المباشر */
+        .free-badge {
+            background: #00aa00;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
         .paypal-direct-btn {
             display: inline-block;
             background: linear-gradient(135deg, #ff0000, #cc0000);
@@ -177,6 +187,27 @@
             width: 100%;
             text-decoration: none;
             text-align: center;
+        }
+        
+        .free-download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #00aa00, #008800);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 100%;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .free-download-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 170, 0, 0.5);
         }
         
         .paypal-direct-btn:hover {
@@ -211,6 +242,12 @@
             margin: 8px 0;
         }
         
+        input:focus {
+            outline: none;
+            border-color: #ff6666;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.3);
+        }
+        
         .file-upload-area {
             border: 2px dashed #ff3333;
             background: #0a0505;
@@ -227,6 +264,48 @@
             border-radius: 20px;
             padding: 20px;
             margin: 15px 0;
+        }
+        
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a0a0a;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .toggle-label {
+            font-weight: bold;
+            color: #ff8888;
+        }
+        
+        .toggle-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .toggle-btn {
+            background: #333;
+            border: none;
+            padding: 8px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: white;
+            transition: 0.3s;
+        }
+        
+        .toggle-btn.active {
+            background: #ff3333;
+            color: black;
+        }
+        
+        .toggle-btn.free-active {
+            background: #00aa00;
+            color: white;
         }
         
         .users-list {
@@ -334,6 +413,7 @@
             .nav-link { padding: 6px 10px; font-size: 12px; }
             .mods-grid { grid-template-columns: 1fr; }
             .mod-price { font-size: 22px; }
+            .toggle-switch { flex-direction: column; text-align: center; }
         }
         
         .note {
@@ -343,6 +423,21 @@
             padding: 10px;
             background: #111;
             border-radius: 10px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -375,12 +470,11 @@
         <div class="dashboard-card" onclick="showSection('donate')"><h3>❤️ التبرع</h3><p>ادعمنا</p></div>
     </div>
     
-    <!-- المتجر مع رابط دفع مباشر -->
     <div id="shopSection" class="section active">
-        <h2>🛒 متجر المودات - اضغط للشراء المباشر</h2>
+        <h2>🛒 متجر المودات</h2>
         <div id="modsList" class="mods-grid"></div>
         <div class="note">
-            💡 ملاحظة: عند الضغط على "شراء الآن"، سيتم نقلك إلى PayPal لإتمام الدفع.
+            💡 ملاحظة: عند الضغط على "شراء الآن" سيتم نقلك إلى PayPal لإتمام الدفع.
         </div>
     </div>
     
@@ -412,6 +506,19 @@
     
     <div id="adminSection" class="section">
         <h2>👑 لوحة تحكم الأدمن</h2>
+        
+        <!-- ميزة جعل المودات مجانية أو مدفوعة -->
+        <div class="admin-panel">
+            <h3>⚙️ إعدادات المتجر</h3>
+            <div class="toggle-switch">
+                <span class="toggle-label">💰 وضع المودات:</span>
+                <div class="toggle-buttons">
+                    <button id="paidModeBtn" class="toggle-btn" onclick="setModsMode('paid')">💸 مدفوعة</button>
+                    <button id="freeModeBtn" class="toggle-btn" onclick="setModsMode('free')">🎁 مجانية</button>
+                </div>
+            </div>
+            <p id="modeStatus" style="color:#ff8888; font-size:13px; margin-top:5px;"></p>
+        </div>
         
         <div class="admin-panel">
             <h3>➕ إضافة مود جديد (رفع ملف)</h3>
@@ -451,8 +558,11 @@
     <div class="login-box">
         <h2 style="color:#ff3333;">🔐 SARNANTO_X</h2>
         <p style="margin-bottom:15px;">تسجيل الدخول</p>
-        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
-        <input type="password" id="loginPass" placeholder="كلمة المرور">
+        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="">
+        <input type="password" id="loginPass" placeholder="كلمة المرور" value="">
+        <label class="checkbox-label">
+            <input type="checkbox" id="rememberMe"> تذكرني
+        </label>
         <button onclick="doLogin()" style="width:100%; margin-bottom:10px;">دخول</button>
         <button onclick="showRegisterForm()" style="width:100%; background:#111;">إنشاء حساب جديد</button>
         <button onclick="guestLogin()" style="width:100%; margin-top:10px; background:#0a0a0a;">دخول كزائر</button>
@@ -464,18 +574,54 @@
     // حساب PayPal الخاص بك
     const PAYPAL_EMAIL = "mohamadhabar120@gmail.com";
     
-    // رابط الدفع المباشر عبر PayPal
+    // إعدادات المتجر (مدفوعة أو مجانية)
+    let storeMode = localStorage.getItem("sarnanto_store_mode") || "paid"; // "paid" أو "free"
+    
     function getPaypalLink(amount, productName) {
-        // رابط الدفع المباشر عبر PayPal.Me
-        return `https://www.paypal.com/paypalme/mohamadhabar120/${amount}?amount=${amount}&currency=USD&locale.x=en_US`;
+        return `https://www.paypal.com/paypalme/mohamadhabar120/${amount}?amount=${amount}&currency=USD`;
     }
     
-    // فتح نافذة الدفع
     function openPaypal(amount, productName) {
         const link = getPaypalLink(amount, productName);
         window.open(link, '_blank');
         addLog(`محاولة شراء: ${productName} بـ $${amount}`, "info");
         showToast(`🔴 جاري تحويلك إلى PayPal لشراء ${productName}`, "info");
+    }
+    
+    function downloadMod(modName, fileName) {
+        showToast(`📥 جاري تحميل مود ${modName}...`, "info");
+        addLog(`تحميل مود مجاني: ${modName}`, "info");
+        // محاكاة التحميل (في الواقع ستضع رابط التحميل الحقيقي)
+        alert(`✅ تم تحميل مود ${modName} بنجاح!\n\nملف: ${fileName}`);
+    }
+    
+    // تعيين وضع المودات (مدفوعة/مجانية)
+    function setModsMode(mode) {
+        storeMode = mode;
+        localStorage.setItem("sarnanto_store_mode", mode);
+        
+        // تحديث شكل الأزرار
+        const paidBtn = document.getElementById("paidModeBtn");
+        const freeBtn = document.getElementById("freeModeBtn");
+        const modeStatus = document.getElementById("modeStatus");
+        
+        if(mode === "paid") {
+            paidBtn.classList.add("active");
+            freeBtn.classList.remove("active");
+            freeBtn.classList.remove("free-active");
+            modeStatus.innerHTML = "🔴 الوضع الحالي: <strong style='color:#ff5555'>المودات مدفوعة</strong> - سيتم عرض أزرار PayPal";
+        } else {
+            paidBtn.classList.remove("active");
+            freeBtn.classList.add("active");
+            freeBtn.classList.add("free-active");
+            modeStatus.innerHTML = "🟢 الوضع الحالي: <strong style='color:#00ff88'>المودات مجانية</strong> - سيتم عرض أزرار تحميل مباشر";
+        }
+        
+        // إعادة عرض المودات
+        displayMods();
+        displayAdminMods();
+        showToast(`✅ تم تغيير وضع المتجر إلى ${mode === "paid" ? "مدفوع" : "مجاني"}`, "success");
+        addLog(`تغيير وضع المتجر إلى: ${mode === "paid" ? "مدفوع" : "مجاني"}`, "info");
     }
     
     // البيانات
@@ -553,21 +699,30 @@
         });
     }
     
-    // عرض المودات مع زر دفع مباشر
     function displayMods() {
         let container = document.getElementById("modsList");
         if(!container) return;
         
-        container.innerHTML = mods.map(m => `
-            <div class="mod-card">
-                <h3>${escapeHtml(m.name)}</h3>
-                <p>${escapeHtml(m.desc)}</p>
-                <div class="mod-price">$${m.price}</div>
-                <button class="paypal-direct-btn" onclick="openPaypal(${m.price}, '${escapeHtml(m.name)}')">
-                    💳 شراء الآن بـ PayPal
-                </button>
-            </div>
-        `).join('');
+        container.innerHTML = mods.map(m => {
+            const priceValue = parseFloat(m.price);
+            const isFree = (storeMode === "free");
+            
+            return `
+                <div class="mod-card">
+                    <h3>${escapeHtml(m.name)}</h3>
+                    <p>${escapeHtml(m.desc)}</p>
+                    ${!isFree ? `<div class="mod-price">$${m.price}</div>` : `<div class="free-badge">🎁 مجاني</div>`}
+                    ${!isFree ? 
+                        `<button class="paypal-direct-btn" onclick="openPaypal(${priceValue}, '${escapeHtml(m.name)}')">
+                            💳 شراء الآن بـ PayPal
+                        </button>` : 
+                        `<button class="free-download-btn" onclick="downloadMod('${escapeHtml(m.name)}', '${escapeHtml(m.fileName)}')">
+                            📥 تحميل مجاني
+                        </button>`
+                    }
+                </div>
+            `;
+        }).join('');
         
         document.getElementById("modCount").innerText = mods.length;
     }
@@ -582,7 +737,10 @@
         if(!container) return;
         container.innerHTML = mods.map((m, idx) => `
             <div style="background:#1a0a0a; padding:12px; margin:8px 0; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                <div><strong>${escapeHtml(m.name)}</strong> - $${m.price}<div style="font-size:11px; color:#888;">📁 ${escapeHtml(m.fileName)}</div></div>
+                <div>
+                    <strong>${escapeHtml(m.name)}</strong> - $${m.price}
+                    <div style="font-size:11px; color:#888;">📁 ${escapeHtml(m.fileName)}</div>
+                </div>
                 <button onclick="deleteMod(${idx})" style="background:#500; padding:5px 15px;">حذف</button>
             </div>
         `).join('');
@@ -677,16 +835,29 @@
     function doLogin() {
         let email = document.getElementById("loginEmail").value;
         let pass = document.getElementById("loginPass").value;
+        let remember = document.getElementById("rememberMe").checked;
         let user = users.find(u => u.email === email && u.password === pass);
+        
         if(user && !user.banned) {
             currentUser = user;
+            
+            if(remember) {
+                localStorage.setItem("sarnanto_saved_email", email);
+                localStorage.setItem("sarnanto_saved_pass", pass);
+            } else {
+                localStorage.removeItem("sarnanto_saved_email");
+                localStorage.removeItem("sarnanto_saved_pass");
+            }
+            
             document.getElementById("loginOverlay").style.display = "none";
             if(user.isAdmin) { 
                 document.getElementById("adminNav").style.display = "inline-block"; 
                 document.getElementById("statsBar").style.display = "flex"; 
                 displayAdminMods(); 
                 displayUsers(); 
-                renderLogs(); 
+                renderLogs();
+                // تحديث واجهة إعدادات الأدمن
+                updateAdminModeUI();
             }
             visitors++; saveAll();
             document.getElementById("userCount").innerText = users.length;
@@ -698,6 +869,24 @@
             document.getElementById("loginError").innerText = "⛔ هذا الحساب محظور";
         } else { 
             document.getElementById("loginError").innerText = "❌ بريد أو كلمة مرور خاطئة"; 
+        }
+    }
+    
+    function updateAdminModeUI() {
+        const paidBtn = document.getElementById("paidModeBtn");
+        const freeBtn = document.getElementById("freeModeBtn");
+        const modeStatus = document.getElementById("modeStatus");
+        
+        if(storeMode === "paid") {
+            paidBtn.classList.add("active");
+            freeBtn.classList.remove("active");
+            freeBtn.classList.remove("free-active");
+            modeStatus.innerHTML = "🔴 الوضع الحالي: <strong style='color:#ff5555'>المودات مدفوعة</strong> - سيتم عرض أزرار PayPal";
+        } else {
+            paidBtn.classList.remove("active");
+            freeBtn.classList.add("active");
+            freeBtn.classList.add("free-active");
+            modeStatus.innerHTML = "🟢 الوضع الحالي: <strong style='color:#00ff88'>المودات مجانية</strong> - سيتم عرض أزرار تحميل مباشر";
         }
     }
     
@@ -724,13 +913,25 @@
         showSection('shop');
     }
     
+    // تحميل البيانات وتشغيل الموقع
     loadAll();
     displayMods();
     displayIdeas();
     document.getElementById("userCount").innerText = users.length;
     document.getElementById("visitorCount").innerText = visitors;
-    document.getElementById("loginEmail").value = "mohamadhabar120@gmail.com";
-    document.getElementById("loginPass").value = "admin123";
+    
+    // التحقق من وجود جلسة سابقة
+    let savedEmail = localStorage.getItem("sarnanto_saved_email");
+    let savedPass = localStorage.getItem("sarnanto_saved_pass");
+    if(savedEmail && savedPass) {
+        let savedUser = users.find(u => u.email === savedEmail && u.password === savedPass);
+        if(savedUser && !savedUser.banned) {
+            document.getElementById("loginEmail").value = savedEmail;
+            document.getElementById("loginPass").value = savedPass;
+            document.getElementById("rememberMe").checked = true;
+            setTimeout(() => doLogin(), 100);
+        }
+    }
 </script>
 </body>
 </html>
