@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>SARNANTO_X - مودات مركزية</title>
+    <title>SARNANTO_X - الموقع الرسمي</title>
     <style>
         * {
             margin: 0;
@@ -449,14 +449,35 @@
             background: #00aa00;
         }
         
-        .sync-status {
-            background: #1a0000;
-            padding: 8px;
-            border-radius: 10px;
+        .forgot-link {
+            display: block;
             text-align: center;
+            color: #ff8888;
             font-size: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #ff3333;
+            margin-top: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .forgot-link:hover {
+            color: #ff3333;
+        }
+        
+        .warning-text {
+            color: #ffaa00;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #1a1a00;
+            border-radius: 10px;
+            border: 1px solid #ffaa00;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
     </style>
 </head>
@@ -465,7 +486,7 @@
 <div class="container">
     <div class="welcome-header">
         <h1>🎉 WELCOME TO SARNANTO_X WEBSITE 🎉</h1>
-        <p>🔴 مودات مركزية متزامنة بين جميع الأجهزة | دفع مباشر عبر PayPal 🔴</p>
+        <p>🔴 أفضل منصة للمودات | دفع مباشر عبر PayPal | تحميل حقيقي 🔴</p>
     </div>
     
     <div class="navbar">
@@ -491,10 +512,9 @@
     
     <div id="shopSection" class="section active">
         <h2>🛒 متجر المودات</h2>
-        <div id="syncStatus" class="sync-status">🔄 جاري مزامنة المودات...</div>
         <div id="modsList" class="mods-grid"></div>
         <div class="note">
-            💡 كل مود له حالة خاصة به. المودات متزامنة بين جميع الأجهزة.
+            💡 كل مود له حالة خاصة به. المودات متزامنة بين جميع الأجهزة
         </div>
     </div>
     
@@ -530,7 +550,7 @@
         <div class="admin-panel">
             <h3>➕ إضافة مود جديد (مركزي - يظهر لجميع الأجهزة)</h3>
             <input type="text" id="newModName" placeholder="اسم المود">
-            <input type="text" id="newModPrice" placeholder="السعر ($) - اتركه فارغاً إذا كان مجاني">
+            <input type="text" id="newModPrice" placeholder="السعر ($)">
             <textarea id="newModDesc" placeholder="وصف المود"></textarea>
             
             <div class="radio-group">
@@ -553,10 +573,10 @@
                 <div class="progress-fill" id="uploadProgressFill"></div>
             </div>
             
-            <button onclick="uploadModToCentral()" id="uploadBtn" style="width:100%; margin-top:10px;">📤 رفع المود للمركز</button>
+            <button onclick="uploadMod()" id="uploadBtn" style="width:100%; margin-top:10px;">📤 رفع المود</button>
         </div>
         
-        <h3>📋 المودات الحالية (المركزية)</h3>
+        <h3>📋 المودات الحالية</h3>
         <div id="adminModsList"></div>
         
         <h3 style="margin-top:25px;">🛡️ إدارة المستخدمين</h3>
@@ -572,11 +592,12 @@
     <a href="https://www.youtube.com/@SARNANTO_X120" target="_blank" class="youtube-link">
         ▶️ اشترك في قناة SARNANTO_X على YouTube
     </a>
-    <div style="margin-top:15px; color:#666;">© 2025 SARNANTO_X | جميع الحقوق محفوظة | مودات مركزية متزامنة</div>
+    <div style="margin-top:15px; color:#666;">© 2025 SARNANTO_X | جميع الحقوق محفوظة</div>
 </div>
 
+<!-- شاشة تسجيل الدخول -->
 <div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
+    <div class="login-box" id="loginBox">
         <h2 style="color:#ff3333;">🔐 SARNANTO_X</h2>
         <p style="margin-bottom:15px;">تسجيل الدخول</p>
         <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="">
@@ -586,27 +607,46 @@
         </label>
         <button onclick="doLogin()" style="width:100%; margin-bottom:10px;">دخول</button>
         <button onclick="showRegisterForm()" style="width:100%; background:#111;">إنشاء حساب جديد</button>
-        <button onclick="guestLogin()" style="width:100%; margin-top:10px; background:#0a0a0a;">دخول كزائر</button>
+        <div class="forgot-link" onclick="showForgotPassword()">🔑 نسيت كلمة المرور؟</div>
         <div id="loginError" style="margin-top:15px; color:#ff6666;"></div>
+    </div>
+    
+    <!-- نافذة نسيت كلمة المرور -->
+    <div class="login-box" id="forgotBox" style="display:none;">
+        <h2 style="color:#ff3333;">🔑 استعادة كلمة المرور</h2>
+        <p style="margin-bottom:15px;">أدخل بريدك الإلكتروني</p>
+        <input type="email" id="forgotEmail" placeholder="البريد الإلكتروني">
+        <button onclick="checkForgotEmail()" style="width:100%; margin-bottom:10px;">التالي</button>
+        <div class="forgot-link" onclick="showLoginBox()">↩️ العودة لتسجيل الدخول</div>
+        <div id="forgotError" style="margin-top:15px; color:#ff6666;"></div>
+    </div>
+    
+    <!-- نافذة تعيين كلمة مرور جديدة -->
+    <div class="login-box" id="resetBox" style="display:none;">
+        <h2 style="color:#00ff88;">🔐 تعيين كلمة مرور جديدة</h2>
+        <p style="margin-bottom:15px;">للبريد: <span id="resetEmailDisplay" style="color:#ff8888;"></span></p>
+        <input type="password" id="newPassword" placeholder="كلمة المرور الجديدة">
+        <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور">
+        <button onclick="resetPassword()" style="width:100%; margin-bottom:10px;">تغيير كلمة المرور</button>
+        <div class="forgot-link" onclick="showLoginBox()">↩️ العودة لتسجيل الدخول</div>
+        <div id="resetError" style="margin-top:15px; color:#ff6666;"></div>
+        <div id="resetWarning" class="warning-text" style="display:none;">
+            ⚠️ انتبه! المرة القادمة تأكد من حفظ كلمة المرور الجديدة
+        </div>
     </div>
 </div>
 
 <script>
-    // ========== التخزين المركزي باستخدام localStorage (يتشاركه جميع الأجهزة بنفس المتصفح) ==========
-    // ملاحظة: هذا الحل يعمل بين الأجهزة إذا كان نفس المستخدم يستخدم نفس المتصفح ونفس حساب Google
-    // للحل الكامل، تحتاج إلى خادم backend (Node.js/PHP)
-    
     const PAYPAL_EMAIL = "mohamadhabar120@gmail.com";
     let pendingFile = null;
     let pendingFileName = "";
     let pendingFileSize = 0;
+    let resetEmailTemp = "";
     
-    // تحميل الملف للتحميل المباشر (للمودات المجانية)
-    function downloadModFile(modId, modName, fileName) {
-        const mod = mods.find(m => m.id === modId);
-        if(mod && mod.fileData) {
+    function downloadModFile(modId, modName, fileName, fileData) {
+        if(fileData) {
             try {
-                const byteCharacters = atob(mod.fileData.split(',')[1]);
+                const byteCharacters = atob(fileData.split(',')[1]);
                 const byteNumbers = new Array(byteCharacters.length);
                 for(let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
                 const byteArray = new Uint8Array(byteNumbers);
@@ -650,8 +690,7 @@
         }
     }
     
-    // رفع المود إلى التخزين المركزي
-    async function uploadModToCentral() {
+    async function uploadMod() {
         if(!pendingFile) { showToast("❌ اختر ملف أولاً", "error"); return; }
         
         const name = document.getElementById("newModName").value;
@@ -704,8 +743,6 @@
                 
                 showToast(`✅ تم رفع المود ${name} بنجاح!`, "success");
                 addLog(`رفع مود: ${name} (${modType === "free" ? "مجاني" : "مدفوع $" + price})`, "info");
-                document.getElementById('syncStatus').innerHTML = '✅ تم تحديث المودات بنجاح';
-                setTimeout(() => { if(document.getElementById('syncStatus')) document.getElementById('syncStatus').innerHTML = '🔄 المودات متزامنة'; }, 3000);
             };
             reader.readAsDataURL(pendingFile);
         } catch(e) {
@@ -741,21 +778,19 @@
         addLog(`تغيير نوع المود: ${mod.name} -> ${mod.isFree ? "مجاني" : "مدفوع"}`, "info");
     }
     
-    // حفظ المودات في localStorage (مركزي لكل المتصفحات على نفس الجهاز)
     function saveModsToStorage() {
         localStorage.setItem("sarnanto_central_mods", JSON.stringify(mods));
     }
     
     function loadModsFromStorage() {
         const stored = localStorage.getItem("sarnanto_central_mods");
-        if(stored) {
+        if(stored && stored !== "[]") {
             mods = JSON.parse(stored);
         } else {
-            // مودات تجريبية افتراضية
             mods = [
-                { id: 1, name: "مود السرعة", price: "4.99", desc: "تسريع اللعب 2x", fileName: "speed.zip", isFree: false, hasFile: false, fileData: null },
-                { id: 2, name: "مود الطيران", price: "6.50", desc: "تحليق في السماء", fileName: "fly.zip", isFree: false, hasFile: false, fileData: null },
-                { id: 3, name: "مود الأسلحة", price: "0", desc: "أسلحة جديدة", fileName: "weapons.zip", isFree: true, hasFile: false, fileData: null }
+                { id: 1, name: "مود السرعة", price: "4.99", desc: "تسريع اللعب 2x", fileName: "speed.zip", isFree: false, fileData: null },
+                { id: 2, name: "مود الطيران", price: "6.50", desc: "تحليق في السماء", fileName: "fly.zip", isFree: false, fileData: null },
+                { id: 3, name: "مود الأسلحة", price: "0", desc: "أسلحة جديدة", fileName: "weapons.zip", isFree: true, fileData: null }
             ];
         }
     }
@@ -817,13 +852,12 @@
                 <p>${escapeHtml(m.desc)}</p>
                 ${m.isFree ? `<div class="free-badge">🎁 مجاني</div>` : `<div class="mod-price">$${m.price}</div>`}
                 ${m.isFree ? 
-                    `<button class="free-download-btn" onclick="downloadModFile(${m.id}, '${escapeHtml(m.name)}', '${escapeHtml(m.fileName)}')">📥 تحميل مجاني</button>` : 
+                    `<button class="free-download-btn" onclick="downloadModFile(${m.id}, '${escapeHtml(m.name)}', '${escapeHtml(m.fileName)}', '${m.fileData || ''}')">📥 تحميل مجاني</button>` : 
                     `<button class="paypal-direct-btn" onclick="openPaypal(${parseFloat(m.price)}, '${escapeHtml(m.name)}')">💳 شراء الآن بـ PayPal</button>`
                 }
             </div>
         `).join('');
         document.getElementById("modCount").innerText = mods.length;
-        if(document.getElementById('syncStatus')) document.getElementById('syncStatus').innerHTML = `✅ ${mods.length} مود متاح`;
     }
     
     function displayIdeas() {
@@ -841,7 +875,7 @@
         container.innerHTML = mods.map((m, idx) => `
             <div style="background:#1a0a0a; padding:12px; margin:8px 0; border-radius:12px;">
                 <div><strong>${escapeHtml(m.name)}</strong> - ${m.isFree ? '🎁 مجاني' : '💰 $' + m.price}</div>
-                <div style="font-size:11px; color:#888; margin-top:5px;">📁 ${escapeHtml(m.fileName)} ${m.fileData ? '✅ ملف محفوظ' : '⚠️ رابط خارجي'}</div>
+                <div style="font-size:11px; color:#888; margin-top:5px;">📁 ${escapeHtml(m.fileName)} ${m.fileData ? '✅ ملف محفوظ' : '⚠️ لا يوجد ملف'}</div>
                 <div style="margin-top:8px; display:flex; gap:10px; flex-wrap:wrap;">
                     <button onclick="toggleModType(${m.id}, ${idx})" class="edit-btn">🔄 تبديل (مجاني/مدفوع)</button>
                     <button onclick="deleteMod(${idx})" style="background:#500; padding:5px 15px;">🗑️ حذف</button>
@@ -910,6 +944,75 @@
         document.getElementById(s + 'Section').classList.add('active');
     }
     
+    // دوال نسيت كلمة المرور
+    function showForgotPassword() {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("forgotBox").style.display = "block";
+        document.getElementById("resetBox").style.display = "none";
+        document.getElementById("forgotError").innerText = "";
+    }
+    
+    function showLoginBox() {
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("forgotBox").style.display = "none";
+        document.getElementById("resetBox").style.display = "none";
+        document.getElementById("loginError").innerText = "";
+    }
+    
+    function checkForgotEmail() {
+        const email = document.getElementById("forgotEmail").value;
+        const user = users.find(u => u.email === email);
+        
+        if(user) {
+            resetEmailTemp = email;
+            document.getElementById("resetEmailDisplay").innerText = email;
+            document.getElementById("forgotBox").style.display = "none";
+            document.getElementById("resetBox").style.display = "block";
+            document.getElementById("resetError").innerText = "";
+            document.getElementById("resetWarning").style.display = "none";
+        } else {
+            document.getElementById("forgotError").innerText = "❌ هذا البريد غير مسجل في النظام";
+        }
+    }
+    
+    function resetPassword() {
+        const newPass = document.getElementById("newPassword").value;
+        const confirmPass = document.getElementById("confirmPassword").value;
+        
+        if(!newPass || !confirmPass) {
+            document.getElementById("resetError").innerText = "❌ جميع الحقول مطلوبة";
+            return;
+        }
+        
+        if(newPass !== confirmPass) {
+            document.getElementById("resetError").innerText = "❌ كلمة المرور غير متطابقة";
+            return;
+        }
+        
+        if(newPass.length < 4) {
+            document.getElementById("resetError").innerText = "❌ كلمة المرور يجب أن تكون 4 أحرف على الأقل";
+            return;
+        }
+        
+        const userIndex = users.findIndex(u => u.email === resetEmailTemp);
+        if(userIndex !== -1) {
+            users[userIndex].password = newPass;
+            saveAll();
+            
+            document.getElementById("resetWarning").style.display = "block";
+            document.getElementById("resetError").innerText = "";
+            document.getElementById("newPassword").value = "";
+            document.getElementById("confirmPassword").value = "";
+            
+            addLog(`تغيير كلمة المرور للبريد: ${resetEmailTemp}`, "info");
+            
+            setTimeout(() => {
+                showLoginBox();
+                showToast("✅ تم تغيير كلمة المرور بنجاح! يمكنك تسجيل الدخول الآن", "success");
+            }, 2000);
+        }
+    }
+    
     function doLogin() {
         let email = document.getElementById("loginEmail").value;
         let pass = document.getElementById("loginPass").value;
@@ -957,24 +1060,11 @@
         addLog(`حساب جديد: ${email}`, "info");
     }
     
-    function guestLogin() {
-        currentUser = null;
-        document.getElementById("loginOverlay").style.display = "none";
-        document.getElementById("adminNav").style.display = "none";
-        document.getElementById("statsBar").style.display = "none";
-        visitors++; saveAll();
-        document.getElementById("visitorCount").innerText = visitors;
-        showToast("أهلاً بك كزائر", "info");
-        addLog("دخول زائر", "info");
-        showSection('shop');
-    }
-    
     loadAll();
     displayMods();
     displayIdeas();
     document.getElementById("userCount").innerText = users.length;
     document.getElementById("visitorCount").innerText = visitors;
-    document.getElementById('syncStatus').innerHTML = `✅ ${mods.length} مود متاح`;
     
     let savedEmail = localStorage.getItem("sarnanto_saved_email");
     let savedPass = localStorage.getItem("sarnanto_saved_pass");
