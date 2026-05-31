@@ -507,7 +507,6 @@
     <div id="adminSection" class="section">
         <h2>👑 لوحة تحكم الأدمن</h2>
         
-        <!-- ميزة جعل المودات مجانية أو مدفوعة -->
         <div class="admin-panel">
             <h3>⚙️ إعدادات المتجر</h3>
             <div class="toggle-switch">
@@ -575,7 +574,10 @@
     const PAYPAL_EMAIL = "mohamadhabar120@gmail.com";
     
     // إعدادات المتجر (مدفوعة أو مجانية)
-    let storeMode = localStorage.getItem("sarnanto_store_mode") || "paid"; // "paid" أو "free"
+    let storeMode = localStorage.getItem("sarnanto_store_mode") || "paid";
+    
+    // تخزين محتوى الملفات المرفوعة (للمودات المجانية)
+    let uploadedFiles = JSON.parse(localStorage.getItem("sarnanto_uploaded_files")) || {};
     
     function getPaypalLink(amount, productName) {
         return `https://www.paypal.com/paypalme/mohamadhabar120/${amount}?amount=${amount}&currency=USD`;
@@ -588,19 +590,52 @@
         showToast(`🔴 جاري تحويلك إلى PayPal لشراء ${productName}`, "info");
     }
     
-    function downloadMod(modName, fileName) {
-        showToast(`📥 جاري تحميل مود ${modName}...`, "info");
-        addLog(`تحميل مود مجاني: ${modName}`, "info");
-        // محاكاة التحميل (في الواقع ستضع رابط التحميل الحقيقي)
-        alert(`✅ تم تحميل مود ${modName} بنجاح!\n\nملف: ${fileName}`);
+    // دالة تحميل الملف المجاني (تعمل فعلياً)
+    function downloadMod(modId, modName, fileName) {
+        // التحقق من وجود ملف محمل
+        if(uploadedFiles[modId]) {
+            // إنشاء رابط تحميل من البيانات المخزنة
+            const binaryData = atob(uploadedFiles[modId].split(',')[1]);
+            const arrayBuffer = new ArrayBuffer(binaryData.length);
+            const uint8Array = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < binaryData.length; i++) {
+                uint8Array[i] = binaryData.charCodeAt(i);
+            }
+            const blob = new Blob([uint8Array], { type: 'application/zip' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast(`✅ بدء تحميل مود ${modName}`, "success");
+            addLog(`تحميل مود مجاني: ${modName} (ملف: ${fileName})`, "info");
+        } else {
+            // إذا لم يكن هناك ملف محمل، نعطي رسالة افتراضية
+            showToast(`📥 جاري تحميل مود ${modName}...`, "info");
+            addLog(`تحميل مود مجاني: ${modName} (تحميل افتراضي)`, "info");
+            
+            // إنشاء ملف نصي تجريبي للتحميل
+            const blob = new Blob([`هذا هو مود ${modName}\nتم التحميل من SARNANTO_X`], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${modName}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     }
     
-    // تعيين وضع المودات (مدفوعة/مجانية)
+    // تعيين وضع المودات
     function setModsMode(mode) {
         storeMode = mode;
         localStorage.setItem("sarnanto_store_mode", mode);
         
-        // تحديث شكل الأزرار
         const paidBtn = document.getElementById("paidModeBtn");
         const freeBtn = document.getElementById("freeModeBtn");
         const modeStatus = document.getElementById("modeStatus");
@@ -617,7 +652,6 @@
             modeStatus.innerHTML = "🟢 الوضع الحالي: <strong style='color:#00ff88'>المودات مجانية</strong> - سيتم عرض أزرار تحميل مباشر";
         }
         
-        // إعادة عرض المودات
         displayMods();
         displayAdminMods();
         showToast(`✅ تم تغيير وضع المتجر إلى ${mode === "paid" ? "مدفوع" : "مجاني"}`, "success");
@@ -638,6 +672,7 @@
     let currentUser = null;
     let visitors = parseInt(localStorage.getItem("visitors")) || 128;
     let selectedFile = null;
+    let selectedFileData = null;
     
     function saveAll() {
         localStorage.setItem("sarnanto_users", JSON.stringify(users));
@@ -645,6 +680,7 @@
         localStorage.setItem("sarnanto_ideas", JSON.stringify(ideas));
         localStorage.setItem("sarnanto_logs", JSON.stringify(logs));
         localStorage.setItem("visitors", visitors);
+        localStorage.setItem("sarnanto_uploaded_files", JSON.stringify(uploadedFiles));
     }
     
     function loadAll() {
@@ -656,6 +692,8 @@
         if(i) ideas = JSON.parse(i);
         let l = localStorage.getItem("sarnanto_logs");
         if(l) logs = JSON.parse(l);
+        let uf = localStorage.getItem("sarnanto_uploaded_files");
+        if(uf) uploadedFiles = JSON.parse(uf);
     }
     
     function addLog(msg, type) {
@@ -716,7 +754,7 @@
                         `<button class="paypal-direct-btn" onclick="openPaypal(${priceValue}, '${escapeHtml(m.name)}')">
                             💳 شراء الآن بـ PayPal
                         </button>` : 
-                        `<button class="free-download-btn" onclick="downloadMod('${escapeHtml(m.name)}', '${escapeHtml(m.fileName)}')">
+                        `<button class="free-download-btn" onclick="downloadMod(${m.id}, '${escapeHtml(m.name)}', '${escapeHtml(m.fileName)}')">
                             📥 تحميل مجاني
                         </button>`
                     }
@@ -762,31 +800,58 @@
         let price = document.getElementById("newModPrice").value;
         let desc = document.getElementById("newModDesc").value;
         if(!name || !price) { showToast("الاسم والسعر مطلوبان", "error"); return; }
+        
         let fileName = selectedFile ? selectedFile.name : "بدون ملف";
-        mods.push({ id: Date.now(), name, price, desc: desc || "بدون وصف", fileName });
+        let newId = Date.now();
+        
+        mods.push({ id: newId, name, price, desc: desc || "بدون وصف", fileName });
+        
+        // حفظ محتوى الملف إذا وجد
+        if(selectedFileData) {
+            uploadedFiles[newId] = selectedFileData;
+        }
+        
         saveAll();
         displayMods();
         displayAdminMods();
+        
         document.getElementById("newModName").value = "";
         document.getElementById("newModPrice").value = "";
         document.getElementById("newModDesc").value = "";
         document.getElementById("modFile").value = "";
         document.getElementById("fileNameDisplay").innerHTML = "";
         selectedFile = null;
+        selectedFileData = null;
+        
         showToast("✅ تم إضافة المود!", "success");
         addLog(`إضافة مود: ${name}`, "info");
     }
     
     function updateFileName() {
         let file = document.getElementById("modFile").files[0];
-        if(file) { selectedFile = file; document.getElementById("fileNameDisplay").innerHTML = `📎 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
-        else { selectedFile = null; document.getElementById("fileNameDisplay").innerHTML = ""; }
+        if(file) {
+            selectedFile = file;
+            document.getElementById("fileNameDisplay").innerHTML = `📎 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+            
+            // قراءة محتوى الملف وحفظه
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFileData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            selectedFile = null;
+            selectedFileData = null;
+            document.getElementById("fileNameDisplay").innerHTML = "";
+        }
     }
     
     function deleteMod(idx) { 
         if(confirm("حذف هذا المود؟")) { 
             let n = mods[idx].name; 
+            let id = mods[idx].id;
             mods.splice(idx,1); 
+            delete uploadedFiles[id];
             saveAll(); 
             displayMods(); 
             displayAdminMods(); 
@@ -856,7 +921,6 @@
                 displayAdminMods(); 
                 displayUsers(); 
                 renderLogs();
-                // تحديث واجهة إعدادات الأدمن
                 updateAdminModeUI();
             }
             visitors++; saveAll();
@@ -913,14 +977,12 @@
         showSection('shop');
     }
     
-    // تحميل البيانات وتشغيل الموقع
     loadAll();
     displayMods();
     displayIdeas();
     document.getElementById("userCount").innerText = users.length;
     document.getElementById("visitorCount").innerText = visitors;
     
-    // التحقق من وجود جلسة سابقة
     let savedEmail = localStorage.getItem("sarnanto_saved_email");
     let savedPass = localStorage.getItem("sarnanto_saved_pass");
     if(savedEmail && savedPass) {
