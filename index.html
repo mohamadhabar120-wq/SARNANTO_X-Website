@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>SARNANTO_X - الموقع الرسمي</title>
+    <title>SARNANTO_X - مودات مستقلة</title>
     <style>
         * {
             margin: 0;
@@ -173,6 +173,16 @@
             margin: 10px 0;
         }
         
+        .paid-badge {
+            background: #ff3333;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
         .paypal-direct-btn {
             display: inline-block;
             background: linear-gradient(135deg, #ff0000, #cc0000);
@@ -249,13 +259,19 @@
         }
         
         .file-upload-area {
-            border: 2px dashed #ff3333;
+            border: 2px dashed #00aa00;
             background: #0a0505;
             padding: 20px;
             border-radius: 20px;
             text-align: center;
             margin: 15px 0;
             cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .file-upload-area:hover {
+            border-color: #ff3333;
+            background: #1a0a0a;
         }
         
         .admin-panel {
@@ -264,48 +280,6 @@
             border-radius: 20px;
             padding: 20px;
             margin: 15px 0;
-        }
-        
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #1a0a0a;
-            padding: 15px;
-            border-radius: 15px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .toggle-label {
-            font-weight: bold;
-            color: #ff8888;
-        }
-        
-        .toggle-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .toggle-btn {
-            background: #333;
-            border: none;
-            padding: 8px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            color: white;
-            transition: 0.3s;
-        }
-        
-        .toggle-btn.active {
-            background: #ff3333;
-            color: black;
-        }
-        
-        .toggle-btn.free-active {
-            background: #00aa00;
-            color: white;
         }
         
         .users-list {
@@ -413,7 +387,6 @@
             .nav-link { padding: 6px 10px; font-size: 12px; }
             .mods-grid { grid-template-columns: 1fr; }
             .mod-price { font-size: 22px; }
-            .toggle-switch { flex-direction: column; text-align: center; }
         }
         
         .note {
@@ -439,6 +412,57 @@
             margin: 0;
             cursor: pointer;
         }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #00ff88;
+            transition: width 0.3s;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 30px;
+            background: #1a1a1a;
+        }
+        
+        .radio-label input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+        }
+        
+        .edit-btn {
+            background: #005500;
+            padding: 5px 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .edit-btn:hover {
+            background: #00aa00;
+        }
     </style>
 </head>
 <body>
@@ -446,7 +470,7 @@
 <div class="container">
     <div class="welcome-header">
         <h1>🎉 WELCOME TO SARNANTO_X WEBSITE 🎉</h1>
-        <p>🔴 أفضل منصة للمودات | دفع مباشر عبر PayPal | حساب: mohamadhabar120@gmail.com 🔴</p>
+        <p>🔴 أفضل منصة للمودات | دفع مباشر عبر PayPal | تحميل حقيقي للملفات 🔴</p>
     </div>
     
     <div class="navbar">
@@ -474,7 +498,7 @@
         <h2>🛒 متجر المودات</h2>
         <div id="modsList" class="mods-grid"></div>
         <div class="note">
-            💡 ملاحظة: عند الضغط على "شراء الآن" سيتم نقلك إلى PayPal لإتمام الدفع.
+            💡 كل مود له حالة خاصة به (مجاني أو مدفوع)
         </div>
     </div>
     
@@ -508,30 +532,32 @@
         <h2>👑 لوحة تحكم الأدمن</h2>
         
         <div class="admin-panel">
-            <h3>⚙️ إعدادات المتجر</h3>
-            <div class="toggle-switch">
-                <span class="toggle-label">💰 وضع المودات:</span>
-                <div class="toggle-buttons">
-                    <button id="paidModeBtn" class="toggle-btn" onclick="setModsMode('paid')">💸 مدفوعة</button>
-                    <button id="freeModeBtn" class="toggle-btn" onclick="setModsMode('free')">🎁 مجانية</button>
-                </div>
-            </div>
-            <p id="modeStatus" style="color:#ff8888; font-size:13px; margin-top:5px;"></p>
-        </div>
-        
-        <div class="admin-panel">
-            <h3>➕ إضافة مود جديد (رفع ملف)</h3>
+            <h3>➕ إضافة مود جديد</h3>
             <input type="text" id="newModName" placeholder="اسم المود">
-            <input type="text" id="newModPrice" placeholder="السعر ($)">
+            <input type="text" id="newModPrice" placeholder="السعر ($) - اتركه فارغاً إذا كان مجاني">
             <textarea id="newModDesc" placeholder="وصف المود"></textarea>
+            
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="modType" value="free" checked> 🎁 مجاني
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="modType" value="paid"> 💰 مدفوع
+                </label>
+            </div>
             
             <div class="file-upload-area" onclick="document.getElementById('modFile').click()">
                 📂 اختر ملف المود (ZIP, RAR, JAR)
-                <input type="file" id="modFile" accept=".zip,.rar,.jar" style="display:none;" onchange="updateFileName()">
+                <input type="file" id="modFile" style="display:none;" onchange="prepareFileUpload()">
                 <div id="fileNameDisplay" style="color:#00ff88; margin-top:10px;"></div>
+                <div id="fileSizeDisplay" style="color:#888; font-size:12px;"></div>
             </div>
             
-            <button onclick="addNewMod()" style="width:100%; margin-top:10px;">✨ نشر المود</button>
+            <div class="progress-bar" id="uploadProgress">
+                <div class="progress-fill" id="uploadProgressFill"></div>
+            </div>
+            
+            <button onclick="uploadModFile()" id="uploadBtn" style="width:100%; margin-top:10px;">📤 رفع المود</button>
         </div>
         
         <h3>📋 المودات الحالية</h3>
@@ -570,109 +596,207 @@
 </div>
 
 <script>
-    // حساب PayPal الخاص بك
     const PAYPAL_EMAIL = "mohamadhabar120@gmail.com";
     
-    // إعدادات المتجر (مدفوعة أو مجانية)
-    let storeMode = localStorage.getItem("sarnanto_store_mode") || "paid";
+    // IndexedDB
+    let db = null;
+    let pendingFile = null;
+    let pendingFileName = "";
+    let pendingFileSize = 0;
     
-    // تخزين محتوى الملفات المرفوعة (للمودات المجانية)
-    let uploadedFiles = JSON.parse(localStorage.getItem("sarnanto_uploaded_files")) || {};
+    function openDatabase() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open("SarnantoModsDB", 2);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                db = request.result;
+                resolve(db);
+            };
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if(!db.objectStoreNames.contains("mods")) {
+                    db.createObjectStore("mods", { keyPath: "id" });
+                }
+            };
+        });
+    }
     
-    function getPaypalLink(amount, productName) {
-        return `https://www.paypal.com/paypalme/mohamadhabar120/${amount}?amount=${amount}&currency=USD`;
+    async function saveFileToDB(modId, fileData, fileName, fileType) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(["mods"], "readwrite");
+            const store = transaction.objectStore("mods");
+            const record = { id: modId, fileData: fileData, fileName: fileName, fileType: fileType, timestamp: Date.now() };
+            const request = store.put(record);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    }
+    
+    async function getFileFromDB(modId) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(["mods"], "readonly");
+            const store = transaction.objectStore("mods");
+            const request = store.get(modId);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    
+    async function deleteFileFromDB(modId) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(["mods"], "readwrite");
+            const store = transaction.objectStore("mods");
+            const request = store.delete(modId);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    }
+    
+    async function downloadModFile(modId, modName, originalFileName) {
+        try {
+            showToast(`📥 جاري تحضير ${modName}...`, "info");
+            const record = await getFileFromDB(modId);
+            if(record && record.fileData) {
+                const byteCharacters = atob(record.fileData.split(',')[1]);
+                const byteNumbers = new Array(byteCharacters.length);
+                for(let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: record.fileType || 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = originalFileName || record.fileName || `${modName}.jar`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast(`✅ بدأ تحميل ${modName}`, "success");
+                addLog(`تحميل مود: ${modName}`, "info");
+            } else {
+                showToast(`❌ ملف المود غير موجود`, "error");
+            }
+        } catch(e) {
+            showToast(`❌ فشل التحميل`, "error");
+        }
+    }
+    
+    function prepareFileUpload() {
+        const file = document.getElementById('modFile').files[0];
+        if(file) {
+            pendingFile = file;
+            pendingFileName = file.name;
+            pendingFileSize = file.size;
+            document.getElementById('fileNameDisplay').innerHTML = `📎 ${file.name}`;
+            document.getElementById('fileSizeDisplay').innerHTML = `📦 الحجم: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+        } else {
+            pendingFile = null;
+            document.getElementById('fileNameDisplay').innerHTML = '';
+            document.getElementById('fileSizeDisplay').innerHTML = '';
+        }
+    }
+    
+    async function uploadModFile() {
+        if(!pendingFile) { showToast("❌ اختر ملف أولاً", "error"); return; }
+        
+        const name = document.getElementById("newModName").value;
+        const price = document.getElementById("newModPrice").value;
+        const desc = document.getElementById("newModDesc").value;
+        const modType = document.querySelector('input[name="modType"]:checked').value;
+        
+        if(!name) { showToast("❌ اسم المود مطلوب", "error"); return; }
+        if(modType === "paid" && (!price || price <= 0)) { showToast("❌ السعر مطلوب للمود المدفوع", "error"); return; }
+        
+        const progressBar = document.getElementById('uploadProgress');
+        const progressFill = document.getElementById('uploadProgressFill');
+        progressBar.style.display = 'block';
+        
+        try {
+            const reader = new FileReader();
+            reader.onprogress = (e) => { if(e.lengthComputable) progressFill.style.width = (e.loaded / e.total) * 100 + '%'; };
+            reader.onload = async (e) => {
+                const fileData = e.target.result;
+                const modId = Date.now();
+                await saveFileToDB(modId, fileData, pendingFileName, pendingFile.type);
+                
+                const finalPrice = modType === "free" ? "0" : price;
+                
+                mods.push({
+                    id: modId,
+                    name: name,
+                    price: finalPrice,
+                    desc: desc || "بدون وصف",
+                    fileName: pendingFileName,
+                    fileSize: pendingFileSize,
+                    isFree: (modType === "free"),
+                    hasFile: true
+                });
+                
+                saveAll();
+                displayMods();
+                displayAdminMods();
+                
+                document.getElementById("newModName").value = "";
+                document.getElementById("newModPrice").value = "";
+                document.getElementById("newModDesc").value = "";
+                document.getElementById("modFile").value = "";
+                document.getElementById("fileNameDisplay").innerHTML = "";
+                document.getElementById("fileSizeDisplay").innerHTML = "";
+                pendingFile = null;
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+                document.querySelector('input[value="free"]').checked = true;
+                
+                showToast(`✅ تم رفع المود ${name} بنجاح!`, "success");
+                addLog(`رفع مود: ${name} (${modType === "free" ? "مجاني" : "مدفوع $" + price})`, "info");
+            };
+            reader.readAsDataURL(pendingFile);
+        } catch(e) {
+            showToast(`❌ فشل الرفع`, "error");
+            progressBar.style.display = 'none';
+        }
+    }
+    
+    async function toggleModType(modId, idx) {
+        const mod = mods.find(m => m.id === modId);
+        if(!mod) return;
+        
+        const newType = mod.isFree ? "مدفوع" : "مجاني";
+        const newPrice = prompt(`أدخل سعر المود (بالدولار) للمود ${mod.name}:`, mod.isFree ? "4.99" : mod.price);
+        if(newPrice === null) return;
+        
+        if(newType === "مدفوع" && (!newPrice || parseFloat(newPrice) <= 0)) {
+            showToast("❌ السعر غير صحيح", "error");
+            return;
+        }
+        
+        mod.isFree = !mod.isFree;
+        mod.price = mod.isFree ? "0" : newPrice;
+        
+        saveAll();
+        displayMods();
+        displayAdminMods();
+        showToast(`✅ تم تغيير ${mod.name} إلى ${mod.isFree ? "مجاني" : "مدفوع $" + mod.price}`, "success");
+        addLog(`تغيير نوع المود: ${mod.name} -> ${mod.isFree ? "مجاني" : "مدفوع"}`, "info");
     }
     
     function openPaypal(amount, productName) {
-        const link = getPaypalLink(amount, productName);
-        window.open(link, '_blank');
+        window.open(`https://www.paypal.com/paypalme/mohamadhabar120/${amount}`, '_blank');
         addLog(`محاولة شراء: ${productName} بـ $${amount}`, "info");
         showToast(`🔴 جاري تحويلك إلى PayPal لشراء ${productName}`, "info");
     }
     
-    // دالة تحميل الملف المجاني (تعمل فعلياً)
-    function downloadMod(modId, modName, fileName) {
-        // التحقق من وجود ملف محمل
-        if(uploadedFiles[modId]) {
-            // إنشاء رابط تحميل من البيانات المخزنة
-            const binaryData = atob(uploadedFiles[modId].split(',')[1]);
-            const arrayBuffer = new ArrayBuffer(binaryData.length);
-            const uint8Array = new Uint8Array(arrayBuffer);
-            for (let i = 0; i < binaryData.length; i++) {
-                uint8Array[i] = binaryData.charCodeAt(i);
-            }
-            const blob = new Blob([uint8Array], { type: 'application/zip' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showToast(`✅ بدء تحميل مود ${modName}`, "success");
-            addLog(`تحميل مود مجاني: ${modName} (ملف: ${fileName})`, "info");
-        } else {
-            // إذا لم يكن هناك ملف محمل، نعطي رسالة افتراضية
-            showToast(`📥 جاري تحميل مود ${modName}...`, "info");
-            addLog(`تحميل مود مجاني: ${modName} (تحميل افتراضي)`, "info");
-            
-            // إنشاء ملف نصي تجريبي للتحميل
-            const blob = new Blob([`هذا هو مود ${modName}\nتم التحميل من SARNANTO_X`], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${modName}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-    }
-    
-    // تعيين وضع المودات
-    function setModsMode(mode) {
-        storeMode = mode;
-        localStorage.setItem("sarnanto_store_mode", mode);
-        
-        const paidBtn = document.getElementById("paidModeBtn");
-        const freeBtn = document.getElementById("freeModeBtn");
-        const modeStatus = document.getElementById("modeStatus");
-        
-        if(mode === "paid") {
-            paidBtn.classList.add("active");
-            freeBtn.classList.remove("active");
-            freeBtn.classList.remove("free-active");
-            modeStatus.innerHTML = "🔴 الوضع الحالي: <strong style='color:#ff5555'>المودات مدفوعة</strong> - سيتم عرض أزرار PayPal";
-        } else {
-            paidBtn.classList.remove("active");
-            freeBtn.classList.add("active");
-            freeBtn.classList.add("free-active");
-            modeStatus.innerHTML = "🟢 الوضع الحالي: <strong style='color:#00ff88'>المودات مجانية</strong> - سيتم عرض أزرار تحميل مباشر";
-        }
-        
-        displayMods();
-        displayAdminMods();
-        showToast(`✅ تم تغيير وضع المتجر إلى ${mode === "paid" ? "مدفوع" : "مجاني"}`, "success");
-        addLog(`تغيير وضع المتجر إلى: ${mode === "paid" ? "مدفوع" : "مجاني"}`, "info");
-    }
-    
-    // البيانات
     let users = [
         { name: "Administrator", email: "mohamadhabar120@gmail.com", password: "admin123", isAdmin: true, banned: false }
     ];
     let mods = [
-        { id: 1, name: "مود السرعة", price: "4.99", desc: "تسريع اللعب 2x", fileName: "speed.zip" },
-        { id: 2, name: "مود الطيران", price: "6.50", desc: "تحليق في السماء", fileName: "fly.zip" },
-        { id: 3, name: "مود الأسلحة", price: "9.99", desc: "أسلحة جديدة ومتطورة", fileName: "weapons.zip" }
+        { id: 1, name: "مود السرعة", price: "4.99", desc: "تسريع اللعب 2x", fileName: "speed.zip", isFree: false, hasFile: false },
+        { id: 2, name: "مود الطيران", price: "6.50", desc: "تحليق في السماء", fileName: "fly.zip", isFree: false, hasFile: false },
+        { id: 3, name: "مود الأسلحة", price: "0", desc: "أسلحة جديدة", fileName: "weapons.zip", isFree: true, hasFile: false }
     ];
     let ideas = [];
     let logs = [];
     let currentUser = null;
     let visitors = parseInt(localStorage.getItem("visitors")) || 128;
-    let selectedFile = null;
-    let selectedFileData = null;
     
     function saveAll() {
         localStorage.setItem("sarnanto_users", JSON.stringify(users));
@@ -680,7 +804,6 @@
         localStorage.setItem("sarnanto_ideas", JSON.stringify(ideas));
         localStorage.setItem("sarnanto_logs", JSON.stringify(logs));
         localStorage.setItem("visitors", visitors);
-        localStorage.setItem("sarnanto_uploaded_files", JSON.stringify(uploadedFiles));
     }
     
     function loadAll() {
@@ -692,8 +815,6 @@
         if(i) ideas = JSON.parse(i);
         let l = localStorage.getItem("sarnanto_logs");
         if(l) logs = JSON.parse(l);
-        let uf = localStorage.getItem("sarnanto_uploaded_files");
-        if(uf) uploadedFiles = JSON.parse(uf);
     }
     
     function addLog(msg, type) {
@@ -706,62 +827,27 @@
     
     function renderLogs() {
         let container = document.getElementById("logsList");
-        if(!container) return;
-        container.innerHTML = logs.map(l => `
-            <div style="margin-bottom:5px; padding:5px; border-bottom:1px solid #222; font-size:11px;">
-                <span style="color:${l.type === 'error' ? '#ff6666' : '#00ff88'}">[${l.type}]</span>
-                ${escapeHtml(l.msg)} <span style="color:#555; float:left;">${l.time}</span>
-            </div>
-        `).join('');
+        if(container) container.innerHTML = logs.map(l => `<div style="margin-bottom:5px; padding:5px; border-bottom:1px solid #222; font-size:11px;"><span style="color:${l.type === 'error' ? '#ff6666' : '#00ff88'}">[${l.type}]</span> ${escapeHtml(l.msg)} <span style="color:#555; float:left;">${l.time}</span></div>`).join('');
     }
     
-    function clearLogs() {
-        if(currentUser?.isAdmin) { logs = []; saveAll(); renderLogs(); showToast("تم مسح السجل", "success"); }
-    }
-    
-    function showToast(msg, type) {
-        let toast = document.createElement("div");
-        toast.className = "toast";
-        toast.innerHTML = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-    
-    function escapeHtml(str) {
-        if(!str) return "";
-        return str.replace(/[&<>]/g, function(m) {
-            if(m === '&') return '&amp;';
-            if(m === '<') return '&lt;';
-            if(m === '>') return '&gt;';
-            return m;
-        });
-    }
+    function clearLogs() { if(currentUser?.isAdmin) { logs = []; saveAll(); renderLogs(); showToast("تم مسح السجل", "success"); } }
+    function showToast(msg, type) { let t = document.createElement("div"); t.className = "toast"; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
+    function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m; }); }
     
     function displayMods() {
         let container = document.getElementById("modsList");
         if(!container) return;
-        
-        container.innerHTML = mods.map(m => {
-            const priceValue = parseFloat(m.price);
-            const isFree = (storeMode === "free");
-            
-            return `
-                <div class="mod-card">
-                    <h3>${escapeHtml(m.name)}</h3>
-                    <p>${escapeHtml(m.desc)}</p>
-                    ${!isFree ? `<div class="mod-price">$${m.price}</div>` : `<div class="free-badge">🎁 مجاني</div>`}
-                    ${!isFree ? 
-                        `<button class="paypal-direct-btn" onclick="openPaypal(${priceValue}, '${escapeHtml(m.name)}')">
-                            💳 شراء الآن بـ PayPal
-                        </button>` : 
-                        `<button class="free-download-btn" onclick="downloadMod(${m.id}, '${escapeHtml(m.name)}', '${escapeHtml(m.fileName)}')">
-                            📥 تحميل مجاني
-                        </button>`
-                    }
-                </div>
-            `;
-        }).join('');
-        
+        container.innerHTML = mods.map(m => `
+            <div class="mod-card">
+                <h3>${escapeHtml(m.name)}</h3>
+                <p>${escapeHtml(m.desc)}</p>
+                ${m.isFree ? `<div class="free-badge">🎁 مجاني</div>` : `<div class="mod-price">$${m.price}</div>`}
+                ${m.isFree ? 
+                    `<button class="free-download-btn" onclick="downloadModFile(${m.id}, '${escapeHtml(m.name)}', '${escapeHtml(m.fileName)}')">📥 تحميل مجاني</button>` : 
+                    `<button class="paypal-direct-btn" onclick="openPaypal(${parseFloat(m.price)}, '${escapeHtml(m.name)}')">💳 شراء الآن بـ PayPal</button>`
+                }
+            </div>
+        `).join('');
         document.getElementById("modCount").innerText = mods.length;
     }
     
@@ -774,12 +860,13 @@
         let container = document.getElementById("adminModsList");
         if(!container) return;
         container.innerHTML = mods.map((m, idx) => `
-            <div style="background:#1a0a0a; padding:12px; margin:8px 0; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                <div>
-                    <strong>${escapeHtml(m.name)}</strong> - $${m.price}
-                    <div style="font-size:11px; color:#888;">📁 ${escapeHtml(m.fileName)}</div>
+            <div style="background:#1a0a0a; padding:12px; margin:8px 0; border-radius:12px;">
+                <div><strong>${escapeHtml(m.name)}</strong> - ${m.isFree ? '🎁 مجاني' : '💰 $' + m.price}</div>
+                <div style="font-size:11px; color:#888; margin-top:5px;">📁 ${escapeHtml(m.fileName)} ${m.hasFile ? '✅ ملف محفوظ' : '⚠️ لا يوجد ملف'}</div>
+                <div style="margin-top:8px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <button onclick="toggleModType(${m.id}, ${idx})" class="edit-btn">🔄 تبديل (مجاني/مدفوع)</button>
+                    <button onclick="deleteMod(${idx})" style="background:#500; padding:5px 15px;">🗑️ حذف</button>
                 </div>
-                <button onclick="deleteMod(${idx})" style="background:#500; padding:5px 15px;">حذف</button>
             </div>
         `).join('');
     }
@@ -795,106 +882,54 @@
         `).join('');
     }
     
-    function addNewMod() {
-        let name = document.getElementById("newModName").value;
-        let price = document.getElementById("newModPrice").value;
-        let desc = document.getElementById("newModDesc").value;
-        if(!name || !price) { showToast("الاسم والسعر مطلوبان", "error"); return; }
-        
-        let fileName = selectedFile ? selectedFile.name : "بدون ملف";
-        let newId = Date.now();
-        
-        mods.push({ id: newId, name, price, desc: desc || "بدون وصف", fileName });
-        
-        // حفظ محتوى الملف إذا وجد
-        if(selectedFileData) {
-            uploadedFiles[newId] = selectedFileData;
+    async function deleteMod(idx) {
+        if(confirm("حذف هذا المود؟")) {
+            let n = mods[idx].name, id = mods[idx].id;
+            try { await deleteFileFromDB(id); } catch(e) {}
+            mods.splice(idx,1);
+            saveAll();
+            displayMods();
+            displayAdminMods();
+            showToast("تم الحذف","success");
+            addLog(`حذف مود: ${n}`,"info");
         }
-        
+    }
+    
+    function toggleBan(idx) {
+        if(!currentUser?.isAdmin) return;
+        let u = users[idx];
+        if(confirm(`${u.banned ? 'فك حظر' : 'حظر'} ${u.name}؟`)) {
+            u.banned = !u.banned;
+            saveAll();
+            displayUsers();
+            showToast(`تم ${u.banned ? 'حظر' : 'فك حظر'} المستخدم`,"success");
+            addLog(`${u.banned ? 'حظر' : 'فك حظر'}: ${u.email}`,"info");
+        }
+    }
+    
+    function addIdea() {
+        let t = document.getElementById("ideaTitle").value;
+        let d = document.getElementById("ideaDesc").value;
+        if(!t) { showToast("أدخل عنوان الفكرة","error"); return; }
+        ideas.push(`${t}: ${d||"بدون تفاصيل"}`);
         saveAll();
-        displayMods();
-        displayAdminMods();
-        
-        document.getElementById("newModName").value = "";
-        document.getElementById("newModPrice").value = "";
-        document.getElementById("newModDesc").value = "";
-        document.getElementById("modFile").value = "";
-        document.getElementById("fileNameDisplay").innerHTML = "";
-        selectedFile = null;
-        selectedFileData = null;
-        
-        showToast("✅ تم إضافة المود!", "success");
-        addLog(`إضافة مود: ${name}`, "info");
+        displayIdeas();
+        document.getElementById("ideaTitle").value = "";
+        document.getElementById("ideaDesc").value = "";
+        showToast("✅ تم إرسال الفكرة!","success");
     }
     
-    function updateFileName() {
-        let file = document.getElementById("modFile").files[0];
-        if(file) {
-            selectedFile = file;
-            document.getElementById("fileNameDisplay").innerHTML = `📎 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
-            
-            // قراءة محتوى الملف وحفظه
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedFileData = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            selectedFile = null;
-            selectedFileData = null;
-            document.getElementById("fileNameDisplay").innerHTML = "";
-        }
+    function sendSupport() {
+        let m = document.getElementById("supportMsg").value;
+        if(!m) { showToast("اكتب رسالتك","error"); return; }
+        showToast("✅ تم إرسال التذكرة","success");
+        addLog(`تذكرة دعم: ${m.substring(0,50)}...`,"info");
+        document.getElementById("supportMsg").value = "";
     }
     
-    function deleteMod(idx) { 
-        if(confirm("حذف هذا المود؟")) { 
-            let n = mods[idx].name; 
-            let id = mods[idx].id;
-            mods.splice(idx,1); 
-            delete uploadedFiles[id];
-            saveAll(); 
-            displayMods(); 
-            displayAdminMods(); 
-            showToast("تم الحذف","success"); 
-            addLog(`حذف مود: ${n}`,"info"); 
-        } 
-    }
-    
-    function toggleBan(idx) { 
-        if(!currentUser?.isAdmin) return; 
-        let u = users[idx]; 
-        if(confirm(`${u.banned ? 'فك حظر' : 'حظر'} ${u.name}؟`)) { 
-            u.banned = !u.banned; 
-            saveAll(); 
-            displayUsers(); 
-            showToast(`تم ${u.banned ? 'حظر' : 'فك حظر'} المستخدم`,"success"); 
-            addLog(`${u.banned ? 'حظر' : 'فك حظر'}: ${u.email}`,"info"); 
-        } 
-    }
-    
-    function addIdea() { 
-        let t = document.getElementById("ideaTitle").value; 
-        let d = document.getElementById("ideaDesc").value; 
-        if(!t) { showToast("أدخل عنوان الفكرة","error"); return; } 
-        ideas.push(`${t}: ${d||"بدون تفاصيل"}`); 
-        saveAll(); 
-        displayIdeas(); 
-        document.getElementById("ideaTitle").value = ""; 
-        document.getElementById("ideaDesc").value = ""; 
-        showToast("✅ تم إرسال الفكرة!","success"); 
-    }
-    
-    function sendSupport() { 
-        let m = document.getElementById("supportMsg").value; 
-        if(!m) { showToast("اكتب رسالتك","error"); return; } 
-        showToast("✅ تم إرسال التذكرة","success"); 
-        addLog(`تذكرة دعم: ${m.substring(0,50)}...`,"info"); 
-        document.getElementById("supportMsg").value = ""; 
-    }
-    
-    function showSection(s) { 
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
-        document.getElementById(s + 'Section').classList.add('active'); 
+    function showSection(s) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(s + 'Section').classList.add('active');
     }
     
     function doLogin() {
@@ -905,7 +940,6 @@
         
         if(user && !user.banned) {
             currentUser = user;
-            
             if(remember) {
                 localStorage.setItem("sarnanto_saved_email", email);
                 localStorage.setItem("sarnanto_saved_pass", pass);
@@ -913,15 +947,13 @@
                 localStorage.removeItem("sarnanto_saved_email");
                 localStorage.removeItem("sarnanto_saved_pass");
             }
-            
             document.getElementById("loginOverlay").style.display = "none";
-            if(user.isAdmin) { 
-                document.getElementById("adminNav").style.display = "inline-block"; 
-                document.getElementById("statsBar").style.display = "flex"; 
-                displayAdminMods(); 
-                displayUsers(); 
+            if(user.isAdmin) {
+                document.getElementById("adminNav").style.display = "inline-block";
+                document.getElementById("statsBar").style.display = "flex";
+                displayAdminMods();
+                displayUsers();
                 renderLogs();
-                updateAdminModeUI();
             }
             visitors++; saveAll();
             document.getElementById("userCount").innerText = users.length;
@@ -929,28 +961,10 @@
             showToast(`مرحباً ${user.name}`, "success");
             addLog(`تسجيل دخول: ${user.email}`, "success");
             showSection('shop');
-        } else if(user?.banned) { 
+        } else if(user?.banned) {
             document.getElementById("loginError").innerText = "⛔ هذا الحساب محظور";
-        } else { 
-            document.getElementById("loginError").innerText = "❌ بريد أو كلمة مرور خاطئة"; 
-        }
-    }
-    
-    function updateAdminModeUI() {
-        const paidBtn = document.getElementById("paidModeBtn");
-        const freeBtn = document.getElementById("freeModeBtn");
-        const modeStatus = document.getElementById("modeStatus");
-        
-        if(storeMode === "paid") {
-            paidBtn.classList.add("active");
-            freeBtn.classList.remove("active");
-            freeBtn.classList.remove("free-active");
-            modeStatus.innerHTML = "🔴 الوضع الحالي: <strong style='color:#ff5555'>المودات مدفوعة</strong> - سيتم عرض أزرار PayPal";
         } else {
-            paidBtn.classList.remove("active");
-            freeBtn.classList.add("active");
-            freeBtn.classList.add("free-active");
-            modeStatus.innerHTML = "🟢 الوضع الحالي: <strong style='color:#00ff88'>المودات مجانية</strong> - سيتم عرض أزرار تحميل مباشر";
+            document.getElementById("loginError").innerText = "❌ بريد أو كلمة مرور خاطئة";
         }
     }
     
@@ -977,23 +991,28 @@
         showSection('shop');
     }
     
-    loadAll();
-    displayMods();
-    displayIdeas();
-    document.getElementById("userCount").innerText = users.length;
-    document.getElementById("visitorCount").innerText = visitors;
-    
-    let savedEmail = localStorage.getItem("sarnanto_saved_email");
-    let savedPass = localStorage.getItem("sarnanto_saved_pass");
-    if(savedEmail && savedPass) {
-        let savedUser = users.find(u => u.email === savedEmail && u.password === savedPass);
-        if(savedUser && !savedUser.banned) {
-            document.getElementById("loginEmail").value = savedEmail;
-            document.getElementById("loginPass").value = savedPass;
-            document.getElementById("rememberMe").checked = true;
-            setTimeout(() => doLogin(), 100);
+    async function init() {
+        await openDatabase();
+        loadAll();
+        displayMods();
+        displayIdeas();
+        document.getElementById("userCount").innerText = users.length;
+        document.getElementById("visitorCount").innerText = visitors;
+        
+        let savedEmail = localStorage.getItem("sarnanto_saved_email");
+        let savedPass = localStorage.getItem("sarnanto_saved_pass");
+        if(savedEmail && savedPass) {
+            let savedUser = users.find(u => u.email === savedEmail && u.password === savedPass);
+            if(savedUser && !savedUser.banned) {
+                document.getElementById("loginEmail").value = savedEmail;
+                document.getElementById("loginPass").value = savedPass;
+                document.getElementById("rememberMe").checked = true;
+                setTimeout(() => doLogin(), 100);
+            }
         }
     }
+    
+    init();
 </script>
 </body>
 </html>
