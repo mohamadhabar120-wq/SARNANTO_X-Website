@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sarnanto-x-website.vercel.app/sitemap.xml

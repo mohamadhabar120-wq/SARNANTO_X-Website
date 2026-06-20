@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Administrator",
+      "email": "mohamadhabar120@gmail.com",
+      "password": "$2a$10$pVk7sTqW6pZ9tM2nO4rQ1uY3vW5xY7zA9B1C2D3E4F5G6H7I8J0K1L2",
+      "isAdmin": true,
+      "banned": false,
+      "createdAt": "2025-06-17T00:00:00.000Z"
+    }
+  ],
+  "mods": [],
+  "ideas": [],
+  "logs": [],
+  "visitors": 128,
+  "totalDownloads": 0
+}
