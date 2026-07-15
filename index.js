@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -48,6 +49,53 @@ function generateToken() {
     return 'token_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
+function generateId() {
+    return Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+// ========== REGISTER (New User) ==========
+app.post('/api/register', (req, res) => {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+        return res.status(400).json({ error: "❌ جميع الحقول مطلوبة" });
+    }
+
+    if (password.length < 6) {
+        return res.status(400).json({ error: "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل" });
+    }
+
+    const existingUser = db.users.find(u => u.email === email);
+    if (existingUser) {
+        return res.status(400).json({ error: "❌ البريد الإلكتروني مستخدم بالفعل" });
+    }
+
+    const newUser = {
+        id: db.users.length + 1,
+        name: name,
+        email: email,
+        password: password,
+        isAdmin: false,
+        banned: false,
+        createdAt: new Date().toISOString()
+    };
+
+    db.users.push(newUser);
+    db.visitors++;
+    saveDB(db);
+
+    res.json({
+        success: true,
+        token: generateToken(),
+        user: {
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email,
+            isAdmin: newUser.isAdmin
+        }
+    });
+});
+
 // ========== LOGIN ==========
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
@@ -84,18 +132,22 @@ app.get('/api/mods', (req, res) => {
 });
 
 app.post('/api/mods', (req, res) => {
-    const { name, price, desc, isFree } = req.body;
+    const { name, price, desc, isFree, category, version, mcVersion } = req.body;
     const newMod = {
-        id: Date.now(),
+        id: generateId(),
         name: name || 'مود بدون اسم',
         price: parseFloat(price) || 0,
         desc: desc || 'بدون وصف',
         isFree: isFree === 'true' || isFree === true,
+        category: category || 'عام',
+        version: version || '1.0',
+        mcVersion: mcVersion || '1.20+',
         fileName: 'mod.zip',
         downloads: 0,
         ratings: [],
         averageRating: 0,
         comments: [],
+        likes: 0,
         createdAt: new Date().toISOString()
     };
     db.mods.push(newMod);
@@ -104,7 +156,7 @@ app.post('/api/mods', (req, res) => {
 });
 
 app.delete('/api/mods/:id', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     db.mods = db.mods.filter(m => m.id !== id);
     saveDB(db);
     res.json({ success: true });
@@ -112,7 +164,7 @@ app.delete('/api/mods/:id', (req, res) => {
 
 // ========== RATE ==========
 app.post('/api/mods/:id/rate', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const { rating } = req.body;
     const mod = db.mods.find(m => m.id === id);
     if (!mod) return res.status(404).json({ error: "المود غير موجود" });
@@ -124,15 +176,26 @@ app.post('/api/mods/:id/rate', (req, res) => {
     res.json({ success: true, averageRating: mod.averageRating });
 });
 
+// ========== LIKE ==========
+app.post('/api/mods/:id/like', (req, res) => {
+    const id = req.params.id;
+    const mod = db.mods.find(m => m.id === id);
+    if (!mod) return res.status(404).json({ error: "المود غير موجود" });
+
+    mod.likes = (mod.likes || 0) + 1;
+    saveDB(db);
+    res.json({ success: true, likes: mod.likes });
+});
+
 // ========== COMMENTS ==========
 app.post('/api/mods/:id/comment', (req, res) => {
-    const id = parseInt(req.params.id);
-    const { text } = req.body;
+    const id = req.params.id;
+    const { text, userName } = req.body;
     const mod = db.mods.find(m => m.id === id);
     if (!mod) return res.status(404).json({ error: "المود غير موجود" });
 
     mod.comments.push({
-        userName: "مستخدم",
+        userName: userName || "مستخدم",
         text: text,
         timestamp: new Date().toISOString()
     });
@@ -142,7 +205,7 @@ app.post('/api/mods/:id/comment', (req, res) => {
 
 // ========== DOWNLOAD ==========
 app.get('/api/download-free/:id', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const mod = db.mods.find(m => m.id === id);
     if (!mod) return res.status(404).json({ error: "المود غير موجود" });
 
@@ -162,15 +225,28 @@ app.get('/api/ideas', (req, res) => {
 });
 
 app.post('/api/ideas', (req, res) => {
-    const { title, description } = req.body;
+    const { title, description, category } = req.body;
     db.ideas.push({
-        id: Date.now(),
+        id: generateId(),
         title: title || 'فكرة بدون عنوان',
         description: description || '',
+        category: category || 'عام',
+        votes: 0,
+        status: 'pending',
         createdAt: new Date().toISOString()
     });
     saveDB(db);
     res.json({ success: true });
+});
+
+app.post('/api/ideas/:id/vote', (req, res) => {
+    const id = req.params.id;
+    const idea = db.ideas.find(i => i.id === id);
+    if (!idea) return res.status(404).json({ error: "الفكرة غير موجودة" });
+
+    idea.votes = (idea.votes || 0) + 1;
+    saveDB(db);
+    res.json({ success: true, votes: idea.votes });
 });
 
 // ========== USERS ==========
@@ -230,7 +306,6 @@ app.use((err, req, res, next) => {
 });
 
 // ========== START ==========
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });
