@@ -2,30 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const multer = require('multer');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
-
-// ========== Multer Config for File Uploads ==========
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, 'upload');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
-        cb(null, uniqueName);
-    }
-});
-const upload = multer({ storage: storage });
 
 // ========== Database ==========
 const DB_FILE = path.join(__dirname, 'database.json');
@@ -62,7 +44,6 @@ function saveDB(data) {
 
 let db = loadDB();
 
-// ========== Helpers ==========
 function generateToken() {
     return 'token_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
@@ -102,7 +83,7 @@ app.get('/api/mods', (req, res) => {
     res.json({ mods: db.mods });
 });
 
-app.post('/api/mods', upload.single('file'), (req, res) => {
+app.post('/api/mods', (req, res) => {
     const { name, price, desc, isFree } = req.body;
     const newMod = {
         id: Date.now(),
@@ -110,8 +91,7 @@ app.post('/api/mods', upload.single('file'), (req, res) => {
         price: parseFloat(price) || 0,
         desc: desc || 'بدون وصف',
         isFree: isFree === 'true' || isFree === true,
-        fileName: req.file ? req.file.filename : 'mod.zip',
-        filePath: req.file ? '/upload/' + req.file.filename : null,
+        fileName: 'mod.zip',
         downloads: 0,
         ratings: [],
         averageRating: 0,
@@ -125,11 +105,6 @@ app.post('/api/mods', upload.single('file'), (req, res) => {
 
 app.delete('/api/mods/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    const mod = db.mods.find(m => m.id === id);
-    if (mod && mod.filePath) {
-        const filePath = path.join(__dirname, mod.filePath);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-    }
     db.mods = db.mods.filter(m => m.id !== id);
     saveDB(db);
     res.json({ success: true });
@@ -178,12 +153,7 @@ app.get('/api/download-free/:id', (req, res) => {
     mod.downloads++;
     db.totalDownloads++;
     saveDB(db);
-
-    if (mod.filePath && fs.existsSync(path.join(__dirname, mod.filePath))) {
-        res.download(path.join(__dirname, mod.filePath), mod.fileName);
-    } else {
-        res.json({ success: true, message: "تم التحميل" });
-    }
+    res.json({ success: true, message: "تم التحميل" });
 });
 
 // ========== IDEAS ==========
@@ -237,7 +207,7 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-// ========== JSONBin SYNC ==========
+// ========== SYNC ==========
 app.get('/api/sync', (req, res) => {
     res.json(db);
 });
@@ -253,7 +223,14 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// ========== ERROR HANDLING ==========
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
+
 // ========== START ==========
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });
