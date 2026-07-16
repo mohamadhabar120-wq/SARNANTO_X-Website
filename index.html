@@ -102,7 +102,6 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
 @media(max-width:768px){.navbar{gap:5px;padding:8px}.nav-link{padding:6px 12px;font-size:12px}.mods-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
 <div class="toast-container" id="toastContainer"></div>
@@ -725,17 +724,7 @@ async function downloadMod(modId) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
         const response = await fetch(`${API_BASE}/api/download-free/${modId}`, { headers: { 'Authorization': token } });
-        if (response.ok) { 
-            const data = await response.json();
-            showToast("📥 بدأ التحميل"); 
-            if (data.downloadUrl) {
-                const a = document.createElement('a');
-                a.href = data.downloadUrl;
-                a.download = data.fileName || 'mod.jar';
-                a.click();
-            }
-            loadMods(); 
-        }
+        if (response.ok) { showToast("📥 بدأ التحميل"); loadMods(); }
         else { showToast("❌ فشل التحميل", 'error'); }
     } catch(e) { showToast("❌ فشل التحميل", 'error'); }
 }
@@ -776,17 +765,7 @@ async function downloadRP(rpId) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
         const response = await fetch(`${API_BASE}/api/download-rp-free/${rpId}`, { headers: { 'Authorization': token } });
-        if (response.ok) { 
-            const data = await response.json();
-            showToast("📥 بدأ التحميل"); 
-            if (data.downloadUrl) {
-                const a = document.createElement('a');
-                a.href = data.downloadUrl;
-                a.download = data.fileName || 'resourcepack.zip';
-                a.click();
-            }
-            loadRPs(); 
-        }
+        if (response.ok) { showToast("📥 بدأ التحميل"); loadRPs(); }
         else { showToast("❌ فشل التحميل", 'error'); }
     } catch(e) { showToast("❌ فشل التحميل", 'error'); }
 }
@@ -830,45 +809,31 @@ function toggleRPPrice() {
     document.getElementById('rpPriceField').style.display = isPaid ? 'block' : 'none';
 }
 
-// ========== Base64 Upload for Vercel Blob ==========
-function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
 async function uploadFileWithProgress(file, endpoint, progressId) {
+    const formData = new FormData();
+    formData.append('file', file);
     const progressBar = document.getElementById(progressId);
     const progressFill = document.getElementById(progressId + 'Fill');
-    if (progressBar) progressBar.style.display = 'block';
-    if (progressFill) progressFill.style.width = '10%';
+    progressBar.style.display = 'block';
+    progressFill.style.width = '0%';
 
-    try {
-        const base64Data = await fileToBase64(file);
-        if (progressFill) progressFill.style.width = '50%';
-
-        const response = await fetch(`${API_BASE}${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                fileData: base64Data,
-                fileName: file.name,
-                mimeType: file.type || 'application/octet-stream'
-            })
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const percent = (e.loaded / e.total) * 100;
+                progressFill.style.width = percent + '%';
+            }
         });
-
-        if (progressFill) progressFill.style.width = '100%';
-        setTimeout(() => { if (progressBar) progressBar.style.display = 'none'; }, 500);
-
-        if (!response.ok) throw new Error('Upload failed');
-        return await response.json();
-    } catch (e) {
-        if (progressBar) progressBar.style.display = 'none';
-        throw e;
-    }
+        xhr.addEventListener('load', () => {
+            progressBar.style.display = 'none';
+            if (xhr.status === 200) resolve(JSON.parse(xhr.responseText));
+            else reject(new Error('Upload failed'));
+        });
+        xhr.addEventListener('error', () => { progressBar.style.display = 'none'; reject(new Error('Upload error')); });
+        xhr.open('POST', `${API_BASE}${endpoint}`);
+        xhr.send(formData);
+    });
 }
 
 async function publishMod() {
@@ -888,8 +853,6 @@ async function publishMod() {
         try {
             const result = await uploadFileWithProgress(selectedModFile, '/api/upload/mod', 'modUploadProgress');
             fileName = result.fileName;
-            // Store blob URL for download
-            window.lastModFileUrl = result.url;
             showToast("📁 تم رفع الملف");
         } catch(e) { showToast("❌ فشل رفع الملف", 'error'); return; }
     }
@@ -940,8 +903,6 @@ async function publishRP() {
         try {
             const result = await uploadFileWithProgress(selectedRPFile, '/api/upload/rp', 'rpUploadProgress');
             fileName = result.fileName;
-            // Store blob URL for download
-            window.lastRPFileUrl = result.url;
             showToast("📁 تم رفع الملف");
         } catch(e) { showToast("❌ فشل رفع الملف", 'error'); return; }
     }
