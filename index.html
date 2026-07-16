@@ -1,759 +1,358 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SARNANTO_X - الموقع الرسمي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: #0a0a0a; 
-            color: #fff; 
-            font-family: 'Tajawal', sans-serif;
-            min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 15px; }
-
-        .header {
-            background: linear-gradient(135deg, #1a0000, #0a0000);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 3px solid #ff3333;
-            border-radius: 0 0 25px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .logo-img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #ff3333; object-fit: cover; }
-        .logo-text h1 { color: #ff3333; font-size: 2rem; }
-        .logo-text p { color: #ff8888; font-size: 0.9rem; }
-
-        .navbar {
-            background: #111;
-            padding: 12px;
-            border-radius: 50px;
-            margin: 20px 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            border: 1px solid rgba(255,51,51,0.2);
-        }
-        .nav-link {
-            background: transparent;
-            border: 1px solid rgba(255,51,51,0.3);
-            color: #ff8888;
-            padding: 8px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .nav-link:hover, .nav-link.active { 
-            background: #ff3333; 
-            color: #000; 
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .card {
-            background: #111;
-            border: 1px solid rgba(255,51,51,0.2);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .card:hover { 
-            transform: translateY(-5px); 
-            border-color: #ff3333;
-            box-shadow: 0 10px 30px rgba(255,51,51,0.15);
-        }
-        .card-icon { font-size: 2.5rem; margin-bottom: 10px; }
-        .card h3 { color: #ff3333; }
-        .card p { color: #888; font-size: 0.85rem; }
-
-        .section {
-            display: none;
-            background: #111;
-            border: 1px solid rgba(255,51,51,0.15);
-            border-radius: 20px;
-            padding: 25px;
-            margin-top: 20px;
-            animation: fadeIn 0.4s ease;
-        }
-        .section.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .mods-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
-        }
-        .mod-card {
-            background: #1a1a1a;
-            border: 1px solid rgba(255,51,51,0.15);
-            border-radius: 20px;
-            padding: 25px;
-            transition: all 0.3s;
-            position: relative;
-        }
-        .mod-card:hover { 
-            transform: translateY(-5px); 
-            border-color: #ff3333;
-        }
-        .mod-badge {
-            position: absolute;
-            top: 15px; left: 15px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        .badge-free { background: #00ff88; color: #000; }
-        .badge-paid { background: #ff3333; color: #fff; }
-
-        .btn {
-            background: #2a0000;
-            border: 2px solid #ff3333;
-            color: #ff8888;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn:hover {
-            background: #ff3333;
-            color: #000;
-            transform: translateY(-2px);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #ff3333, #cc0000);
-            color: #fff;
-            border: none;
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #00aa00, #008800);
-            color: #fff;
-            border: none;
-        }
-
-        input, textarea, select {
-            background: #1a1a1a;
-            border: 1px solid rgba(255,51,51,0.2);
-            color: #fff;
-            padding: 12px 18px;
-            border-radius: 12px;
-            width: 100%;
-            margin: 8px 0;
-            font-family: inherit;
-        }
-        input:focus, textarea:focus, select:focus {
-            border-color: #ff3333;
-            outline: none;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; color: #ff8888; margin-bottom: 5px; }
-
-        .comment-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        .comment-list { max-height: 200px; overflow-y: auto; margin: 10px 0; }
-        .comment-item {
-            background: #0a0a0a;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 12px;
-            border-right: 3px solid #ff3333;
-        }
-
-        .rating-stars { display: flex; gap: 5px; justify-content: center; margin: 10px 0; }
-        .star { cursor: pointer; font-size: 28px; transition: 0.2s; }
-        .star:hover { transform: scale(1.3); }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-        .stat-card {
-            background: #0a0a0a;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,51,51,0.1);
-            text-align: center;
-        }
-        .stat-value { font-size: 2rem; font-weight: 900; color: #ff3333; }
-        .stat-label { color: #888; font-size: 0.85rem; }
-
-        .users-list {
-            background: #0a0a0a;
-            border-radius: 12px;
-            padding: 15px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #1a1a1a;
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 10px;
-        }
-        .user-avatar {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, #ff3333, #cc0000);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .ideas-list { display: flex; flex-direction: column; gap: 15px; }
-        .idea-card {
-            background: #1a1a1a;
-            border: 1px solid rgba(255,51,51,0.1);
-            border-radius: 16px;
-            padding: 20px;
-        }
-        .idea-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        .status-pending { background: #ffaa00; color: #000; }
-        .status-approved { background: #00ff88; color: #000; }
-
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast {
-            background: #111;
-            color: #fff;
-            padding: 15px 25px;
-            border-radius: 12px;
-            border: 1px solid #ff3333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: toastSlide 0.4s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 300px;
-        }
-        @keyframes toastSlide {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-        .login-box {
-            background: #111;
-            border: 2px solid #ff3333;
-            border-radius: 25px;
-            padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .login-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .login-tab {
-            flex: 1;
-            padding: 10px;
-            background: transparent;
-            border: 1px solid rgba(255,51,51,0.2);
-            color: #888;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .login-tab.active {
-            background: #ff3333;
-            color: #000;
-            border-color: #ff3333;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 40px;
-            border-top: 1px solid rgba(255,51,51,0.1);
-        }
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .social-link {
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .social-link:hover { transform: translateY(-5px) scale(1.1); }
-        .youtube-link { background: #ff0000; color: #fff; }
-        .discord-link { background: #5865F2; color: #fff; }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
-        .empty-state-icon { font-size: 4rem; margin-bottom: 20px; }
-
-        .sync-status {
-            background: #1a0000;
-            padding: 12px 20px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            border: 1px solid rgba(0,255,136,0.2);
-            color: #00ff88;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px; height: 20px;
-            border: 2px solid rgba(255,51,51,0.2);
-            border-top-color: #ff3333;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        @media (max-width: 768px) {
-            .navbar { gap: 5px; padding: 8px; }
-            .nav-link { padding: 6px 12px; font-size: 12px; }
-            .mods-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SARNANTO_X - الموقع الرسمي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Tajawal',sans-serif;min-height:100vh}
+.container{max-width:1400px;margin:0 auto;padding:15px}
+.header{background:linear-gradient(135deg,#1a0000,#0a0000);padding:20px;text-align:center;border-bottom:3px solid #ff3333;border-radius:0 0 25px 25px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.logo-img{width:70px;height:70px;border-radius:50%;border:3px solid #ff3333;object-fit:cover}
+.logo-text h1{color:#ff3333;font-size:2rem}
+.logo-text p{color:#ff8888;font-size:0.9rem}
+.navbar{background:#111;padding:12px;border-radius:50px;margin:20px 0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;border:1px solid rgba(255,51,51,0.2)}
+.nav-link{background:transparent;border:1px solid rgba(255,51,51,0.3);color:#ff8888;padding:8px 18px;border-radius:30px;cursor:pointer;font-weight:700;font-size:14px;transition:all 0.3s}
+.nav-link:hover,.nav-link.active{background:#ff3333;color:#000}
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin-bottom:25px}
+.card{background:#111;border:1px solid rgba(255,51,51,0.2);border-radius:20px;padding:20px;text-align:center;cursor:pointer;transition:all 0.3s}
+.card:hover{transform:translateY(-5px);border-color:#ff3333;box-shadow:0 10px 30px rgba(255,51,51,0.15)}
+.card-icon{font-size:2.5rem;margin-bottom:10px}
+.card h3{color:#ff3333}
+.card p{color:#888;font-size:0.85rem}
+.section{display:none;background:#111;border:1px solid rgba(255,51,51,0.15);border-radius:20px;padding:25px;margin-top:20px;animation:fadeIn 0.4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;margin-top:15px}
+.mod-card{background:#1a1a1a;border:1px solid rgba(255,51,51,0.15);border-radius:20px;padding:0;transition:all 0.3s;position:relative;overflow:hidden}
+.mod-card:hover{transform:translateY(-5px);border-color:#ff3333}
+.mod-image{width:100%;height:180px;object-fit:cover;border-radius:20px 20px 0 0;display:block;cursor:pointer}
+.mod-image-placeholder{width:100%;height:180px;background:linear-gradient(135deg,#2a0000,#1a0000);display:flex;align-items:center;justify-content:center;font-size:3rem;border-radius:20px 20px 0 0}
+.mod-card-content{padding:20px}
+.mod-badge{position:absolute;top:15px;left:15px;padding:5px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;z-index:2}
+.badge-free{background:#00ff88;color:#000}
+.badge-paid{background:#ff3333;color:#fff}
+.badge-rp{background:#3388ff;color:#fff}
+.btn{background:#2a0000;border:2px solid #ff3333;color:#ff8888;padding:10px 20px;border-radius:30px;cursor:pointer;font-weight:700;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px}
+.btn:hover{background:#ff3333;color:#000;transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,#ff3333,#cc0000);color:#fff;border:none}
+.btn-success{background:linear-gradient(135deg,#00aa00,#008800);color:#fff;border:none}
+.btn-blue{background:linear-gradient(135deg,#3366ff,#2244cc);color:#fff;border:none}
+input,textarea,select{background:#1a1a1a;border:1px solid rgba(255,51,51,0.2);color:#fff;padding:12px 18px;border-radius:12px;width:100%;margin:8px 0;font-family:inherit}
+input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;color:#ff8888;margin-bottom:5px}
+.file-upload{background:#1a1a1a;border:2px dashed rgba(255,51,51,0.3);border-radius:16px;padding:30px;text-align:center;cursor:pointer;transition:all 0.3s;margin:10px 0}
+.file-upload:hover{border-color:#ff3333;background:#1f0000}
+.file-upload.dragover{border-color:#00ff88;background:#001a0a}
+.file-upload input{display:none}
+.file-upload-icon{font-size:2.5rem;margin-bottom:10px}
+.file-upload-text{color:#888}
+.file-upload-filename{color:#00ff88;margin-top:10px;font-weight:700}
+.image-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:10px}
+.image-preview{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:2px solid rgba(255,51,51,0.2);cursor:pointer}
+.comment-section{margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05)}
+.comment-list{max-height:200px;overflow-y:auto;margin:10px 0}
+.comment-item{background:#0a0a0a;padding:12px;margin:8px 0;border-radius:12px;border-right:3px solid #ff3333}
+.rating-stars{display:flex;gap:5px;justify-content:center;margin:10px 0}
+.star{cursor:pointer;font-size:28px;transition:0.2s}
+.star:hover{transform:scale(1.3)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin:15px 0}
+.stat-card{background:#0a0a0a;padding:15px;border-radius:12px;border:1px solid rgba(255,51,51,0.1);text-align:center}
+.stat-value{font-size:2rem;font-weight:900;color:#ff3333}
+.stat-label{color:#888;font-size:0.85rem}
+.users-list{background:#0a0a0a;border-radius:12px;padding:15px;max-height:300px;overflow-y:auto}
+.user-item{display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;padding:12px 15px;margin-bottom:8px;border-radius:10px}
+.user-avatar{width:40px;height:40px;background:linear-gradient(135deg,#ff3333,#cc0000);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+.ideas-list{display:flex;flex-direction:column;gap:15px}
+.idea-card{background:#1a1a1a;border:1px solid rgba(255,51,51,0.1);border-radius:16px;padding:20px}
+.idea-status{padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700}
+.status-pending{background:#ffaa00;color:#000}
+.status-approved{background:#00ff88;color:#000}
+.toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:10px}
+.toast{background:#111;color:#fff;padding:15px 25px;border-radius:12px;border:1px solid #ff3333;box-shadow:0 10px 30px rgba(0,0,0,0.5);animation:toastSlide 0.4s ease;display:flex;align-items:center;gap:10px;min-width:300px}
+@keyframes toastSlide{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:flex;justify-content:center;align-items:center;z-index:10000}
+.login-box{background:#111;border:2px solid #ff3333;border-radius:25px;padding:40px;width:90%;max-width:400px;text-align:center}
+.login-tabs{display:flex;gap:10px;margin-bottom:25px}
+.login-tab{flex:1;padding:10px;background:transparent;border:1px solid rgba(255,51,51,0.2);color:#888;border-radius:10px;cursor:pointer;transition:all 0.3s}
+.login-tab.active{background:#ff3333;color:#000;border-color:#ff3333}
+.footer{text-align:center;padding:30px 20px;margin-top:40px;border-top:1px solid rgba(255,51,51,0.1)}
+.social-links{display:flex;justify-content:center;gap:15px;margin:20px 0}
+.social-link{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;text-decoration:none;transition:all 0.3s}
+.social-link:hover{transform:translateY(-5px) scale(1.1)}
+.youtube-link{background:#ff0000;color:#fff}
+.discord-link{background:#5865F2;color:#fff}
+.empty-state{text-align:center;padding:60px 20px;color:#888}
+.empty-state-icon{font-size:4rem;margin-bottom:20px}
+.sync-status{background:#1a0000;padding:12px 20px;border-radius:12px;text-align:center;font-size:0.85rem;margin-bottom:20px;border:1px solid rgba(0,255,136,0.2);color:#00ff88}
+.loading-spinner{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,51,51,0.2);border-top-color:#ff3333;border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tab-buttons{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.tab-btn{padding:10px 25px;border-radius:30px;border:1px solid rgba(255,51,51,0.3);background:transparent;color:#ff8888;cursor:pointer;font-weight:700;font-family:inherit;transition:all 0.3s}
+.tab-btn:hover,.tab-btn.active{background:#ff3333;color:#000;border-color:#ff3333}
+.progress-bar{width:100%;height:6px;background:#1a1a1a;border-radius:3px;margin-top:10px;overflow:hidden;display:none}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#ff3333,#ff8888);border-radius:3px;transition:width 0.3s;width:0%}
+.gallery-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:none;justify-content:center;align-items:center;z-index:20000;padding:20px}
+.gallery-modal.active{display:flex}
+.gallery-modal img{max-width:90%;max-height:80vh;border-radius:16px;border:2px solid #ff3333}
+.gallery-close{position:absolute;top:20px;right:20px;font-size:2rem;cursor:pointer;background:#ff3333;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;color:#fff}
+@media(max-width:768px){.navbar{gap:5px;padding:8px}.nav-link{padding:6px 12px;font-size:12px}.mods-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
-
 <div class="toast-container" id="toastContainer"></div>
-
+<div class="gallery-modal" id="galleryModal" onclick="closeGallery()"><button class="gallery-close" onclick="closeGallery();event.stopPropagation();">✕</button><img id="galleryImage" src="" alt=""></div>
 <div class="container">
-    <!-- Header -->
-    <div class="header">
-        <img src="https://yt3.googleusercontent.com/tiGgKQ9ia9zvMYZyltmPY_oSKQG6bx1oQWmnqPlw4SClnAzBWdhSzth_quFYhfOTAHQgIVHfLg=s160-c-k-c0x00ffffff-no-rj" 
-             alt="SARNANTO_X" class="logo-img" onerror="this.style.display='none'">
-        <div class="logo-text">
-            <h1>🔥 SARNANTO_X</h1>
-            <p>أفضل منصة لتحميل مودات ماين كرافت</p>
-        </div>
-    </div>
-
-    <!-- Navbar -->
-    <div class="navbar">
-        <div class="nav-link active" onclick="showSection('shop')" data-section="shop">🛒 المتجر</div>
-        <div class="nav-link" onclick="showSection('support')" data-section="support">💬 الدعم</div>
-        <div class="nav-link" onclick="showSection('ideas')" data-section="ideas">💡 الأفكار</div>
-        <div class="nav-link" onclick="showSection('donate')" data-section="donate">💰 التبرع</div>
-        <div class="nav-link" id="adminNav" style="display:none;" onclick="showSection('admin')" data-section="admin">👑 الأدمن</div>
-        <div class="nav-link" onclick="logoutUser()">🚪 خروج</div>
-    </div>
-
-    <!-- Sync Status -->
-    <div id="syncStatus" class="sync-status">🔄 جاري الاتصال بالخادم...</div>
-
-    <!-- Dashboard -->
-    <div class="dashboard">
-        <div class="card" onclick="showSection('shop')">
-            <div class="card-icon">🛍️</div>
-            <h3>المتجر</h3>
-            <p>مودات حصرية</p>
-        </div>
-        <div class="card" onclick="showSection('support')">
-            <div class="card-icon">🎧</div>
-            <h3>الدعم</h3>
-            <p>مساعدة فورية</p>
-        </div>
-        <div class="card" onclick="showSection('ideas')">
-            <div class="card-icon">💡</div>
-            <h3>الأفكار</h3>
-            <p>اقترح مودات</p>
-        </div>
-        <div class="card" onclick="showSection('donate')">
-            <div class="card-icon">❤️</div>
-            <h3>التبرع</h3>
-            <p>ادعمنا</p>
-        </div>
-    </div>
-
-    <!-- ===== SHOP ===== -->
-    <div id="shopSection" class="section active">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,51,51,0.1);">
-            <span style="font-size: 1.8rem;">🛒</span>
-            <h2 style="color: #ff3333;">متجر المودات</h2>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-            <input type="text" id="modSearch" placeholder="🔍 ابحث عن مود..." onkeyup="filterMods()" style="flex: 1; min-width: 200px;">
-            <select id="modFilter" onchange="filterMods()" style="width: auto;">
-                <option value="all">الكل</option>
-                <option value="free">🎁 مجاني</option>
-                <option value="paid">💰 مدفوع</option>
-            </select>
-        </div>
-
-        <div id="modsList" class="mods-grid"></div>
-
-        <div id="modsEmpty" class="empty-state" style="display:none;">
-            <div class="empty-state-icon">📭</div>
-            <h3>لا توجد مودات</h3>
-            <p>سيتم إضافة مودات قريباً!</p>
-        </div>
-    </div>
-
-    <!-- ===== SUPPORT ===== -->
-    <div id="supportSection" class="section">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-            <span style="font-size: 1.8rem;">📞</span>
-            <h2 style="color: #ff3333;">مركز الدعم</h2>
-        </div>
-
-        <p style="color: #888; margin-bottom: 20px;">نحن هنا لمساعدتك 24/7</p>
-
-        <div class="form-group">
-            <label>📧 بريدك الإلكتروني</label>
-            <input type="email" id="supportEmail" placeholder="your@email.com">
-        </div>
-
-        <div class="form-group">
-            <label>📝 نوع المشكلة</label>
-            <select id="supportType">
-                <option>مشكلة في التحميل</option>
-                <option>مشكلة في التسجيل</option>
-                <option>طلب مود جديد</option>
-                <option>بلاغ عن خطأ</option>
-                <option>أخرى</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>💬 وصف المشكلة</label>
-            <textarea id="supportMsg" rows="4" placeholder="اكتب مشكلتك بالتفصيل..."></textarea>
-        </div>
-
-        <button class="btn btn-primary" onclick="sendSupport()" style="width: 100%;">📨 إرسال التذكرة</button>
-
-        <div id="supportResult" style="margin-top: 20px;"></div>
-    </div>
-
-    <!-- ===== IDEAS ===== -->
-    <div id="ideasSection" class="section">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-            <span style="font-size: 1.8rem;">💡</span>
-            <h2 style="color: #ff3333;">اقتراح أفكار جديدة</h2>
-        </div>
-
-        <div style="background: #1a1a1a; padding: 20px; border-radius: 16px; margin-bottom: 20px;">
-            <div class="form-group">
-                <label>✨ عنوان الفكرة</label>
-                <input type="text" id="ideaTitle" placeholder="مثال: مود أسلحة جديدة">
-            </div>
-
-            <div class="form-group">
-                <label>📂 التصنيف</label>
-                <select id="ideaCategory">
-                    <option>أسلحة</option>
-                    <option>دروع</option>
-                    <option>بيئة</option>
-                    <option>مخلوقات</option>
-                    <option>تقنية</option>
-                    <option>أخرى</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>📝 شرح الفكرة</label>
-                <textarea id="ideaDesc" rows="3" placeholder="اشرح فكرتك بالتفصيل..."></textarea>
-            </div>
-
-            <button class="btn btn-primary" onclick="addIdea()" style="width: 100%;">✨ إرسال الفكرة</button>
-        </div>
-
-        <h3 style="color: #ff3333; margin-bottom: 15px;">📌 الأفكار المقترحة</h3>
-        <div id="ideasList" class="ideas-list"></div>
-    </div>
-
-    <!-- ===== DONATE ===== -->
-    <div id="donateSection" class="section">
-        <div style="text-align: center; max-width: 500px; margin: 0 auto;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: center;">
-                <span style="font-size: 1.8rem;">❤️</span>
-                <h2 style="color: #ff3333;">ادعم SARNANTO_X</h2>
-            </div>
-
-            <p style="color: #888; margin-bottom: 25px;">تبرعك يساعد في تطوير المزيد من المودات والمحتوى الحصري</p>
-
-            <div style="background: #1a1a1a; padding: 30px; border-radius: 20px; border: 1px solid rgba(255,51,51,0.2);">
-                <p style="color: #ff8888; font-size: 1.3rem; margin-bottom: 20px;">💰 المبلغ الموصى به: $10</p>
-
-                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 20px 0;">
-                    <button class="btn" onclick="donateAmount(5)">$5</button>
-                    <button class="btn btn-primary" onclick="donateAmount(10)">$10</button>
-                    <button class="btn" onclick="donateAmount(20)">$20</button>
-                    <button class="btn" onclick="donateAmount(50)">$50</button>
-                </div>
-
-                <input type="number" id="donateInput" placeholder="أو أدخل مبلغاً مخصصاً" style="max-width: 250px; margin: 15px auto; display: block;">
-
-                <button class="btn btn-primary" onclick="donateCustom()" style="width: 100%; margin-top: 15px;">🔴 تبرع الآن عبر PayPal</button>
-            </div>
-
-            <p style="color: #888; margin-top: 20px; font-size: 0.85rem;">🔒 جميع التبرعات عبر PayPal | آمنة 100%</p>
-        </div>
-    </div>
-
-    <!-- ===== ADMIN ===== -->
-    <div id="adminSection" class="section">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-            <span style="font-size: 1.8rem;">👑</span>
-            <h2 style="color: #ff3333;">لوحة تحكم الأدمن</h2>
-        </div>
-
-        <!-- Stats -->
-        <div style="background: #1a1a1a; border: 1px solid rgba(255,51,51,0.2); border-radius: 16px; padding: 20px; margin: 15px 0;">
-            <h3 style="color: #ff3333; margin-bottom: 15px;">📊 إحصائيات الموقع</h3>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="statUsers">0</div>
-                    <div class="stat-label">👥 المستخدمين</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statMods">0</div>
-                    <div class="stat-label">📦 المودات</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statIdeas">0</div>
-                    <div class="stat-label">💡 الأفكار</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statDownloads">0</div>
-                    <div class="stat-label">📥 التحميلات</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Mod -->
-        <div style="background: #1a1a1a; border: 1px solid rgba(255,51,51,0.2); border-radius: 16px; padding: 20px; margin: 15px 0;">
-            <h3 style="color: #ff3333; margin-bottom: 15px;">➕ نشر مود جديد</h3>
-
-            <div class="form-group">
-                <label>📛 اسم المود</label>
-                <input type="text" id="quickModName" placeholder="اسم المود">
-            </div>
-
-            <div class="form-group">
-                <label>📝 وصف المود</label>
-                <textarea id="quickModDesc" rows="2" placeholder="وصف مختصر..."></textarea>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="form-group">
-                    <label>📂 التصنيف</label>
-                    <select id="quickModCategory">
-                        <option>أسلحة</option>
-                        <option>دروع</option>
-                        <option>بيئة</option>
-                        <option>مخلوقات</option>
-                        <option>تقنية</option>
-                        <option>عام</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>🎮 إصدار MC</label>
-                    <input type="text" id="quickModMCVersion" placeholder="1.20+">
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 15px; margin: 15px 0; justify-content: center;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 20px; border-radius: 30px; background: #0a0a0a; border: 1px solid rgba(255,51,51,0.2);">
-                    <input type="radio" name="modType" value="free" checked onchange="togglePrice()"> 🎁 مجاني
-                </label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 20px; border-radius: 30px; background: #0a0a0a; border: 1px solid rgba(255,51,51,0.2);">
-                    <input type="radio" name="modType" value="paid" onchange="togglePrice()"> 💰 مدفوع
-                </label>
-            </div>
-
-            <div class="form-group" id="priceField" style="display: none;">
-                <label>💵 السعر ($)</label>
-                <input type="number" id="quickModPrice" placeholder="5.00" step="0.01">
-            </div>
-
-            <button class="btn btn-primary" onclick="publishMod()" style="width: 100%;">🚀 نشر المود</button>
-        </div>
-
-        <h3 style="color: #ff3333; margin: 20px 0 15px;">📋 قائمة المودات</h3>
-        <div id="adminModsList"></div>
-
-        <h3 style="color: #ff3333; margin: 20px 0 15px;">🛡️ إدارة المستخدمين</h3>
-        <div class="users-list" id="usersList"></div>
-    </div>
+<div class="header">
+<img src="https://yt3.googleusercontent.com/tiGgKQ9ia9zvMYZyltmPY_oSKQG6bx1oQWmnqPlw4SClnAzBWdhSzth_quFYhfOTAHQgIVHfLg=s160-c-k-c0x00ffffff-no-rj" alt="SARNANTO_X" class="logo-img" onerror="this.style.display='none'">
+<div class="logo-text"><h1>🔥 SARNANTO_X</h1><p>أفضل منصة لتحميل مودات ورسورسباكات ماين كرافت</p></div>
+</div>
+<div class="navbar">
+<div class="nav-link active" onclick="showSection('shop')" data-section="shop">🛒 المتجر</div>
+<div class="nav-link" onclick="showSection('resourcepacks')" data-section="resourcepacks">🎨 الريسورسباكات</div>
+<div class="nav-link" onclick="showSection('support')" data-section="support">💬 الدعم</div>
+<div class="nav-link" onclick="showSection('ideas')" data-section="ideas">💡 الأفكار</div>
+<div class="nav-link" onclick="showSection('donate')" data-section="donate">💰 التبرع</div>
+<div class="nav-link" id="adminNav" style="display:none;" onclick="showSection('admin')" data-section="admin">👑 الأدمن</div>
+<div class="nav-link" onclick="logoutUser()">🚪 خروج</div>
+</div>
+<div id="syncStatus" class="sync-status">🔄 جاري الاتصال بالخادم...</div>
+<div class="dashboard">
+<div class="card" onclick="showSection('shop')"><div class="card-icon">🛍️</div><h3>المتجر</h3><p>مودات حصرية</p></div>
+<div class="card" onclick="showSection('resourcepacks')"><div class="card-icon">🎨</div><h3>الريسورسباكات</h3><p>تصاميم فنية</p></div>
+<div class="card" onclick="showSection('support')"><div class="card-icon">🎧</div><h3>الدعم</h3><p>مساعدة فورية</p></div>
+<div class="card" onclick="showSection('ideas')"><div class="card-icon">💡</div><h3>الأفكار</h3><p>اقترح مودات</p></div>
 </div>
 
-<!-- Footer -->
+<div id="shopSection" class="section active">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid rgba(255,51,51,0.1);"><span style="font-size:1.8rem;">🛒</span><h2 style="color:#ff3333;">متجر المودات</h2></div>
+<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;"><input type="text" id="modSearch" placeholder="🔍 ابحث عن مود..." onkeyup="filterMods()" style="flex:1;min-width:200px"><select id="modFilter" onchange="filterMods()" style="width:auto"><option value="all">الكل</option><option value="free">🎁 مجاني</option><option value="paid">💰 مدفوع</option></select></div>
+<div id="modsList" class="mods-grid"></div>
+<div id="modsEmpty" class="empty-state" style="display:none;"><div class="empty-state-icon">📭</div><h3>لا توجد مودات</h3><p>سيتم إضافة مودات قريباً!</p></div>
+</div>
+
+<div id="resourcepacksSection" class="section">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid rgba(51,136,255,0.3);"><span style="font-size:1.8rem;">🎨</span><h2 style="color:#3388ff;">متجر الريسورسباكات</h2></div>
+<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;"><input type="text" id="rpSearch" placeholder="🔍 ابحث عن ريسورسباك..." onkeyup="filterRPs()" style="flex:1;min-width:200px"><select id="rpFilter" onchange="filterRPs()" style="width:auto"><option value="all">الكل</option><option value="free">🎁 مجاني</option><option value="paid">💰 مدفوع</option></select></div>
+<div id="rpList" class="mods-grid"></div>
+<div id="rpEmpty" class="empty-state" style="display:none;"><div class="empty-state-icon">🎨</div><h3>لا توجد ريسورسباكات</h3><p>سيتم إضافة ريسورسباكات قريباً!</p></div>
+</div>
+
+<div id="supportSection" class="section">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;"><span style="font-size:1.8rem;">📞</span><h2 style="color:#ff3333;">مركز الدعم</h2></div>
+<p style="color:#888;margin-bottom:20px;">نحن هنا لمساعدتك 24/7</p>
+<div class="form-group"><label>📧 بريدك الإلكتروني</label><input type="email" id="supportEmail" placeholder="your@email.com"></div>
+<div class="form-group"><label>📝 نوع المشكلة</label><select id="supportType"><option>مشكلة في التحميل</option><option>مشكلة في التسجيل</option><option>طلب مود جديد</option><option>طلب ريسورسباك جديد</option><option>بلاغ عن خطأ</option><option>أخرى</option></select></div>
+<div class="form-group"><label>💬 وصف المشكلة</label><textarea id="supportMsg" rows="4" placeholder="اكتب مشكلتك بالتفصيل..."></textarea></div>
+<button class="btn btn-primary" onclick="sendSupport()" style="width:100%;">📨 إرسال التذكرة</button>
+<div id="supportResult" style="margin-top:20px;"></div>
+</div>
+
+<div id="ideasSection" class="section">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;"><span style="font-size:1.8rem;">💡</span><h2 style="color:#ff3333;">اقتراح أفكار جديدة</h2></div>
+<div style="background:#1a1a1a;padding:20px;border-radius:16px;margin-bottom:20px;">
+<div class="form-group"><label>✨ عنوان الفكرة</label><input type="text" id="ideaTitle" placeholder="مثال: مود أسلحة جديدة"></div>
+<div class="form-group"><label>📂 التصنيف</label><select id="ideaCategory"><option>أسلحة</option><option>دروع</option><option>بيئة</option><option>مخلوقات</option><option>تقنية</option><option>ريسورسباك</option><option>أخرى</option></select></div>
+<div class="form-group"><label>📝 شرح الفكرة</label><textarea id="ideaDesc" rows="3" placeholder="اشرح فكرتك بالتفصيل..."></textarea></div>
+<button class="btn btn-primary" onclick="addIdea()" style="width:100%;">✨ إرسال الفكرة</button>
+</div>
+<h3 style="color:#ff3333;margin-bottom:15px;">📌 الأفكار المقترحة</h3>
+<div id="ideasList" class="ideas-list"></div>
+</div>
+
+<div id="donateSection" class="section">
+<div style="text-align:center;max-width:500px;margin:0 auto;">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;justify-content:center;"><span style="font-size:1.8rem;">❤️</span><h2 style="color:#ff3333;">ادعم SARNANTO_X</h2></div>
+<p style="color:#888;margin-bottom:25px;">تبرعك يساعد في تطوير المزيد من المودات والمحتوى الحصري</p>
+<div style="background:#1a1a1a;padding:30px;border-radius:20px;border:1px solid rgba(255,51,51,0.2);">
+<p style="color:#ff8888;font-size:1.3rem;margin-bottom:20px;">💰 المبلغ الموصى به: $10</p>
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0;">
+<button class="btn" onclick="donateAmount(5)">$5</button>
+<button class="btn btn-primary" onclick="donateAmount(10)">$10</button>
+<button class="btn" onclick="donateAmount(20)">$20</button>
+<button class="btn" onclick="donateAmount(50)">$50</button>
+</div>
+<input type="number" id="donateInput" placeholder="أو أدخل مبلغاً مخصصاً" style="max-width:250px;margin:15px auto;display:block">
+<button class="btn btn-primary" onclick="donateCustom()" style="width:100%;margin-top:15px;">🔴 تبرع الآن عبر PayPal</button>
+</div>
+<p style="color:#888;margin-top:20px;font-size:0.85rem;">🔒 جميع التبرعات عبر PayPal | آمنة 100%</p>
+</div>
+</div>
+
+<div id="adminSection" class="section">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;"><span style="font-size:1.8rem;">👑</span><h2 style="color:#ff3333;">لوحة تحكم الأدمن</h2></div>
+
+<div style="background:#1a1a1a;border:1px solid rgba(255,51,51,0.2);border-radius:16px;padding:20px;margin:15px 0;">
+<h3 style="color:#ff3333;margin-bottom:15px;">📊 إحصائيات الموقع</h3>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-value" id="statUsers">0</div><div class="stat-label">👥 المستخدمين</div></div>
+<div class="stat-card"><div class="stat-value" id="statMods">0</div><div class="stat-label">📦 المودات</div></div>
+<div class="stat-card"><div class="stat-value" id="statRPs">0</div><div class="stat-label">🎨 الريسورسباكات</div></div>
+<div class="stat-card"><div class="stat-value" id="statIdeas">0</div><div class="stat-label">💡 الأفكار</div></div>
+<div class="stat-card"><div class="stat-value" id="statDownloads">0</div><div class="stat-label">📥 التحميلات</div></div>
+</div>
+</div>
+
+<div style="background:#1a1a1a;border:1px solid rgba(255,51,51,0.2);border-radius:16px;padding:20px;margin:15px 0;">
+<h3 style="color:#ff3333;margin-bottom:15px;">➕ نشر محتوى جديد</h3>
+<div class="tab-buttons">
+<button class="tab-btn active" onclick="switchAdminTab('mod')" id="tabMod">📦 مود</button>
+<button class="tab-btn" onclick="switchAdminTab('rp')" id="tabRP">🎨 ريسورسباك</button>
+</div>
+
+<div id="adminModForm">
+<div class="form-group"><label>📛 اسم المود</label><input type="text" id="quickModName" placeholder="اسم المود"></div>
+<div class="form-group"><label>📝 وصف المود</label><textarea id="quickModDesc" rows="2" placeholder="وصف مختصر..."></textarea></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+<div class="form-group"><label>📂 التصنيف</label><select id="quickModCategory"><option>أسلحة</option><option>دروع</option><option>بيئة</option><option>مخلوقات</option><option>تقنية</option><option>عام</option></select></div>
+<div class="form-group"><label>🎮 إصدار MC</label><input type="text" id="quickModMCVersion" placeholder="1.20+"></div>
+</div>
+<div style="display:flex;gap:15px;margin:15px 0;justify-content:center;">
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;border-radius:30px;background:#0a0a0a;border:1px solid rgba(255,51,51,0.2);"><input type="radio" name="modType" value="free" checked onchange="togglePrice()"> 🎁 مجاني</label>
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;border-radius:30px;background:#0a0a0a;border:1px solid rgba(255,51,51,0.2);"><input type="radio" name="modType" value="paid" onchange="togglePrice()"> 💰 مدفوع</label>
+</div>
+<div class="form-group" id="priceField" style="display:none;"><label>💵 السعر ($)</label><input type="number" id="quickModPrice" placeholder="5.00" step="0.01"></div>
+<div class="form-group">
+<label>📁 ملف المود (.jar أو .zip)</label>
+<div class="file-upload" id="modFileUpload" onclick="document.getElementById('modFile').click()">
+<input type="file" id="modFile" accept=".jar,.zip" onchange="handleFileSelect(this,'modFileUpload')">
+<div class="file-upload-icon">📁</div><div class="file-upload-text">اضغط أو اسحب الملف هنا</div><div class="file-upload-filename" id="modFileName"></div>
+</div>
+</div>
+<div class="form-group">
+<label>🖼️ صور المود (اختياري)</label>
+<div class="file-upload" id="modImageUpload" onclick="document.getElementById('modImages').click()">
+<input type="file" id="modImages" accept="image/*" multiple onchange="handleImagesSelect(this,'modImagePreview')">
+<div class="file-upload-icon">🖼️</div><div class="file-upload-text">اضغط أو اسحب الصور هنا</div>
+</div>
+<div class="image-preview-grid" id="modImagePreview"></div>
+</div>
+<div class="progress-bar" id="modUploadProgress"><div class="progress-bar-fill" id="modUploadProgressFill"></div></div>
+<button class="btn btn-primary" onclick="publishMod()" style="width:100%;margin-top:15px;">🚀 نشر المود</button>
+</div>
+
+<div id="adminRPForm" style="display:none;">
+<div class="form-group"><label>📛 اسم الريسورسباك</label><input type="text" id="quickRPName" placeholder="اسم الريسورسباك"></div>
+<div class="form-group"><label>📝 وصف الريسورسباك</label><textarea id="quickRPDesc" rows="2" placeholder="وصف مختصر..."></textarea></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+<div class="form-group"><label>📂 التصنيف</label><select id="quickRPCategory"><option>واقعي</option><option>كرتوني</option><option>بكسل</option><option>خيالي</option><option>PVP</option><option>عام</option></select></div>
+<div class="form-group"><label>🎮 إصدار MC</label><input type="text" id="quickRPVersion" placeholder="1.20+"></div>
+</div>
+<div style="display:flex;gap:15px;margin:15px 0;justify-content:center;">
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;border-radius:30px;background:#0a0a0a;border:1px solid rgba(51,136,255,0.2);"><input type="radio" name="rpType" value="free" checked onchange="toggleRPPrice()"> 🎁 مجاني</label>
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;border-radius:30px;background:#0a0a0a;border:1px solid rgba(51,136,255,0.2);"><input type="radio" name="rpType" value="paid" onchange="toggleRPPrice()"> 💰 مدفوع</label>
+</div>
+<div class="form-group" id="rpPriceField" style="display:none;"><label>💵 السعر ($)</label><input type="number" id="quickRPPrice" placeholder="3.00" step="0.01"></div>
+<div class="form-group">
+<label>📁 ملف الريسورسباك (.zip)</label>
+<div class="file-upload" id="rpFileUpload" onclick="document.getElementById('rpFile').click()">
+<input type="file" id="rpFile" accept=".zip" onchange="handleFileSelect(this,'rpFileUpload')">
+<div class="file-upload-icon">📁</div><div class="file-upload-text">اضغط أو اسحب الملف هنا</div><div class="file-upload-filename" id="rpFileName"></div>
+</div>
+</div>
+<div class="form-group">
+<label>🖼️ صور الريسورسباك (اختياري)</label>
+<div class="file-upload" id="rpImageUpload" onclick="document.getElementById('rpImages').click()">
+<input type="file" id="rpImages" accept="image/*" multiple onchange="handleImagesSelect(this,'rpImagePreview')">
+<div class="file-upload-icon">🖼️</div><div class="file-upload-text">اضغط أو اسحب الصور هنا</div>
+</div>
+<div class="image-preview-grid" id="rpImagePreview"></div>
+</div>
+<div class="progress-bar" id="rpUploadProgress"><div class="progress-bar-fill" id="rpUploadProgressFill"></div></div>
+<button class="btn btn-blue" onclick="publishRP()" style="width:100%;margin-top:15px;">🚀 نشر الريسورسباك</button>
+</div>
+</div>
+
+<div class="tab-buttons">
+<button class="tab-btn active" onclick="switchAdminList('mods')" id="listTabMods">📦 المودات</button>
+<button class="tab-btn" onclick="switchAdminList('rps')" id="listTabRPs">🎨 الريسورسباكات</button>
+</div>
+
+<div id="adminModsListContainer">
+<h3 style="color:#ff3333;margin:20px 0 15px;">📋 قائمة المودات</h3>
+<div id="adminModsList"></div>
+</div>
+<div id="adminRPsListContainer" style="display:none;">
+<h3 style="color:#3388ff;margin:20px 0 15px;">📋 قائمة الريسورسباكات</h3>
+<div id="adminRPsList"></div>
+</div>
+
+<h3 style="color:#ff3333;margin:20px 0 15px;">🛡️ إدارة المستخدمين</h3>
+<div class="users-list" id="usersList"></div>
+</div>
+</div>
+
 <div class="footer">
-    <div class="social-links">
-        <a href="https://www.youtube.com/@SARNANTO_X120" target="_blank" class="social-link youtube-link" title="YouTube">▶️</a>
-        <a href="#" class="social-link discord-link" title="Discord">💬</a>
-    </div>
-    <p style="color: #666; font-size: 0.9rem;">© 2025 SARNANTO_X - جميع الحقوق محفوظة</p>
+<div class="social-links">
+<a href="https://www.youtube.com/@SARNANTO_X120" target="_blank" class="social-link youtube-link" title="YouTube">▶️</a>
+<a href="#" class="social-link discord-link" title="Discord">💬</a>
+</div>
+<p style="color:#666;font-size:0.9rem;">© 2025 SARNANTO_X - جميع الحقوق محفوظة</p>
 </div>
 
-<!-- Login Overlay -->
 <div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <h2 style="color: #ff3333; margin-bottom: 5px;">🔐 SARNANTO_X</h2>
-        <p style="color: #888; margin-bottom: 25px;">تسجيل الدخول أو إنشاء حساب</p>
-
-        <div class="login-tabs">
-            <div class="login-tab active" onclick="switchTab('login')" id="tabLogin">دخول</div>
-            <div class="login-tab" onclick="switchTab('register')" id="tabRegister">حساب جديد</div>
-        </div>
-
-        <!-- Login Form -->
-        <div id="loginForm">
-            <div class="form-group">
-                <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني" value="mohamadhabar120@gmail.com">
-            </div>
-            <div class="form-group">
-                <input type="password" id="loginPass" placeholder="🔒 كلمة المرور" value="SARNANTO_X123">
-            </div>
-            <button class="btn btn-primary" onclick="doLogin()" style="width: 100%;">🔓 دخول</button>
-        </div>
-
-        <!-- Register Form -->
-        <div id="registerForm" style="display: none;">
-            <div class="form-group">
-                <input type="text" id="regName" placeholder="👤 الاسم الكامل">
-            </div>
-            <div class="form-group">
-                <input type="email" id="regEmail" placeholder="📧 البريد الإلكتروني">
-            </div>
-            <div class="form-group">
-                <input type="password" id="regPass" placeholder="🔒 كلمة المرور (6 أحرف على الأقل)">
-            </div>
-            <div class="form-group">
-                <input type="password" id="regPassConfirm" placeholder="🔒 تأكيد كلمة المرور">
-            </div>
-            <button class="btn btn-primary" onclick="doRegister()" style="width: 100%;">✨ إنشاء حساب</button>
-        </div>
-
-        <div id="loginError" style="color: #ff6666; font-size: 0.9rem; margin-top: 15px;"></div>
-    </div>
+<div class="login-box">
+<h2 style="color:#ff3333;margin-bottom:5px;">🔐 SARNANTO_X</h2>
+<p style="color:#888;margin-bottom:25px;">تسجيل الدخول أو إنشاء حساب</p>
+<div class="login-tabs">
+<div class="login-tab active" onclick="switchTab('login')" id="tabLogin">دخول</div>
+<div class="login-tab" onclick="switchTab('register')" id="tabRegister">حساب جديد</div>
+</div>
+<div id="loginForm">
+<div class="form-group"><input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني" value="mohamadhabar120@gmail.com"></div>
+<div class="form-group"><input type="password" id="loginPass" placeholder="🔒 كلمة المرور" value="SARNANTO_X123"></div>
+<button class="btn btn-primary" onclick="doLogin()" style="width:100%;">🔓 دخول</button>
+</div>
+<div id="registerForm" style="display:none;">
+<div class="form-group"><input type="text" id="regName" placeholder="👤 الاسم الكامل"></div>
+<div class="form-group"><input type="email" id="regEmail" placeholder="📧 البريد الإلكتروني"></div>
+<div class="form-group"><input type="password" id="regPass" placeholder="🔒 كلمة المرور (6 أحرف على الأقل)"></div>
+<div class="form-group"><input type="password" id="regPassConfirm" placeholder="🔒 تأكيد كلمة المرور"></div>
+<button class="btn btn-primary" onclick="doRegister()" style="width:100%;">✨ إنشاء حساب</button>
+</div>
+<div id="loginError" style="color:#ff6666;font-size:0.9rem;margin-top:15px;"></div>
+</div>
 </div>
 
 <script>
-// ========== CONFIG ==========
 const API_BASE = window.location.origin;
-
-// ========== STATE ==========
-let currentUser = null;
-let mods = [];
-let users = [];
-let ideas = [];
+let currentUser = null, mods = [], resourcePacks = [], users = [], ideas = [];
 let token = localStorage.getItem('sarnanto_token');
+let selectedModFile = null, selectedModImages = [], selectedRPFile = null, selectedRPImages = [];
 
-// ========== TOAST ==========
 function showToast(msg, type = 'success') {
     const container = document.getElementById("toastContainer");
     const toast = document.createElement("div");
     toast.className = "toast";
-    toast.style.borderColor = type === 'error' ? '#ff3333' : type === 'warning' ? '#ffaa00' : '#00ff88';
-    const icons = { success: '✅', error: '❌', warning: '⚠️' };
+    toast.style.borderColor = type === 'error' ? '#ff3333' : type === 'warning' ? '#ffaa00' : type === 'info' ? '#3388ff' : '#00ff88';
+    const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
     toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
     container.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
-// ========== HELPERS ==========
-function escapeHtml(str) {
-    if (!str) return "";
-    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-}
+function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+function formatDate(dateStr) { if (!dateStr) return ''; return new Date(dateStr).toLocaleDateString('ar-SA'); }
+function formatFileSize(bytes) { if (bytes < 1024) return bytes + ' B'; if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'; return (bytes / (1024 * 1024)).toFixed(1) + ' MB'; }
 
-function formatDate(dateStr) {
-    if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('ar-SA');
-}
-
-// ========== NAVIGATION ==========
 function showSection(section) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-
     const target = document.getElementById(section + 'Section');
     if (target) target.classList.add('active');
-
     const navLink = document.querySelector(`[data-section="${section}"]`);
     if (navLink) navLink.classList.add('active');
-
     if (section === 'shop') loadMods();
+    if (section === 'resourcepacks') loadRPs();
     if (section === 'ideas') loadIdeas();
-    if (section === 'admin' && currentUser?.isAdmin) {
-        loadUsers();
-        updateStats();
-    }
+    if (section === 'admin' && currentUser?.isAdmin) { loadUsers(); updateStats(); }
 }
 
-// ========== LOGIN TABS ==========
 function switchTab(tab) {
     document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
     document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
@@ -762,95 +361,109 @@ function switchTab(tab) {
     document.getElementById('loginError').innerText = '';
 }
 
-// ========== REGISTER ==========
+function switchAdminTab(tab) {
+    document.getElementById('tabMod').classList.toggle('active', tab === 'mod');
+    document.getElementById('tabRP').classList.toggle('active', tab === 'rp');
+    document.getElementById('adminModForm').style.display = tab === 'mod' ? 'block' : 'none';
+    document.getElementById('adminRPForm').style.display = tab === 'rp' ? 'block' : 'none';
+}
+
+function switchAdminList(list) {
+    document.getElementById('listTabMods').classList.toggle('active', list === 'mods');
+    document.getElementById('listTabRPs').classList.toggle('active', list === 'rps');
+    document.getElementById('adminModsListContainer').style.display = list === 'mods' ? 'block' : 'none';
+    document.getElementById('adminRPsListContainer').style.display = list === 'rps' ? 'block' : 'none';
+}
+
+function handleFileSelect(input, uploadId) {
+    const file = input.files[0]; if (!file) return;
+    const uploadEl = document.getElementById(uploadId);
+    const nameEl = uploadId === 'modFileUpload' ? document.getElementById('modFileName') : document.getElementById('rpFileName');
+    if (uploadId === 'modFileUpload') selectedModFile = file; else selectedRPFile = file;
+    uploadEl.style.borderColor = '#00ff88'; uploadEl.style.background = '#001a0a';
+    nameEl.innerText = `✅ ${file.name} (${formatFileSize(file.size)})`;
+}
+
+function handleImagesSelect(input, previewId) {
+    const files = Array.from(input.files); if (files.length === 0) return;
+    const previewContainer = document.getElementById(previewId);
+    previewContainer.innerHTML = '';
+    if (previewId === 'modImagePreview') selectedModImages = files; else selectedRPImages = files;
+    files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result; img.className = 'image-preview';
+            img.onclick = () => openGallery(e.target.result);
+            previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function openGallery(src) { document.getElementById('galleryImage').src = src; document.getElementById('galleryModal').classList.add('active'); }
+function closeGallery() { document.getElementById('galleryModal').classList.remove('active'); }
+
+document.addEventListener('DOMContentLoaded', () => {
+    ['modFileUpload','modImageUpload','rpFileUpload','rpImageUpload'].forEach(id => {
+        const el = document.getElementById(id); if (!el) return;
+        el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('dragover'); });
+        el.addEventListener('dragleave', () => { el.classList.remove('dragover'); });
+        el.addEventListener('drop', (e) => {
+            e.preventDefault(); el.classList.remove('dragover');
+            const input = el.querySelector('input');
+            if (input) { input.files = e.dataTransfer.files; input.dispatchEvent(new Event('change')); }
+        });
+    });
+});
+
 async function doRegister() {
     const name = document.getElementById("regName").value.trim();
     const email = document.getElementById("regEmail").value.trim();
     const password = document.getElementById("regPass").value;
     const confirm = document.getElementById("regPassConfirm").value;
-
-    if (!name || !email || !password) {
-        document.getElementById("loginError").innerText = "❌ جميع الحقول مطلوبة";
-        return;
-    }
-    if (password.length < 6) {
-        document.getElementById("loginError").innerText = "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل";
-        return;
-    }
-    if (password !== confirm) {
-        document.getElementById("loginError").innerText = "❌ كلمتا المرور غير متطابقتين";
-        return;
-    }
-
+    if (!name || !email || !password) { document.getElementById("loginError").innerText = "❌ جميع الحقول مطلوبة"; return; }
+    if (password.length < 6) { document.getElementById("loginError").innerText = "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل"; return; }
+    if (password !== confirm) { document.getElementById("loginError").innerText = "❌ كلمتا المرور غير متطابقتين"; return; }
     try {
-        const response = await fetch(`${API_BASE}/api/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
-        });
-
+        const response = await fetch(`${API_BASE}/api/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password }) });
         if (response.ok) {
             const data = await response.json();
-            token = data.token;
-            currentUser = data.user;
+            token = data.token; currentUser = data.user;
             localStorage.setItem('sarnanto_token', token);
             document.getElementById("loginOverlay").style.display = "none";
             showToast(`🎉 مرحباً ${currentUser.name}! تم إنشاء حسابك`);
             if (currentUser.isAdmin) document.getElementById("adminNav").style.display = "inline-block";
-            loadMods();
-            loadIdeas();
-        } else {
-            const error = await response.json();
-            document.getElementById("loginError").innerText = error.error || "❌ فشل إنشاء الحساب";
-        }
-    } catch(e) {
-        document.getElementById("loginError").innerText = "❌ خطأ في الاتصال بالخادم";
-    }
+            loadMods(); loadRPs(); loadIdeas();
+        } else { const error = await response.json(); document.getElementById("loginError").innerText = error.error || "❌ فشل إنشاء الحساب"; }
+    } catch(e) { document.getElementById("loginError").innerText = "❌ خطأ في الاتصال بالخادم"; }
 }
 
-// ========== LOGIN ==========
 async function doLogin() {
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPass").value;
-
     try {
-        const response = await fetch(`${API_BASE}/api/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-
+        const response = await fetch(`${API_BASE}/api/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
         if (response.ok) {
             const data = await response.json();
-            token = data.token;
-            currentUser = data.user;
+            token = data.token; currentUser = data.user;
             localStorage.setItem('sarnanto_token', token);
             document.getElementById("loginOverlay").style.display = "none";
             showToast(`👋 مرحباً ${currentUser.name}!`);
             if (currentUser.isAdmin) document.getElementById("adminNav").style.display = "inline-block";
-            loadMods();
-            loadIdeas();
-            showSection('shop');
-        } else {
-            const error = await response.json();
-            document.getElementById("loginError").innerText = error.error || "❌ بريد أو كلمة مرور خاطئة";
-        }
-    } catch(e) {
-        document.getElementById("loginError").innerText = "❌ خطأ في الاتصال بالخادم";
-    }
+            loadMods(); loadRPs(); loadIdeas(); showSection('shop');
+        } else { const error = await response.json(); document.getElementById("loginError").innerText = error.error || "❌ بريد أو كلمة مرور خاطئة"; }
+    } catch(e) { document.getElementById("loginError").innerText = "❌ خطأ في الاتصال بالخادم"; }
 }
 
 function logoutUser() {
-    currentUser = null;
-    token = null;
+    currentUser = null; token = null;
     localStorage.removeItem('sarnanto_token');
     document.getElementById("adminNav").style.display = "none";
     document.getElementById("loginOverlay").style.display = "flex";
-    showToast("👋 تم تسجيل الخروج");
-    switchTab('login');
+    showToast("👋 تم تسجيل الخروج"); switchTab('login');
 }
 
-// ========== LOAD DATA ==========
 async function loadMods() {
     try {
         document.getElementById('syncStatus').innerHTML = '<div class="loading-spinner"></div><span>جاري تحميل المودات...</span>';
@@ -861,89 +474,133 @@ async function loadMods() {
             displayMods();
             if (currentUser?.isAdmin) displayAdminMods();
             updateStats();
-            document.getElementById('syncStatus').innerHTML = '✅ متزامن | ' + mods.length + ' مود';
+            document.getElementById('syncStatus').innerHTML = '✅ متزامن | ' + mods.length + ' مود | ' + resourcePacks.length + ' ريسورسباك';
         }
-    } catch(e) { 
-        document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية';
-    }
+    } catch(e) { document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية'; }
+}
+
+async function loadRPs() {
+    try {
+        document.getElementById('syncStatus').innerHTML = '<div class="loading-spinner"></div><span>جاري تحميل الريسورسباكات...</span>';
+        const response = await fetch(`${API_BASE}/api/resourcepacks`);
+        if (response.ok) {
+            const data = await response.json();
+            resourcePacks = data.resourcePacks || [];
+            displayRPs();
+            if (currentUser?.isAdmin) displayAdminRPs();
+            updateStats();
+            document.getElementById('syncStatus').innerHTML = '✅ متزامن | ' + mods.length + ' مود | ' + resourcePacks.length + ' ريسورسباك';
+        }
+    } catch(e) { document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية'; }
 }
 
 async function loadUsers() {
     if (!currentUser?.isAdmin) return;
     try {
         const response = await fetch(`${API_BASE}/api/users`, { headers: { 'Authorization': token } });
-        if (response.ok) {
-            const data = await response.json();
-            users = data.users || [];
-            displayUsers();
-            updateStats();
-        }
+        if (response.ok) { const data = await response.json(); users = data.users || []; displayUsers(); updateStats(); }
     } catch(e) { console.error(e); }
 }
 
 async function loadIdeas() {
     try {
         const response = await fetch(`${API_BASE}/api/ideas`);
-        if (response.ok) {
-            const data = await response.json();
-            ideas = data.ideas || [];
-            displayIdeas();
-        }
+        if (response.ok) { const data = await response.json(); ideas = data.ideas || []; displayIdeas(); }
     } catch(e) { console.error(e); }
 }
 
-// ========== DISPLAY ==========
 function displayMods() {
     const container = document.getElementById("modsList");
     const emptyState = document.getElementById("modsEmpty");
     if (!container) return;
-
     const searchTerm = (document.getElementById('modSearch')?.value || '').toLowerCase();
     const filterType = document.getElementById('modFilter')?.value || 'all';
-
     let filtered = mods;
     if (searchTerm) filtered = filtered.filter(m => (m.name || '').toLowerCase().includes(searchTerm));
     if (filterType === 'free') filtered = filtered.filter(m => m.isFree);
     if (filterType === 'paid') filtered = filtered.filter(m => !m.isFree);
-
-    if (filtered.length === 0) {
-        container.innerHTML = '';
-        emptyState.style.display = 'block';
-        return;
-    }
+    if (filtered.length === 0) { container.innerHTML = ''; emptyState.style.display = 'block'; return; }
     emptyState.style.display = 'none';
-
     container.innerHTML = filtered.map(m => `
         <div class="mod-card">
+            ${m.images && m.images.length > 0 ? `<img src="${m.images[0]}" class="mod-image" alt="${escapeHtml(m.name)}" onclick="openGallery('${m.images[0]}')">` : `<div class="mod-image-placeholder">📦</div>`}
             <div class="mod-badge ${m.isFree ? 'badge-free' : 'badge-paid'}">${m.isFree ? '🎁 مجاني' : '💰 $' + m.price}</div>
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ff3333, #cc0000); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">📦</div>
-                <div style="flex: 1;">
-                    <h3 style="color: #fff; font-size: 1.2rem;">${escapeHtml(m.name)}</h3>
-                    <div style="color: #888; font-size: 0.8rem;">📂 ${escapeHtml(m.category || 'عام')} | 🎮 ${escapeHtml(m.mcVersion || '1.20+')}</div>
+            <div class="mod-card-content">
+                <div style="display:flex;align-items:center;gap:15px;margin-bottom:15px;">
+                    <div style="flex:1;">
+                        <h3 style="color:#fff;font-size:1.2rem;">${escapeHtml(m.name)}</h3>
+                        <div style="color:#888;font-size:0.8rem;">📂 ${escapeHtml(m.category || 'عام')} | 🎮 ${escapeHtml(m.mcVersion || '1.20+')}</div>
+                        ${m.fileName ? `<div style="color:#666;font-size:0.75rem;margin-top:3px;">📁 ${m.fileName}</div>` : ''}
+                    </div>
+                </div>
+                <p style="color:#888;margin:10px 0;">${escapeHtml(m.desc)}</p>
+                <div style="display:flex;gap:15px;margin:15px 0;padding:10px 0;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);color:#888;font-size:0.85rem;">
+                    <span>⭐ ${m.averageRating || 0} (${m.ratings?.length || 0})</span>
+                    <span>📥 ${m.downloads || 0}</span>
+                    <span>❤️ ${m.likes || 0}</span>
+                    <span>💬 ${m.comments?.length || 0}</span>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    ${m.isFree ? `<button class="btn btn-success" onclick="downloadMod('${m.id}')" style="flex:1;">📥 تحميل مجاني</button>` : `<button class="btn btn-primary" onclick="buyMod('${m.id}','${escapeHtml(m.name)}',${m.price})" style="flex:1;">💳 شراء ($${m.price})</button>`}
+                    <button class="btn" onclick="likeMod('${m.id}')">❤️</button>
+                </div>
+                <div class="comment-section">
+                    <h4 style="color:#ff8888;margin-bottom:10px;">💬 التعليقات</h4>
+                    <div class="rating-stars">${[1,2,3,4,5].map(i => `<span class="star" onclick="rateMod('${m.id}',${i})" style="color:${i <= Math.round(m.averageRating || 0) ? '#ffd700' : '#444'};">${i <= Math.round(m.averageRating || 0) ? '⭐' : '☆'}</span>`).join('')}</div>
+                    <div class="comment-list">${renderComments(m.comments || [])}</div>
+                    <div style="display:flex;gap:10px;margin-top:10px;">
+                        <input type="text" id="comment-${m.id}" placeholder="اكتب تعليقاً..." style="flex:1;">
+                        <button class="btn" onclick="addComment('${m.id}')" style="padding:8px 15px;">إرسال</button>
+                    </div>
                 </div>
             </div>
-            <p style="color: #888; margin: 10px 0;">${escapeHtml(m.desc)}</p>
-            <div style="display: flex; gap: 15px; margin: 15px 0; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); color: #888; font-size: 0.85rem;">
-                <span>⭐ ${m.averageRating || 0} (${m.ratings?.length || 0})</span>
-                <span>📥 ${m.downloads || 0}</span>
-                <span>❤️ ${m.likes || 0}</span>
-                <span>💬 ${m.comments?.length || 0}</span>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                ${m.isFree ? 
-                    `<button class="btn btn-success" onclick="downloadMod('${m.id}')" style="flex: 1;">📥 تحميل مجاني</button>` :
-                    `<button class="btn btn-primary" onclick="buyMod('${m.id}', '${escapeHtml(m.name)}', ${m.price})" style="flex: 1;">💳 شراء ($${m.price})</button>`
-                }
-                <button class="btn" onclick="likeMod('${m.id}')">❤️</button>
-            </div>
-            <div class="comment-section">
-                <h4 style="color: #ff8888; margin-bottom: 10px;">💬 التعليقات</h4>
-                <div class="rating-stars">${[1,2,3,4,5].map(i => `<span class="star" onclick="rateMod('${m.id}', ${i})" style="color: ${i <= Math.round(m.averageRating || 0) ? '#ffd700' : '#444'};">${i <= Math.round(m.averageRating || 0) ? '⭐' : '☆'}</span>`).join('')}</div>
-                <div class="comment-list">${renderComments(m.comments || [])}</div>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <input type="text" id="comment-${m.id}" placeholder="اكتب تعليقاً..." style="flex: 1;">
-                    <button class="btn" onclick="addComment('${m.id}')" style="padding: 8px 15px;">إرسال</button>
+        </div>
+    `).join('');
+}
+
+function displayRPs() {
+    const container = document.getElementById("rpList");
+    const emptyState = document.getElementById("rpEmpty");
+    if (!container) return;
+    const searchTerm = (document.getElementById('rpSearch')?.value || '').toLowerCase();
+    const filterType = document.getElementById('rpFilter')?.value || 'all';
+    let filtered = resourcePacks;
+    if (searchTerm) filtered = filtered.filter(r => (r.name || '').toLowerCase().includes(searchTerm));
+    if (filterType === 'free') filtered = filtered.filter(r => r.isFree);
+    if (filterType === 'paid') filtered = filtered.filter(r => !r.isFree);
+    if (filtered.length === 0) { container.innerHTML = ''; emptyState.style.display = 'block'; return; }
+    emptyState.style.display = 'none';
+    container.innerHTML = filtered.map(r => `
+        <div class="mod-card">
+            ${r.images && r.images.length > 0 ? `<img src="${r.images[0]}" class="mod-image" alt="${escapeHtml(r.name)}" onclick="openGallery('${r.images[0]}')">` : `<div class="mod-image-placeholder">🎨</div>`}
+            <div class="mod-badge ${r.isFree ? 'badge-free' : 'badge-rp'}">${r.isFree ? '🎁 مجاني' : '💰 $' + r.price}</div>
+            <div class="mod-card-content">
+                <div style="display:flex;align-items:center;gap:15px;margin-bottom:15px;">
+                    <div style="flex:1;">
+                        <h3 style="color:#fff;font-size:1.2rem;">${escapeHtml(r.name)}</h3>
+                        <div style="color:#888;font-size:0.8rem;">📂 ${escapeHtml(r.category || 'عام')} | 🎮 ${escapeHtml(r.mcVersion || '1.20+')}</div>
+                        ${r.fileName ? `<div style="color:#666;font-size:0.75rem;margin-top:3px;">📁 ${r.fileName}</div>` : ''}
+                    </div>
+                </div>
+                <p style="color:#888;margin:10px 0;">${escapeHtml(r.desc)}</p>
+                <div style="display:flex;gap:15px;margin:15px 0;padding:10px 0;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);color:#888;font-size:0.85rem;">
+                    <span>⭐ ${r.averageRating || 0} (${r.ratings?.length || 0})</span>
+                    <span>📥 ${r.downloads || 0}</span>
+                    <span>❤️ ${r.likes || 0}</span>
+                    <span>💬 ${r.comments?.length || 0}</span>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    ${r.isFree ? `<button class="btn btn-success" onclick="downloadRP('${r.id}')" style="flex:1;">📥 تحميل مجاني</button>` : `<button class="btn btn-blue" onclick="buyRP('${r.id}','${escapeHtml(r.name)}',${r.price})" style="flex:1;">💳 شراء ($${r.price})</button>`}
+                    <button class="btn" onclick="likeRP('${r.id}')">❤️</button>
+                </div>
+                <div class="comment-section">
+                    <h4 style="color:#3388ff;margin-bottom:10px;">💬 التعليقات</h4>
+                    <div class="rating-stars">${[1,2,3,4,5].map(i => `<span class="star" onclick="rateRP('${r.id}',${i})" style="color:${i <= Math.round(r.averageRating || 0) ? '#ffd700' : '#444'};">${i <= Math.round(r.averageRating || 0) ? '⭐' : '☆'}</span>`).join('')}</div>
+                    <div class="comment-list">${renderComments(r.comments || [])}</div>
+                    <div style="display:flex;gap:10px;margin-top:10px;">
+                        <input type="text" id="rpcomment-${r.id}" placeholder="اكتب تعليقاً..." style="flex:1;">
+                        <button class="btn" onclick="addRPComment('${r.id}')" style="padding:8px 15px;">إرسال</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -951,35 +608,41 @@ function displayMods() {
 }
 
 function renderComments(comments) {
-    if (!comments || comments.length === 0) return '<p style="color: #888; text-align: center; padding: 10px;">لا توجد تعليقات</p>';
-    return comments.map(c => `
-        <div class="comment-item">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <strong style="color: #ff8888;">${escapeHtml(c.userName)}</strong>
-                <span style="color: #666; font-size: 0.75rem;">${formatDate(c.timestamp)}</span>
-            </div>
-            <p>${escapeHtml(c.text)}</p>
-        </div>
-    `).join('');
+    if (!comments || comments.length === 0) return '<p style="color:#888;text-align:center;padding:10px;">لا توجد تعليقات</p>';
+    return comments.map(c => `<div class="comment-item"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><strong style="color:#ff8888;">${escapeHtml(c.userName)}</strong><span style="color:#666;font-size:0.75rem;">${formatDate(c.timestamp)}</span></div><p>${escapeHtml(c.text)}</p></div>`).join('');
 }
 
 function filterMods() { displayMods(); }
+function filterRPs() { displayRPs(); }
 
 function displayAdminMods() {
     const container = document.getElementById("adminModsList");
     if (!container) return;
-    if (mods.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><h3>لا توجد مودات</h3></div>';
-        return;
-    }
+    if (mods.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><h3>لا توجد مودات</h3></div>'; return; }
     container.innerHTML = mods.map(m => `
-        <div style="background: #0a0a0a; padding: 15px; margin: 8px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="background:#0a0a0a;padding:15px;margin:8px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;">
             <div>
-                <strong style="color: #ff8888;">${escapeHtml(m.name)}</strong>
-                <span style="color: #888; font-size: 0.85rem;"> — ${m.isFree ? '🎁 مجاني' : '💰 $' + m.price}</span>
-                <div style="color: #888; font-size: 0.8rem; margin-top: 5px;">📥 ${m.downloads || 0} | ⭐ ${m.averageRating || 0} | 💬 ${m.comments?.length || 0}</div>
+                <strong style="color:#ff8888;">${escapeHtml(m.name)}</strong>
+                <span style="color:#888;font-size:0.85rem;"> — ${m.isFree ? '🎁 مجاني' : '💰 $' + m.price}</span>
+                <div style="color:#888;font-size:0.8rem;margin-top:5px;">📥 ${m.downloads || 0} | ⭐ ${m.averageRating || 0} | 💬 ${m.comments?.length || 0}</div>
             </div>
-            <button class="btn" onclick="deleteMod('${m.id}')" style="background: #500; color: #fff; border-color: #500;">🗑️ حذف</button>
+            <button class="btn" onclick="deleteMod('${m.id}')" style="background:#500;color:#fff;border-color:#500;">🗑️ حذف</button>
+        </div>
+    `).join('');
+}
+
+function displayAdminRPs() {
+    const container = document.getElementById("adminRPsList");
+    if (!container) return;
+    if (resourcePacks.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎨</div><h3>لا توجد ريسورسباكات</h3></div>'; return; }
+    container.innerHTML = resourcePacks.map(r => `
+        <div style="background:#0a0a0a;padding:15px;margin:8px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <strong style="color:#3388ff;">${escapeHtml(r.name)}</strong>
+                <span style="color:#888;font-size:0.85rem;"> — ${r.isFree ? '🎁 مجاني' : '💰 $' + r.price}</span>
+                <div style="color:#888;font-size:0.8rem;margin-top:5px;">📥 ${r.downloads || 0} | ⭐ ${r.averageRating || 0} | 💬 ${r.comments?.length || 0}</div>
+            </div>
+            <button class="btn" onclick="deleteRP('${r.id}')" style="background:#003;color:#fff;border-color:#3388ff;">🗑️ حذف</button>
         </div>
     `).join('');
 }
@@ -987,24 +650,18 @@ function displayAdminMods() {
 function displayUsers() {
     const container = document.getElementById("usersList");
     if (!container) return;
-    if (users.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><h3>لا يوجد مستخدمون</h3></div>';
-        return;
-    }
+    if (users.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><h3>لا يوجد مستخدمون</h3></div>'; return; }
     container.innerHTML = users.map(u => `
         <div class="user-item">
-            <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
                 <div class="user-avatar">${(u.name || 'U').charAt(0).toUpperCase()}</div>
                 <div>
                     <strong>${escapeHtml(u.name)}</strong> ${u.isAdmin ? '👑' : ''}
-                    <div style="color: #888; font-size: 0.8rem;">${u.email}</div>
+                    <div style="color:#888;font-size:0.8rem;">${u.email}</div>
                 </div>
             </div>
             <div>
-                ${!u.isAdmin && u.email !== currentUser?.email ? 
-                    `<button class="btn" onclick="toggleBan(${u.id})" style="background: ${u.banned ? '#0a0a0a' : '#500'}; color: ${u.banned ? '#00ff88' : '#fff'}; border-color: ${u.banned ? '#00ff88' : '#500'};">${u.banned ? '✅ فك الحظر' : '🚫 حظر'}</button>` :
-                    '<span style="color: #888; font-size: 0.8rem;">(أنت)</span>'
-                }
+                ${!u.isAdmin && u.email !== currentUser?.email ? `<button class="btn" onclick="toggleBan(${u.id})" style="background:${u.banned ? '#0a0a0a' : '#500'};color:${u.banned ? '#00ff88' : '#fff'};border-color:${u.banned ? '#00ff88' : '#500'};">${u.banned ? '✅ فك الحظر' : '🚫 حظر'}</button>` : '<span style="color:#888;font-size:0.8rem;">(أنت)</span>'}
             </div>
         </div>
     `).join('');
@@ -1013,46 +670,35 @@ function displayUsers() {
 function displayIdeas() {
     const container = document.getElementById("ideasList");
     if (!container) return;
-    if (ideas.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💡</div><h3>لا توجد أفكار مقترحة</h3><p>كن أول من يقترح فكرة!</p></div>';
-        return;
-    }
+    if (ideas.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💡</div><h3>لا توجد أفكار مقترحة</h3><p>كن أول من يقترح فكرة!</p></div>'; return; }
     container.innerHTML = ideas.map(i => `
         <div class="idea-card">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;">
                 <div>
-                    <h4 style="color: #fff; margin-bottom: 5px;">${escapeHtml(i.title)}</h4>
-                    <span style="color: #888; font-size: 0.8rem;">📂 ${escapeHtml(i.category || 'عام')} | 📅 ${formatDate(i.createdAt)}</span>
+                    <h4 style="color:#fff;margin-bottom:5px;">${escapeHtml(i.title)}</h4>
+                    <span style="color:#888;font-size:0.8rem;">📂 ${escapeHtml(i.category || 'عام')} | 📅 ${formatDate(i.createdAt)}</span>
                 </div>
                 <span class="idea-status status-${i.status || 'pending'}">${i.status === 'approved' ? '✅ مقبول' : i.status === 'rejected' ? '❌ مرفوض' : '⏳ قيد المراجعة'}</span>
             </div>
-            <p style="color: #888; margin: 10px 0;">${escapeHtml(i.description)}</p>
-            <div style="display: flex; align-items: center; gap: 10px; margin-top: 15px;">
-                <button class="btn" onclick="voteIdea('${i.id}')" style="padding: 6px 15px;">👍 تصويت</button>
-                <span style="color: #888;">${i.votes || 0} تصويت</span>
+            <p style="color:#888;margin:10px 0;">${escapeHtml(i.description)}</p>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:15px;">
+                <button class="btn" onclick="voteIdea('${i.id}')" style="padding:6px 15px;">👍 تصويت</button>
+                <span style="color:#888;">${i.votes || 0} تصويت</span>
             </div>
         </div>
     `).join('');
 }
 
 function updateStats() {
-    const els = ['statUsers', 'statMods', 'statIdeas', 'statDownloads'];
-    const vals = [users.length, mods.length, ideas.length, 0];
-    els.forEach((id, i) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = vals[i];
-    });
+    const els = ['statUsers','statMods','statRPs','statIdeas','statDownloads'];
+    const vals = [users.length, mods.length, resourcePacks.length, ideas.length, 0];
+    els.forEach((id, i) => { const el = document.getElementById(id); if (el) el.innerText = vals[i]; });
 }
 
-// ========== ACTIONS ==========
 async function rateMod(modId, rating) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
-        const response = await fetch(`${API_BASE}/api/mods/${modId}/rate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ rating })
-        });
+        const response = await fetch(`${API_BASE}/api/mods/${modId}/rate`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': token }, body: JSON.stringify({ rating }) });
         if (response.ok) { showToast(`⭐ تم التقييم بـ ${rating} نجوم`); loadMods(); }
     } catch(e) { showToast("❌ فشل التقييم", 'error'); }
 }
@@ -1060,10 +706,7 @@ async function rateMod(modId, rating) {
 async function likeMod(modId) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
-        const response = await fetch(`${API_BASE}/api/mods/${modId}/like`, {
-            method: 'POST',
-            headers: { 'Authorization': token }
-        });
+        const response = await fetch(`${API_BASE}/api/mods/${modId}/like`, { method: 'POST', headers: { 'Authorization': token } });
         if (response.ok) { showToast("❤️ تم الإعجاب"); loadMods(); }
     } catch(e) { showToast("❌ فشل الإعجاب", 'error'); }
 }
@@ -1073,11 +716,7 @@ async function addComment(modId) {
     if (!text?.trim()) { showToast("❌ اكتب تعليقاً", 'warning'); return; }
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
-        const response = await fetch(`${API_BASE}/api/mods/${modId}/comment`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ text, userName: currentUser.name })
-        });
+        const response = await fetch(`${API_BASE}/api/mods/${modId}/comment`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': token }, body: JSON.stringify({ text, userName: currentUser.name }) });
         if (response.ok) { showToast("✅ تم إضافة التعليق"); loadMods(); document.getElementById(`comment-${modId}`).value = ''; }
     } catch(e) { showToast("❌ فشل إضافة التعليق", 'error'); }
 }
@@ -1086,12 +725,73 @@ async function downloadMod(modId) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
         const response = await fetch(`${API_BASE}/api/download-free/${modId}`, { headers: { 'Authorization': token } });
-        if (response.ok) { showToast("📥 بدأ التحميل"); loadMods(); }
+        if (response.ok) { 
+            const data = await response.json();
+            showToast("📥 بدأ التحميل"); 
+            if (data.downloadUrl) {
+                const a = document.createElement('a');
+                a.href = data.downloadUrl;
+                a.download = data.fileName || 'mod.jar';
+                a.click();
+            }
+            loadMods(); 
+        }
         else { showToast("❌ فشل التحميل", 'error'); }
     } catch(e) { showToast("❌ فشل التحميل", 'error'); }
 }
 
 function buyMod(modId, modName, price) {
+    if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
+    window.open(`https://www.paypal.com/paypalme/mohamadhabar120/${price}`, '_blank');
+    showToast(`🔴 جاري تحويلك إلى PayPal...`);
+}
+
+async function rateRP(rpId, rating) {
+    if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
+    try {
+        const response = await fetch(`${API_BASE}/api/resourcepacks/${rpId}/rate`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': token }, body: JSON.stringify({ rating }) });
+        if (response.ok) { showToast(`⭐ تم التقييم بـ ${rating} نجوم`); loadRPs(); }
+    } catch(e) { showToast("❌ فشل التقييم", 'error'); }
+}
+
+async function likeRP(rpId) {
+    if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
+    try {
+        const response = await fetch(`${API_BASE}/api/resourcepacks/${rpId}/like`, { method: 'POST', headers: { 'Authorization': token } });
+        if (response.ok) { showToast("❤️ تم الإعجاب"); loadRPs(); }
+    } catch(e) { showToast("❌ فشل الإعجاب", 'error'); }
+}
+
+async function addRPComment(rpId) {
+    const text = document.getElementById(`rpcomment-${rpId}`)?.value;
+    if (!text?.trim()) { showToast("❌ اكتب تعليقاً", 'warning'); return; }
+    if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
+    try {
+        const response = await fetch(`${API_BASE}/api/resourcepacks/${rpId}/comment`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': token }, body: JSON.stringify({ text, userName: currentUser.name }) });
+        if (response.ok) { showToast("✅ تم إضافة التعليق"); loadRPs(); document.getElementById(`rpcomment-${rpId}`).value = ''; }
+    } catch(e) { showToast("❌ فشل إضافة التعليق", 'error'); }
+}
+
+async function downloadRP(rpId) {
+    if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
+    try {
+        const response = await fetch(`${API_BASE}/api/download-rp-free/${rpId}`, { headers: { 'Authorization': token } });
+        if (response.ok) { 
+            const data = await response.json();
+            showToast("📥 بدأ التحميل"); 
+            if (data.downloadUrl) {
+                const a = document.createElement('a');
+                a.href = data.downloadUrl;
+                a.download = data.fileName || 'resourcepack.zip';
+                a.click();
+            }
+            loadRPs(); 
+        }
+        else { showToast("❌ فشل التحميل", 'error'); }
+    } catch(e) { showToast("❌ فشل التحميل", 'error'); }
+}
+
+function buyRP(rpId, rpName, price) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     window.open(`https://www.paypal.com/paypalme/mohamadhabar120/${price}`, '_blank');
     showToast(`🔴 جاري تحويلك إلى PayPal...`);
@@ -1103,11 +803,7 @@ async function addIdea() {
     const category = document.getElementById("ideaCategory").value;
     if (!title) { showToast("❌ أدخل عنوان الفكرة", 'warning'); return; }
     try {
-        const response = await fetch(`${API_BASE}/api/ideas`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ title, description, category })
-        });
+        const response = await fetch(`${API_BASE}/api/ideas`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': token }, body: JSON.stringify({ title, description, category }) });
         if (response.ok) {
             showToast("✅ تم إرسال الفكرة");
             document.getElementById("ideaTitle").value = "";
@@ -1119,10 +815,7 @@ async function addIdea() {
 
 async function voteIdea(ideaId) {
     try {
-        const response = await fetch(`${API_BASE}/api/ideas/${ideaId}/vote`, {
-            method: 'POST',
-            headers: { 'Authorization': token }
-        });
+        const response = await fetch(`${API_BASE}/api/ideas/${ideaId}/vote`, { method: 'POST', headers: { 'Authorization': token } });
         if (response.ok) { showToast("👍 تم التصويت"); loadIdeas(); }
     } catch(e) { showToast("❌ فشل التصويت", 'error'); }
 }
@@ -1132,6 +825,52 @@ function togglePrice() {
     document.getElementById('priceField').style.display = isPaid ? 'block' : 'none';
 }
 
+function toggleRPPrice() {
+    const isPaid = document.querySelector('input[name="rpType"]:checked').value === 'paid';
+    document.getElementById('rpPriceField').style.display = isPaid ? 'block' : 'none';
+}
+
+// ========== Base64 Upload for Vercel Blob ==========
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function uploadFileWithProgress(file, endpoint, progressId) {
+    const progressBar = document.getElementById(progressId);
+    const progressFill = document.getElementById(progressId + 'Fill');
+    if (progressBar) progressBar.style.display = 'block';
+    if (progressFill) progressFill.style.width = '10%';
+
+    try {
+        const base64Data = await fileToBase64(file);
+        if (progressFill) progressFill.style.width = '50%';
+
+        const response = await fetch(`${API_BASE}${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                fileData: base64Data,
+                fileName: file.name,
+                mimeType: file.type || 'application/octet-stream'
+            })
+        });
+
+        if (progressFill) progressFill.style.width = '100%';
+        setTimeout(() => { if (progressBar) progressBar.style.display = 'none'; }, 500);
+
+        if (!response.ok) throw new Error('Upload failed');
+        return await response.json();
+    } catch (e) {
+        if (progressBar) progressBar.style.display = 'none';
+        throw e;
+    }
+}
+
 async function publishMod() {
     const name = document.getElementById("quickModName").value.trim();
     const desc = document.getElementById("quickModDesc").value.trim();
@@ -1139,22 +878,99 @@ async function publishMod() {
     const mcVersion = document.getElementById("quickModMCVersion").value || '1.20+';
     const modType = document.querySelector('input[name="modType"]:checked').value;
     const price = document.getElementById("quickModPrice").value;
-
     if (!name) { showToast("❌ اسم المود مطلوب", 'warning'); return; }
     if (modType === "paid" && (!price || price <= 0)) { showToast("❌ السعر مطلوب", 'warning'); return; }
+
+    let fileName = '';
+    let images = [];
+
+    if (selectedModFile) {
+        try {
+            const result = await uploadFileWithProgress(selectedModFile, '/api/upload/mod', 'modUploadProgress');
+            fileName = result.fileName;
+            // Store blob URL for download
+            window.lastModFileUrl = result.url;
+            showToast("📁 تم رفع الملف");
+        } catch(e) { showToast("❌ فشل رفع الملف", 'error'); return; }
+    }
+
+    if (selectedModImages.length > 0) {
+        try {
+            for (const img of selectedModImages) {
+                const result = await uploadFileWithProgress(img, '/api/upload/image', 'modUploadProgress');
+                images.push(result.url);
+            }
+            showToast("🖼️ تم رفع الصور");
+        } catch(e) { showToast("❌ فشل رفع الصور", 'error'); }
+    }
 
     try {
         const response = await fetch(`${API_BASE}/api/mods`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ name, desc, category, mcVersion, price: modType === "free" ? "0" : price, isFree: modType === "free" })
+            body: JSON.stringify({ name, desc, category, mcVersion, price: modType === "free" ? "0" : price, isFree: modType === "free", fileName, images })
         });
         if (response.ok) {
             showToast(`🚀 تم نشر المود ${name}`);
             document.getElementById("quickModName").value = "";
             document.getElementById("quickModDesc").value = "";
             document.getElementById("quickModPrice").value = "";
+            document.getElementById("modFileName").innerText = "";
+            document.getElementById("modImagePreview").innerHTML = "";
+            selectedModFile = null; selectedModImages = [];
             loadMods();
+        } else { showToast("❌ فشل النشر", 'error'); }
+    } catch(e) { showToast("❌ فشل النشر", 'error'); }
+}
+
+async function publishRP() {
+    const name = document.getElementById("quickRPName").value.trim();
+    const desc = document.getElementById("quickRPDesc").value.trim();
+    const category = document.getElementById("quickRPCategory").value;
+    const mcVersion = document.getElementById("quickRPVersion").value || '1.20+';
+    const rpType = document.querySelector('input[name="rpType"]:checked').value;
+    const price = document.getElementById("quickRPPrice").value;
+    if (!name) { showToast("❌ اسم الريسورسباك مطلوب", 'warning'); return; }
+    if (rpType === "paid" && (!price || price <= 0)) { showToast("❌ السعر مطلوب", 'warning'); return; }
+
+    let fileName = '';
+    let images = [];
+
+    if (selectedRPFile) {
+        try {
+            const result = await uploadFileWithProgress(selectedRPFile, '/api/upload/rp', 'rpUploadProgress');
+            fileName = result.fileName;
+            // Store blob URL for download
+            window.lastRPFileUrl = result.url;
+            showToast("📁 تم رفع الملف");
+        } catch(e) { showToast("❌ فشل رفع الملف", 'error'); return; }
+    }
+
+    if (selectedRPImages.length > 0) {
+        try {
+            for (const img of selectedRPImages) {
+                const result = await uploadFileWithProgress(img, '/api/upload/image', 'rpUploadProgress');
+                images.push(result.url);
+            }
+            showToast("🖼️ تم رفع الصور");
+        } catch(e) { showToast("❌ فشل رفع الصور", 'error'); }
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/resourcepacks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': token },
+            body: JSON.stringify({ name, desc, category, mcVersion, price: rpType === "free" ? "0" : price, isFree: rpType === "free", fileName, images })
+        });
+        if (response.ok) {
+            showToast(`🚀 تم نشر الريسورسباك ${name}`);
+            document.getElementById("quickRPName").value = "";
+            document.getElementById("quickRPDesc").value = "";
+            document.getElementById("quickRPPrice").value = "";
+            document.getElementById("rpFileName").innerText = "";
+            document.getElementById("rpImagePreview").innerHTML = "";
+            selectedRPFile = null; selectedRPImages = [];
+            loadRPs();
         } else { showToast("❌ فشل النشر", 'error'); }
     } catch(e) { showToast("❌ فشل النشر", 'error'); }
 }
@@ -1167,17 +983,21 @@ async function deleteMod(modId) {
     } catch(e) { showToast("❌ فشل الحذف", 'error'); }
 }
 
+async function deleteRP(rpId) {
+    if (!confirm("هل أنت متأكد من حذف هذا الريسورسباك؟")) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/resourcepacks/${rpId}`, { method: 'DELETE', headers: { 'Authorization': token } });
+        if (response.ok) { showToast("✅ تم حذف الريسورسباك"); loadRPs(); }
+    } catch(e) { showToast("❌ فشل الحذف", 'error'); }
+}
+
 async function toggleBan(userId) {
     if (!currentUser?.isAdmin) return;
     const user = users.find(u => u.id === userId);
     const action = user?.banned ? 'فك الحظر' : 'الحظر';
     if (!confirm(`هل تريد ${action} هذا المستخدم؟`)) return;
     try {
-        const response = await fetch(`${API_BASE}/api/users/${userId}/ban`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ banned: !user?.banned })
-        });
+        const response = await fetch(`${API_BASE}/api/users/${userId}/ban`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': token }, body: JSON.stringify({ banned: !user?.banned }) });
         if (response.ok) { showToast(`✅ تم ${action}`); loadUsers(); }
     } catch(e) { showToast("❌ فشل", 'error'); }
 }
@@ -1186,15 +1006,7 @@ function sendSupport() {
     const email = document.getElementById("supportEmail").value;
     const msg = document.getElementById("supportMsg").value;
     if (!email || !msg) { showToast("❌ أكمل جميع الحقول", 'warning'); return; }
-
-    document.getElementById("supportResult").innerHTML = `
-        <div style="background: rgba(0,255,136,0.1); border: 1px solid #00ff88; padding: 20px; border-radius: 12px; text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
-            <h3 style="color: #00ff88; margin-bottom: 10px;">تم إرسال تذكرتك بنجاح!</h3>
-            <p style="color: #888;">رقم التذكرة: #${Date.now().toString().slice(-6)}</p>
-            <p style="color: #888; margin-top: 10px;">سنرد عليك خلال 24 ساعة</p>
-        </div>
-    `;
+    document.getElementById("supportResult").innerHTML = `<div style="background:rgba(0,255,136,0.1);border:1px solid #00ff88;padding:20px;border-radius:12px;text-align:center;"><div style="font-size:3rem;margin-bottom:10px;">✅</div><h3 style="color:#00ff88;margin-bottom:10px;">تم إرسال تذكرتك بنجاح!</h3><p style="color:#888;">رقم التذكرة: #${Date.now().toString().slice(-6)}</p><p style="color:#888;margin-top:10px;">سنرد عليك خلال 24 ساعة</p></div>`;
     document.getElementById("supportEmail").value = "";
     document.getElementById("supportMsg").value = "";
     showToast("✅ تم إرسال التذكرة");
@@ -1212,12 +1024,11 @@ function donateCustom() {
     showToast(`❤️ شكراً لدعمك بـ $${amount}!`);
 }
 
-// ========== INIT ==========
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('syncStatus').innerHTML = '<div class="loading-spinner"></div><span>جاري الاتصال بالخادم...</span>';
     await loadMods();
+    await loadRPs();
     await loadIdeas();
-
     if (token) {
         try {
             const response = await fetch(`${API_BASE}/api/mods`, { headers: { 'Authorization': token } });

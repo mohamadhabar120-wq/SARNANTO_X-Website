@@ -1,12 +1,14 @@
 {
   "name": "sarnanto-x",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "@vercel/blob": "^0.27.0",
+    "multer": "^1.4.5"
   }
 }
