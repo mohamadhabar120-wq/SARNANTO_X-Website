@@ -111,6 +111,17 @@ a,button,input,select,textarea{transition:all .25s ease}
     transition:border-color 0.3s,box-shadow 0.3s,transform 0.2s;
 }
 .login-box input:focus{border-color:#ff3333;outline:none;box-shadow:0 0 0 4px rgba(255,51,51,0.15);transform:translateY(-1px)}
+/* Stop Chrome/Safari from painting autofilled fields white — was breaking the dark theme */
+.login-box input:-webkit-autofill,
+.login-box input:-webkit-autofill:hover,
+.login-box input:-webkit-autofill:focus,
+.login-box input:-webkit-autofill:active{
+    -webkit-text-fill-color:#fff !important;
+    -webkit-box-shadow:0 0 0 1000px #0a0a0a inset !important;
+    box-shadow:0 0 0 1000px #0a0a0a inset !important;
+    caret-color:#fff;
+    transition:background-color 9999s ease-in-out 0s;
+}
 .login-box .btn-primary{
     position:relative;
     overflow:hidden;
@@ -1284,10 +1295,16 @@ async function uploadFileWithProgress(file, endpoint, progressId) {
         });
         xhr.addEventListener('load', () => {
             progressBar.style.display = 'none';
-            if (xhr.status === 200) resolve(JSON.parse(xhr.responseText));
-            else reject(new Error('Upload failed'));
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try { resolve(JSON.parse(xhr.responseText)); }
+                catch(e) { reject(new Error('رد غير صالح من الخادم')); }
+            } else {
+                let msg = `فشل الرفع (كود ${xhr.status})`;
+                try { const data = JSON.parse(xhr.responseText); if (data.error) msg = data.error; } catch(e) {}
+                reject(new Error(msg));
+            }
         });
-        xhr.addEventListener('error', () => { progressBar.style.display = 'none'; reject(new Error('Upload error')); });
+        xhr.addEventListener('error', () => { progressBar.style.display = 'none'; reject(new Error('تعذّر الاتصال بالخادم أثناء الرفع')); });
         xhr.open('POST', `${API_BASE}${endpoint}`);
         xhr.send(formData);
     });
@@ -1310,7 +1327,7 @@ async function publishMod() {
             fileName = result.fileName;
             fileUrl = result.url;
             showToast("📁 تم رفع الملف");
-        } catch(e) { showToast("❌ فشل رفع الملف", 'error'); return; }
+        } catch(e) { showToast(`❌ ${e.message || "فشل رفع الملف"}`, 'error'); return; }
     }
 
     try {
@@ -1349,7 +1366,7 @@ async function publishRP() {
             fileName = result.fileName;
             fileUrl = result.url;
             showToast("📁 تم رفع الملف");
-        } catch(e) { showToast("❌ فشل رفع الملف", 'error'); return; }
+        } catch(e) { showToast(`❌ ${e.message || "فشل رفع الملف"}`, 'error'); return; }
     }
 
     try {

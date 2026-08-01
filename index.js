@@ -258,7 +258,7 @@ app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
         });
     } catch (e) {
         console.error('Upload error:', e);
-        res.status(500).json({ error: '❌ فشل رفع الملف' });
+        res.status(500).json({ error: 'فشل رفع الملف: ' + (e.message || 'خطأ غير معروف بالخادم') });
     }
 });
 
@@ -524,7 +524,7 @@ app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); }
 // ========== ERROR HANDLING ==========
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ error: 'Something went wrong!' });
+    res.status(500).json({ error: err.message || 'حدث خطأ ما!' });
 });
 
 // ========== START ==========
