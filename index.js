@@ -23,11 +23,14 @@ app.use(express.static(__dirname));
 // start` still works for development without any setup.
 // ==========================================================
 const HAS_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
+const ON_VERCEL = !!process.env.VERCEL;
 const DB_BLOB_PATH = 'db/database.json';
 
 // ========== File Upload Setup ==========
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
-if (!HAS_BLOB && !fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+if (!HAS_BLOB && !ON_VERCEL && !fs.existsSync(UPLOAD_DIR)) {
+    try { fs.mkdirSync(UPLOAD_DIR, { recursive: true }); } catch (e) { console.error('Could not create uploads dir:', e); }
+}
 
 // Use memory storage so we can forward the buffer to Blob storage.
 // (diskStorage would silently lose every uploaded file in production.)
@@ -245,6 +248,14 @@ app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
                 fileName: safeFileName(req.file.originalname),
                 url: blob.url,
                 size: req.file.size
+            });
+        }
+        if (ON_VERCEL) {
+            // Vercel's production filesystem is read-only — writing here will
+            // always fail. Fail with a clear, actionable message instead of a
+            // cryptic filesystem error (ENOTDIR/EROFS).
+            return res.status(500).json({
+                error: 'التخزين الدائم غير مفعّل: متغير BLOB_READ_WRITE_TOKEN غير موجود على السيرفر. اربط Blob Store من Storage في Vercel ثم أعد النشر (Redeploy).'
             });
         }
         const dest = path.join(UPLOAD_DIR, type);

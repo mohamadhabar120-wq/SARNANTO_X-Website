@@ -48,7 +48,7 @@ a,button,input,select,textarea{transition:all .25s ease}
 .banned-overlay .support-text{color:#888;margin-top:20px;font-size:0.9rem}
 .banned-overlay .support-text a{color:#ff3333;text-decoration:none}
 
-/* ===== LOGIN OVERLAY ===== */
+/* ===== LOGIN OVERLAY - مصغر ===== */
 .login-overlay{
     position:fixed;
     top:0;
@@ -71,47 +71,46 @@ a,button,input,select,textarea{transition:all .25s ease}
     position:relative;
     background:linear-gradient(145deg,rgba(26,26,26,0.9),rgba(10,10,10,0.95));
     border:2px solid #ff3333;
-    border-radius:30px;
-    padding:45px;
+    border-radius:24px;
+    padding:28px 30px;
     width:90%;
-    max-width:420px;
+    max-width:380px;
     text-align:center;
     animation:slideUp 0.6s cubic-bezier(.2,.8,.2,1), boxGlow 4s ease-in-out infinite;
     z-index:1;
 }
-@keyframes slideUp{from{opacity:0;transform:translateY(50px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes boxGlow{
-    0%,100%{box-shadow:0 0 60px rgba(255,51,51,.28),0 0 110px rgba(255,51,51,.08)}
-    33%{box-shadow:0 0 60px rgba(255,170,0,.28),0 0 110px rgba(255,170,0,.08)}
-    66%{box-shadow:0 0 60px rgba(51,136,255,.28),0 0 110px rgba(51,136,255,.08)}
+    0%,100%{box-shadow:0 0 40px rgba(255,51,51,.2),0 0 80px rgba(255,51,51,.05)}
+    33%{box-shadow:0 0 40px rgba(255,170,0,.2),0 0 80px rgba(255,170,0,.05)}
+    66%{box-shadow:0 0 40px rgba(51,136,255,.2),0 0 80px rgba(51,136,255,.05)}
 }
-.logo-flame-wrap{position:relative;width:90px;height:90px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
-.logo-flame-wrap::before{content:'';position:absolute;inset:-15px;background:radial-gradient(circle,rgba(255,110,0,0.45),transparent 70%);filter:blur(14px);animation:flameGlow 2.2s ease-in-out infinite}
-@keyframes flameGlow{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.2)}}
-.login-box .logo-icon{font-size:3.6rem;position:relative;animation:flameFlicker 1.8s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(255,90,0,.65))}
-@keyframes flameFlicker{0%,100%{transform:scale(1) rotate(-3deg)}25%{transform:scale(1.06) rotate(2deg)}50%{transform:scale(0.96) rotate(-1deg)}75%{transform:scale(1.04) rotate(2deg)}}
-.login-box h2{font-size:1.9rem;margin-bottom:5px;letter-spacing:0.5px}
-.login-box .subtitle{color:#888;margin-bottom:25px;font-size:0.9rem}
-.login-tabs{position:relative;display:flex;gap:0;margin-bottom:25px;background:#0a0a0a;border-radius:15px;padding:5px}
-.login-tab-thumb{position:absolute;top:5px;bottom:5px;left:0;width:50%;background:linear-gradient(135deg,#ff3333,#cc0000);border-radius:10px;box-shadow:0 4px 15px rgba(255,51,51,.4);transition:transform .35s cubic-bezier(.2,.8,.2,1),width .35s;z-index:0}
-.login-tab{flex:1;padding:12px;background:transparent;border:none;color:#888;border-radius:10px;cursor:pointer;font-weight:700;font-family:inherit;font-size:0.95rem;transition:color 0.3s;position:relative;z-index:1}
+.logo-flame-wrap{position:relative;width:65px;height:65px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center}
+.logo-flame-wrap::before{content:'';position:absolute;inset:-12px;background:radial-gradient(circle,rgba(255,110,0,0.35),transparent 70%);filter:blur(12px);animation:flameGlow 2.2s ease-in-out infinite}
+@keyframes flameGlow{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+.login-box .logo-icon{font-size:2.8rem;position:relative;animation:flameFlicker 1.8s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(255,90,0,.5))}
+@keyframes flameFlicker{0%,100%{transform:scale(1) rotate(-2deg)}25%{transform:scale(1.05) rotate(2deg)}50%{transform:scale(0.97) rotate(-1deg)}75%{transform:scale(1.03) rotate(2deg)}}
+.login-box h2{font-size:1.5rem;margin-bottom:2px;letter-spacing:0.5px}
+.login-box .subtitle{color:#888;margin-bottom:18px;font-size:0.8rem}
+.login-tabs{position:relative;display:flex;gap:0;margin-bottom:18px;background:#0a0a0a;border-radius:12px;padding:4px}
+.login-tab-thumb{position:absolute;top:4px;bottom:4px;left:0;width:50%;background:linear-gradient(135deg,#ff3333,#cc0000);border-radius:8px;box-shadow:0 3px 12px rgba(255,51,51,.3);transition:transform .3s cubic-bezier(.2,.8,.2,1),width .3s;z-index:0}
+.login-tab{flex:1;padding:10px;background:transparent;border:none;color:#888;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit;font-size:0.85rem;transition:color 0.3s;position:relative;z-index:1}
 .login-tab.active{color:#fff}
 .login-tab:hover:not(.active){color:#ff8888}
-.login-box .form-group{margin-bottom:18px;text-align:right}
-.login-box .form-group label{display:block;color:#ff8888;margin-bottom:6px;font-size:0.85rem}
+.login-box .form-group{margin-bottom:12px;text-align:right}
+.login-box .form-group label{display:block;color:#ff8888;margin-bottom:4px;font-size:0.8rem}
 .login-box input{
     background:#0a0a0a;
     border:2px solid rgba(255,51,51,0.15);
     color:#fff;
-    padding:14px 18px;
-    border-radius:12px;
+    padding:10px 14px;
+    border-radius:10px;
     width:100%;
     font-family:inherit;
-    font-size:1rem;
+    font-size:0.9rem;
     transition:border-color 0.3s,box-shadow 0.3s,transform 0.2s;
 }
-.login-box input:focus{border-color:#ff3333;outline:none;box-shadow:0 0 0 4px rgba(255,51,51,0.15);transform:translateY(-1px)}
-/* Stop Chrome/Safari from painting autofilled fields white — was breaking the dark theme */
+.login-box input:focus{border-color:#ff3333;outline:none;box-shadow:0 0 0 3px rgba(255,51,51,0.12);transform:translateY(-1px)}
 .login-box input:-webkit-autofill,
 .login-box input:-webkit-autofill:hover,
 .login-box input:-webkit-autofill:focus,
@@ -120,31 +119,30 @@ a,button,input,select,textarea{transition:all .25s ease}
     -webkit-box-shadow:0 0 0 1000px #0a0a0a inset !important;
     box-shadow:0 0 0 1000px #0a0a0a inset !important;
     caret-color:#fff;
-    transition:background-color 9999s ease-in-out 0s;
 }
 .login-box .btn-primary{
     position:relative;
     overflow:hidden;
-    background:linear-gradient(135deg,#ff3333,#ffaa00,#cc0000);
+    background:linear-gradient(135deg,#00cc44,#00aa33);
     background-size:220% 220%;
     animation:btnGradientMove 3s ease infinite;
     color:#fff;
     border:none;
-    padding:14px;
-    border-radius:12px;
+    padding:12px;
+    border-radius:10px;
     font-weight:700;
-    font-size:1rem;
+    font-size:0.95rem;
     cursor:pointer;
     width:100%;
     transition:transform 0.2s,box-shadow 0.2s;
     font-family:inherit;
 }
 @keyframes btnGradientMove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.login-box .btn-primary::after{content:'';position:absolute;top:0;left:-60%;width:35%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:btnShine 2.6s ease-in-out infinite}
+.login-box .btn-primary::after{content:'';position:absolute;top:0;left:-60%;width:35%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.3),transparent);transform:skewX(-20deg);animation:btnShine 2.6s ease-in-out infinite}
 @keyframes btnShine{0%{left:-60%}100%{left:130%}}
-.login-box .btn-primary:hover{transform:scale(1.02);box-shadow:0 10px 30px rgba(255,51,51,0.4)}
-.login-error{color:#ff6666;font-size:0.9rem;margin-top:15px;min-height:25px}
-.login-box .forgot-link{color:#666;font-size:0.8rem;margin-top:15px;display:block;cursor:pointer}
+.login-box .btn-primary:hover{transform:scale(1.02);box-shadow:0 8px 25px rgba(0,204,68,0.35)}
+.login-error{color:#ff6666;font-size:0.85rem;margin-top:10px;min-height:20px}
+.login-box .forgot-link{color:#666;font-size:0.75rem;margin-top:10px;display:block;cursor:pointer}
 .login-box .forgot-link:hover{color:#ff8888}
 
 /* ===== REST OF STYLES ===== */
@@ -190,7 +188,8 @@ a,button,input,select,textarea{transition:all .25s ease}
 .btn{background:#2a0000;border:2px solid #ff3333;color:#ff8888;padding:10px 20px;border-radius:30px;cursor:pointer;font-weight:700;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px}
 .btn:hover{background:#ff3333;color:#000;transform:translateY(-2px)}
 .btn-primary{background:linear-gradient(135deg,#ff3333,#cc0000);color:#fff;border:none}
-.btn-success{background:linear-gradient(135deg,#00aa00,#008800);color:#fff;border:none}
+.btn-success{background:linear-gradient(135deg,#00cc44,#009933);color:#fff;border:none}
+.btn-success:hover{background:linear-gradient(135deg,#00dd55,#00aa33);color:#fff;box-shadow:0 4px 20px rgba(0,204,68,0.4)}
 .btn-blue{background:linear-gradient(135deg,#3366ff,#2244cc);color:#fff;border:none}
 .btn-danger{background:linear-gradient(135deg,#cc0000,#880000);color:#fff;border:none}
 input,textarea,select{background:#1a1a1a;border:1px solid rgba(255,51,51,0.2);color:#fff;padding:12px 18px;border-radius:12px;width:100%;margin:8px 0;font-family:inherit;font-size:0.95rem}
@@ -244,7 +243,7 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
 .progress-bar-fill{height:100%;background:linear-gradient(90deg,#ff3333,#ff8888);border-radius:3px;transition:width 0.3s;width:0%}
 .paypal-btn{background:linear-gradient(135deg,#0070ba,#003087);color:#fff;border:none;padding:12px 30px;border-radius:30px;font-weight:700;cursor:pointer;font-family:inherit;font-size:1rem;transition:transform 0.2s}
 .paypal-btn:hover{transform:scale(1.05)}
-@media(max-width:768px){.navbar{gap:5px;padding:8px}.nav-link{padding:6px 12px;font-size:12px}.mods-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.login-box{padding:25px}}
+@media(max-width:768px){.navbar{gap:5px;padding:8px}.nav-link{padding:6px 12px;font-size:12px}.mods-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.login-box{padding:20px}}
 
 /* ===== LEGENDARY MODE ===== */
 .bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;pointer-events:none}
@@ -267,6 +266,10 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
 .storage-badge{display:inline-block;margin-inline-start:8px;padding:2px 10px;border-radius:20px;font-size:0.72rem;font-weight:700}
 .storage-badge.persistent{background:rgba(0,255,136,0.12);color:#00ff88;border:1px solid rgba(0,255,136,0.3)}
 .storage-badge.local{background:rgba(255,170,0,0.12);color:#ffaa00;border:1px solid rgba(255,170,0,0.3)}
+
+.mod-header{display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:8px}
+.mod-name{font-size:1.2rem;font-weight:900;color:#fff}
+.mod-meta{color:#666;font-size:0.8rem;margin-top:3px}
 </style>
 <base target="_blank">
 </head>
@@ -287,7 +290,7 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
 <!-- ===== TOAST ===== -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- ===== LOGIN OVERLAY ===== -->
+<!-- ===== LOGIN OVERLAY - مصغر ===== -->
 <div class="login-overlay" id="loginOverlay">
     <div class="login-embers">
         <span style="left:8%;width:5px;height:5px;--drift:15px;animation-duration:5.5s;animation-delay:0s"></span>
@@ -301,11 +304,11 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
     <div class="login-box">
         <div class="logo-flame-wrap"><div class="logo-icon">🔥</div></div>
         <h2 class="gradient-text">SARNANTO_X</h2>
-        <p class="subtitle">تسجيل الدخول أو إنشاء حساب جديد</p>
+        <p class="subtitle">تسجيل الدخول أو إنشاء حساب</p>
         <div class="login-tabs" id="loginTabs">
             <div class="login-tab-thumb" id="loginTabThumb"></div>
             <button class="login-tab active" onclick="switchLoginTab('login')" id="tabLogin">🔐 دخول</button>
-            <button class="login-tab" onclick="switchLoginTab('register')" id="tabRegister">✨ حساب جديد</button>
+            <button class="login-tab" onclick="switchLoginTab('register')" id="tabRegister">✨ حساب</button>
         </div>
         <div id="loginForm">
             <div class="form-group">
@@ -329,12 +332,8 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
                 <input type="email" id="regEmail" placeholder="example@email.com">
             </div>
             <div class="form-group">
-                <label>🔒 كلمة المرور (6 أحرف على الأقل)</label>
+                <label>🔒 كلمة المرور (6 أحرف)</label>
                 <input type="password" id="regPass" placeholder="********">
-            </div>
-            <div class="form-group">
-                <label>🔒 تأكيد كلمة المرور</label>
-                <input type="password" id="regPassConfirm" placeholder="********">
             </div>
             <button class="btn-primary" onclick="doRegister()">✨ إنشاء حساب</button>
             <div class="login-error" id="registerError"></div>
@@ -429,7 +428,7 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
             </select>
         </div>
         <div class="form-group"><label>💬 وصف المشكلة</label><textarea id="supportMsg" rows="4" placeholder="اكتب مشكلتك بالتفصيل..."></textarea></div>
-        <button class="btn btn-primary" onclick="sendSupport()" style="width:100%;">📨 إرسال التذكرة</button>
+        <button class="btn btn-success" onclick="sendSupport()" style="width:100%;">📨 إرسال التذكرة</button>
         <div id="supportResult" style="margin-top:20px;"></div>
     </div>
 
@@ -447,7 +446,7 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
                 </select>
             </div>
             <div class="form-group"><label>📝 شرح الفكرة</label><textarea id="ideaDesc" rows="3" placeholder="اشرح فكرتك بالتفصيل..."></textarea></div>
-            <button class="btn btn-primary" onclick="addIdea()" style="width:100%;">✨ إرسال الفكرة</button>
+            <button class="btn btn-success" onclick="addIdea()" style="width:100%;">✨ إرسال الفكرة</button>
         </div>
         <h3 style="color:#ff3333;margin-bottom:15px;">📌 الأفكار المقترحة</h3>
         <div id="ideasList" class="ideas-list"></div>
@@ -464,7 +463,7 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
                 <p style="color:#ff8888;font-size:1.3rem;margin-bottom:20px;">💰 المبلغ الموصى به: $10</p>
                 <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0;">
                     <button class="btn" onclick="donateAmount(5)">$5</button>
-                    <button class="btn btn-primary" onclick="donateAmount(10)">$10</button>
+                    <button class="btn btn-success" onclick="donateAmount(10)">$10</button>
                     <button class="btn" onclick="donateAmount(20)">$20</button>
                     <button class="btn" onclick="donateAmount(50)">$50</button>
                 </div>
@@ -529,7 +528,7 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
                     </div>
                 </div>
                 <div class="progress-bar" id="modUploadProgress"><div class="progress-bar-fill" id="modUploadProgressFill"></div></div>
-                <button class="btn btn-primary" onclick="publishMod()" style="width:100%;margin-top:15px;">🚀 نشر المود</button>
+                <button class="btn btn-success" onclick="publishMod()" style="width:100%;margin-top:15px;">🚀 نشر المود</button>
             </div>
 
             <div id="adminRPForm" style="display:none;">
@@ -694,11 +693,9 @@ async function doRegister() {
     const name = document.getElementById("regName").value.trim();
     const email = document.getElementById("regEmail").value.trim();
     const password = document.getElementById("regPass").value;
-    const confirm = document.getElementById("regPassConfirm").value;
     const errorEl = document.getElementById("registerError");
     if (!name || !email || !password) { errorEl.innerText = "❌ جميع الحقول مطلوبة"; return; }
     if (password.length < 6) { errorEl.innerText = "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل"; return; }
-    if (password !== confirm) { errorEl.innerText = "❌ كلمتا المرور غير متطابقتين"; return; }
     try {
         const response = await fetch(`${API_BASE}/api/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password }) });
         if (response.ok) {
@@ -835,7 +832,6 @@ function toggleRPPrice() {
 
 // ===== API FUNCTIONS =====
 async function loadMods() {
-    showSkeleton('modsList');
     try {
         const response = await fetch(`${API_BASE}/api/mods`);
         if (response.ok) {
@@ -846,12 +842,30 @@ async function loadMods() {
             if (currentUser?.isAdmin) displayAdminMods();
             updateStats();
             document.getElementById('syncStatus').innerHTML = '✅ متزامن | ' + mods.length + ' مود | ' + resourcePacks.length + ' ريسورسباك';
+        } else {
+            // Fallback: try to load from localStorage if server fails
+            const cached = localStorage.getItem('sarnanto_mods');
+            if (cached) {
+                mods = JSON.parse(cached);
+                displayMods();
+                renderSpotlight();
+                document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية (الخادم غير مستجيب)';
+            }
         }
-    } catch(e) { document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية'; }
+    } catch(e) { 
+        console.error('Error loading mods:', e);
+        // Try cache
+        const cached = localStorage.getItem('sarnanto_mods');
+        if (cached) {
+            mods = JSON.parse(cached);
+            displayMods();
+            renderSpotlight();
+            document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية (الخادم غير مستجيب)';
+        }
+    }
 }
 
 async function loadRPs() {
-    showSkeleton('rpList');
     try {
         const response = await fetch(`${API_BASE}/api/resourcepacks`);
         if (response.ok) {
@@ -861,14 +875,23 @@ async function loadRPs() {
             if (currentUser?.isAdmin) displayAdminRPs();
             updateStats();
             document.getElementById('syncStatus').innerHTML = '✅ متزامن | ' + mods.length + ' مود | ' + resourcePacks.length + ' ريسورسباك';
+        } else {
+            const cached = localStorage.getItem('sarnanto_rps');
+            if (cached) {
+                resourcePacks = JSON.parse(cached);
+                displayRPs();
+                document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية (الخادم غير مستجيب)';
+            }
         }
-    } catch(e) { document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية'; }
-}
-
-function showSkeleton(containerId) {
-    const el = document.getElementById(containerId);
-    if (!el || el.children.length) return; // only show on first/empty load, not on every refresh
-    el.innerHTML = Array(3).fill('<div class="skeleton skeleton-card"></div>').join('');
+    } catch(e) {
+        console.error('Error loading RPs:', e);
+        const cached = localStorage.getItem('sarnanto_rps');
+        if (cached) {
+            resourcePacks = JSON.parse(cached);
+            displayRPs();
+            document.getElementById('syncStatus').innerHTML = '⚠️ استخدام البيانات المحلية (الخادم غير مستجيب)';
+        }
+    }
 }
 
 async function loadUsers() {
@@ -956,7 +979,7 @@ function displayMods() {
                 <div class="comment-list">${renderComments(m.comments || [])}</div>
                 <div style="display:flex;gap:10px;margin-top:10px;">
                     <input type="text" id="comment-${m.id}" placeholder="اكتب تعليقاً..." style="flex:1;">
-                    <button class="btn" onclick="addComment('${m.id}')" style="padding:8px 15px;">إرسال</button>
+                    <button class="btn btn-success" onclick="addComment('${m.id}')" style="padding:8px 15px;">إرسال</button>
                 </div>
             </div>
         </div>
@@ -1032,9 +1055,8 @@ function displayRPs() {
                 <div class="comment-list">${renderComments(r.comments || [])}</div>
                 <div style="display:flex;gap:10px;margin-top:10px;">
                     <input type="text" id="rpcomment-${r.id}" placeholder="اكتب تعليقاً..." style="flex:1;">
-                    <button class="btn" onclick="addRPComment('${r.id}')" style="padding:8px 15px;">إرسال</button>
+                    <button class="btn btn-success" onclick="addRPComment('${r.id}')" style="padding:8px 15px;">إرسال</button>
                 </div>
-
             </div>
         </div>
     `;}).join('');
@@ -1115,7 +1137,7 @@ function displayIdeas() {
             <div style="display:flex;align-items:center;gap:10px;margin-top:15px;flex-wrap:wrap;">
                 ${currentUser && (i.votedBy || []).includes(currentUser.id)
                     ? `<button class="btn" disabled style="opacity:0.6;cursor:default;">✅ صوّتّ</button>`
-                    : `<button class="btn" onclick="voteIdea('${i.id}')" style="padding:6px 15px;">👍 تصويت</button>`}
+                    : `<button class="btn btn-success" onclick="voteIdea('${i.id}')" style="padding:6px 15px;">👍 تصويت</button>`}
                 <span style="color:#888;">${i.votes || 0} تصويت</span>
                 ${currentUser?.isAdmin ? `
                     <span style="flex:1;"></span>
@@ -1143,8 +1165,6 @@ function updateStats() {
     const els = ['statUsers','statMods','statRPs','statIdeas'];
     const vals = [users.length, mods.length, resourcePacks.length, ideas.length];
     els.forEach((id, i) => animateCount(id, vals[i]));
-    // Downloads/visitors live only on the server (they change from actions other
-    // users take), so pull them for real instead of hardcoding 0.
     fetch(`${API_BASE}/api/stats`).then(r => r.ok ? r.json() : null).then(data => {
         if (!data) return;
         animateCount('statDownloads', data.downloads || 0);
@@ -1191,7 +1211,11 @@ async function downloadMod(modId) {
         const response = await fetch(`${API_BASE}/api/download-free/${modId}`, { headers: { 'Authorization': token } });
         if (response.ok) {
             const data = await response.json();
-            if (data.url) window.open(data.url, '_blank');
+            if (data.url) {
+                window.open(data.url, '_blank');
+            } else {
+                showToast("⚠️ لا يوجد رابط تحميل للمود", 'warning');
+            }
             showToast("📥 بدأ التحميل");
             loadMods();
         } else { showToast("❌ فشل التحميل", 'error'); }
@@ -1237,7 +1261,11 @@ async function downloadRP(rpId) {
         const response = await fetch(`${API_BASE}/api/download-rp-free/${rpId}`, { headers: { 'Authorization': token } });
         if (response.ok) {
             const data = await response.json();
-            if (data.url) window.open(data.url, '_blank');
+            if (data.url) {
+                window.open(data.url, '_blank');
+            } else {
+                showToast("⚠️ لا يوجد رابط تحميل للريسورسباك", 'warning');
+            }
             showToast("📥 بدأ التحميل");
             loadRPs();
         } else { showToast("❌ فشل التحميل", 'error'); }
@@ -1417,7 +1445,7 @@ async function toggleBan(userId) {
             body: JSON.stringify({ 
                 banned: !user?.banned,
                 banReason: !user?.banned ? 'مخالفة قوانين الموقع' : null,
-                banPermanent: !user?.banned ? true : false  // حظر دائم افتراضي
+                banPermanent: !user?.banned ? true : false
             }) 
         });
         if (response.ok) { 
@@ -1454,7 +1482,6 @@ function donateCustom() {
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('syncStatus').innerHTML = '<div class="loading-spinner"></div><span>جاري الاتصال بالخادم...</span>';
     
-    // Check token
     if (token) {
         try {
             const response = await fetch(`${API_BASE}/api/me`, { headers: { 'Authorization': token } });
