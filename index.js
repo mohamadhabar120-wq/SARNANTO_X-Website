@@ -25,7 +25,7 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 200 * 1024 * 1024 }, // 200 MB
+    limits: { fileSize: 200 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const type = req.params.type;
         if (type === 'mod') {
@@ -395,7 +395,10 @@ app.get('/api/download-free/:id', authMiddleware, async (req, res) => {
     mod.downloads = (mod.downloads || 0) + 1;
     db.totalDownloads = (db.totalDownloads || 0) + 1;
     await saveDB(db);
-    res.json({ success: true, message: "تم التحميل", fileName: mod.fileName, url: mod.fileUrl || null });
+    
+    // استخدام downloadLink إذا كان موجوداً، وإلا استخدام fileUrl
+    const downloadUrl = mod.downloadLink || mod.fileUrl || null;
+    res.json({ success: true, message: "تم التحميل", fileName: mod.fileName, url: downloadUrl });
 });
 
 app.get('/api/download-rp-free/:id', authMiddleware, async (req, res) => {
@@ -406,7 +409,9 @@ app.get('/api/download-rp-free/:id', authMiddleware, async (req, res) => {
     rp.downloads = (rp.downloads || 0) + 1;
     db.totalDownloads = (db.totalDownloads || 0) + 1;
     await saveDB(db);
-    res.json({ success: true, message: "تم التحميل", fileName: rp.fileName, url: rp.fileUrl || null });
+    
+    const downloadUrl = rp.downloadLink || rp.fileUrl || null;
+    res.json({ success: true, message: "تم التحميل", fileName: rp.fileName, url: downloadUrl });
 });
 
 app.get('/api/ideas', (req, res) => { res.json({ ideas: db.ideas }); });
