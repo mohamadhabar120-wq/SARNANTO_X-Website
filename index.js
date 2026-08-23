@@ -12,33 +12,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// ==========================================================
-// STORAGE MODE
-// On Vercel, the filesystem is ephemeral (serverless functions
-// don't persist disk writes between invocations/cold starts).
-// If a Blob store is connected (BLOB_READ_WRITE_TOKEN present),
-// we persist BOTH the database and uploaded files to Vercel Blob
-// so nothing gets wiped after a redeploy or cold start.
-// Locally (no token), we fall back to the filesystem so `npm run
-// start` still works for development without any setup.
-// ==========================================================
 const HAS_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
 const ON_VERCEL = !!process.env.VERCEL;
 const DB_BLOB_PATH = 'db/database.json';
 
-// ========== File Upload Setup ==========
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
 if (!HAS_BLOB && !ON_VERCEL && !fs.existsSync(UPLOAD_DIR)) {
     try { fs.mkdirSync(UPLOAD_DIR, { recursive: true }); } catch (e) { console.error('Could not create uploads dir:', e); }
 }
 
-// Use memory storage so we can forward the buffer to Blob storage.
-// (diskStorage would silently lose every uploaded file in production.)
 const storage = multer.memoryStorage();
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 100 * 1024 * 1024 },
+    limits: { fileSize: 200 * 1024 * 1024 }, // 200 MB
     fileFilter: (req, file, cb) => {
         const type = req.params.type;
         if (type === 'mod') {
@@ -54,8 +41,6 @@ const upload = multer({
 });
 
 function safeFileName(originalname) {
-    // Strip anything that isn't a safe filename character to avoid
-    // path issues and stored-XSS via crafted filenames.
     return (originalname || 'file').replace(/[^a-zA-Z0-9._-]/g, '_').slice(-100);
 }
 
@@ -63,7 +48,6 @@ function generateUploadName(originalname) {
     return Date.now() + '_' + Math.random().toString(36).substr(2, 9) + path.extname(safeFileName(originalname));
 }
 
-// ========== Database ==========
 const DB_FILE = path.join(__dirname, 'database.json');
 
 function defaultDB() {
@@ -116,8 +100,6 @@ async function saveDB(data) {
 let db = defaultDB();
 let dbReady = loadDB().then(d => { db = d; });
 
-// Keep data fresh across serverless cold starts / multiple instances:
-// reload from Blob storage at the start of each request when Blob is in use.
 app.use(async (req, res, next) => {
     await dbReady;
     if (HAS_BLOB) {
@@ -130,7 +112,6 @@ function generateToken() { return 'token_' + Date.now() + '_' + Math.random().to
 function generateId() { return Date.now() + '_' + Math.random().toString(36).substr(2, 9); }
 function nextUserId() { return db.users.length ? Math.max(...db.users.map(u => u.id)) + 1 : 1; }
 
-// ========== AUTH MIDDLEWARE ==========
 function authMiddleware(req, res, next) {
     const token = req.headers.authorization;
     if (!token) return res.status(401).json({ error: "Unauthorized" });
@@ -151,7 +132,6 @@ function authMiddleware(req, res, next) {
     next();
 }
 
-// ========== REGISTER ==========
 app.post('/api/register', async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) return res.status(400).json({ error: "❌ جميع الحقول مطلوبة" });
@@ -172,7 +152,6 @@ app.post('/api/register', async (req, res) => {
     res.json({ success: true, token: tok, user: { id: newUser.id, name: newUser.name, email: newUser.email, isAdmin: newUser.isAdmin } });
 });
 
-// ========== LOGIN ==========
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     const user = db.users.find(u => u.email === email);
@@ -206,7 +185,6 @@ app.post('/api/login', async (req, res) => {
     });
 });
 
-// ========== GET CURRENT USER ==========
 app.get('/api/me', (req, res) => {
     const token = req.headers.authorization;
     if (!token) return res.json({ user: null });
@@ -230,7 +208,6 @@ app.get('/api/me', (req, res) => {
     });
 });
 
-// ========== FILE UPLOAD ==========
 app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const type = req.params.type;
@@ -251,9 +228,6 @@ app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
             });
         }
         if (ON_VERCEL) {
-            // Vercel's production filesystem is read-only — writing here will
-            // always fail. Fail with a clear, actionable message instead of a
-            // cryptic filesystem error (ENOTDIR/EROFS).
             return res.status(500).json({
                 error: 'التخزين الدائم غير مفعّل: متغير BLOB_READ_WRITE_TOKEN غير موجود على السيرفر. اربط Blob Store من Storage في Vercel ثم أعد النشر (Redeploy).'
             });
@@ -273,11 +247,10 @@ app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
     }
 });
 
-// ========== MODS ==========
 app.get('/api/mods', (req, res) => { res.json({ mods: db.mods }); });
 
 app.post('/api/mods', authMiddleware, async (req, res) => {
-    const { name, price, desc, isFree, category, version, mcVersion, fileName, fileUrl } = req.body;
+    const { name, price, desc, isFree, category, version, mcVersion, fileName, fileUrl, iconUrl, downloadLink } = req.body;
     if (!name || !name.trim()) return res.status(400).json({ error: "❌ اسم المود مطلوب" });
     const newMod = {
         id: generateId(), name: String(name).slice(0, 80),
@@ -285,6 +258,7 @@ app.post('/api/mods', authMiddleware, async (req, res) => {
         isFree: isFree === 'true' || isFree === true,
         category: category || 'عام', version: version || '1.0',
         mcVersion: mcVersion || '1.20+', fileName: fileName || '', fileUrl: fileUrl || '',
+        iconUrl: iconUrl || '', downloadLink: downloadLink || '',
         downloads: 0, ratings: [],
         averageRating: 0, comments: [], likes: 0, likedBy: [],
         createdAt: new Date().toISOString()
@@ -302,11 +276,10 @@ app.delete('/api/mods/:id', authMiddleware, async (req, res) => {
     res.json({ success: true });
 });
 
-// ========== RESOURCE PACKS ==========
 app.get('/api/resourcepacks', (req, res) => { res.json({ resourcePacks: db.resourcePacks }); });
 
 app.post('/api/resourcepacks', authMiddleware, async (req, res) => {
-    const { name, price, desc, isFree, category, version, mcVersion, fileName, fileUrl } = req.body;
+    const { name, price, desc, isFree, category, version, mcVersion, fileName, fileUrl, iconUrl, downloadLink } = req.body;
     if (!name || !name.trim()) return res.status(400).json({ error: "❌ اسم الريسورسباك مطلوب" });
     const newRP = {
         id: generateId(), name: String(name).slice(0, 80),
@@ -314,6 +287,7 @@ app.post('/api/resourcepacks', authMiddleware, async (req, res) => {
         isFree: isFree === 'true' || isFree === true,
         category: category || 'عام', version: version || '1.0',
         mcVersion: mcVersion || '1.20+', fileName: fileName || '', fileUrl: fileUrl || '',
+        iconUrl: iconUrl || '', downloadLink: downloadLink || '',
         downloads: 0, ratings: [],
         averageRating: 0, comments: [], likes: 0, likedBy: [],
         createdAt: new Date().toISOString()
@@ -331,7 +305,6 @@ app.delete('/api/resourcepacks/:id', authMiddleware, async (req, res) => {
     res.json({ success: true });
 });
 
-// ========== RATE MODS (one rating per user, updates on re-rate) ==========
 app.post('/api/mods/:id/rate', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const rating = parseInt(req.body.rating);
@@ -348,7 +321,6 @@ app.post('/api/mods/:id/rate', authMiddleware, async (req, res) => {
     res.json({ success: true, averageRating: mod.averageRating });
 });
 
-// ========== LIKE MODS (toggle, one like per user) ==========
 app.post('/api/mods/:id/like', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const mod = db.mods.find(m => m.id === id);
@@ -363,7 +335,6 @@ app.post('/api/mods/:id/like', authMiddleware, async (req, res) => {
     res.json({ success: true, likes: mod.likes, liked });
 });
 
-// ========== COMMENTS MODS ==========
 app.post('/api/mods/:id/comment', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const { text } = req.body;
@@ -375,7 +346,6 @@ app.post('/api/mods/:id/comment', authMiddleware, async (req, res) => {
     res.json({ success: true });
 });
 
-// ========== RATE RPs ==========
 app.post('/api/resourcepacks/:id/rate', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const rating = parseInt(req.body.rating);
@@ -392,7 +362,6 @@ app.post('/api/resourcepacks/:id/rate', authMiddleware, async (req, res) => {
     res.json({ success: true, averageRating: rp.averageRating });
 });
 
-// ========== LIKE RPs (toggle, one like per user) ==========
 app.post('/api/resourcepacks/:id/like', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const rp = db.resourcePacks.find(r => r.id === id);
@@ -407,7 +376,6 @@ app.post('/api/resourcepacks/:id/like', authMiddleware, async (req, res) => {
     res.json({ success: true, likes: rp.likes, liked });
 });
 
-// ========== COMMENTS RPs ==========
 app.post('/api/resourcepacks/:id/comment', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const { text } = req.body;
@@ -419,7 +387,6 @@ app.post('/api/resourcepacks/:id/comment', authMiddleware, async (req, res) => {
     res.json({ success: true });
 });
 
-// ========== DOWNLOAD MODS ==========
 app.get('/api/download-free/:id', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const mod = db.mods.find(m => m.id === id);
@@ -431,7 +398,6 @@ app.get('/api/download-free/:id', authMiddleware, async (req, res) => {
     res.json({ success: true, message: "تم التحميل", fileName: mod.fileName, url: mod.fileUrl || null });
 });
 
-// ========== DOWNLOAD RPs ==========
 app.get('/api/download-rp-free/:id', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const rp = db.resourcePacks.find(r => r.id === id);
@@ -443,7 +409,6 @@ app.get('/api/download-rp-free/:id', authMiddleware, async (req, res) => {
     res.json({ success: true, message: "تم التحميل", fileName: rp.fileName, url: rp.fileUrl || null });
 });
 
-// ========== IDEAS ==========
 app.get('/api/ideas', (req, res) => { res.json({ ideas: db.ideas }); });
 
 app.post('/api/ideas', authMiddleware, async (req, res) => {
@@ -481,7 +446,6 @@ app.put('/api/ideas/:id/status', authMiddleware, async (req, res) => {
     res.json({ success: true });
 });
 
-// ========== USERS ==========
 app.get('/api/users', authMiddleware, (req, res) => {
     if (!req.user.isAdmin) return res.status(403).json({ error: "Admin only" });
     res.json({ users: db.users.map(u => ({
@@ -513,7 +477,6 @@ app.put('/api/users/:id/ban', authMiddleware, async (req, res) => {
     res.json({ success: true });
 });
 
-// ========== STATS ==========
 app.get('/api/stats', (req, res) => {
     res.json({
         users: db.users.length,
@@ -526,19 +489,15 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-// ========== SERVE UPLOADS (local dev fallback only) ==========
 app.use('/uploads', express.static(UPLOAD_DIR));
 
-// ========== SERVE index.html ==========
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); });
 
-// ========== ERROR HANDLING ==========
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: err.message || 'حدث خطأ ما!' });
 });
 
-// ========== START ==========
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(HAS_BLOB ? '💾 Persistent storage: Vercel Blob (production-ready)' : '⚠️  Persistent storage: local filesystem (dev only, add BLOB_READ_WRITE_TOKEN for production)');

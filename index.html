@@ -48,7 +48,7 @@ a,button,input,select,textarea{transition:all .25s ease}
 .banned-overlay .support-text{color:#888;margin-top:20px;font-size:0.9rem}
 .banned-overlay .support-text a{color:#ff3333;text-decoration:none}
 
-/* ===== LOGIN OVERLAY - مصغر ===== */
+/* ===== LOGIN OVERLAY ===== */
 .login-overlay{
     position:fixed;
     top:0;
@@ -170,6 +170,7 @@ a,button,input,select,textarea{transition:all .25s ease}
 .mod-card{background:#1a1a1a;border:1px solid rgba(255,51,51,0.15);border-radius:20px;padding:20px;transition:all 0.35s cubic-bezier(.2,.8,.2,1);animation:cardIn 0.5s cubic-bezier(.2,.8,.2,1) both}
 .mod-card:hover{transform:translateY(-8px);border-color:#ff3333;box-shadow:0 15px 35px rgba(255,51,51,0.18)}
 @keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mod-icon{width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:10px;background:#0a0a0a}
 .new-ribbon{position:absolute;top:14px;left:14px;background:linear-gradient(135deg,#00ff88,#00aa55);color:#000;font-size:0.7rem;font-weight:900;padding:3px 10px;border-radius:20px;box-shadow:0 0 12px rgba(0,255,136,0.5)}
 .share-btn{background:transparent;border:1px solid rgba(255,255,255,0.15);color:#888;padding:8px 12px;border-radius:30px;cursor:pointer;font-family:inherit}
 .share-btn:hover{border-color:#ff3333;color:#ff8888}
@@ -196,6 +197,7 @@ input,textarea,select{background:#1a1a1a;border:1px solid rgba(255,51,51,0.2);co
 input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
 .form-group{margin-bottom:15px}
 .form-group label{display:block;color:#ff8888;margin-bottom:5px;font-weight:700;font-size:0.9rem}
+.form-group small{display:block;color:#666;font-size:0.75rem;margin-top:2px}
 .file-upload{background:#1a1a1a;border:2px dashed rgba(255,51,51,0.3);border-radius:16px;padding:30px;text-align:center;cursor:pointer;transition:all 0.3s;margin:10px 0}
 .file-upload:hover{border-color:#ff3333;background:#1f0000}
 .file-upload.dragover{border-color:#00ff88;background:#001a0a}
@@ -290,7 +292,7 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
 <!-- ===== TOAST ===== -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- ===== LOGIN OVERLAY - مصغر ===== -->
+<!-- ===== LOGIN OVERLAY ===== -->
 <div class="login-overlay" id="loginOverlay">
     <div class="login-embers">
         <span style="left:8%;width:5px;height:5px;--drift:15px;animation-duration:5.5s;animation-delay:0s"></span>
@@ -509,6 +511,21 @@ input:focus,textarea:focus,select:focus{border-color:#ff3333;outline:none}
                     </div>
                     <div class="form-group"><label>🎮 إصدار MC</label><input type="text" id="quickModMCVersion" placeholder="1.20+"></div>
                 </div>
+                
+                <!-- ===== NEW: LOGO IMAGE FIELD ===== -->
+                <div class="form-group">
+                    <label>🖼️ رابط صورة المود (لوجو)</label>
+                    <input type="url" id="quickModIcon" placeholder="https://example.com/image.png">
+                    <small>ارفع الصورة على ImgBB أو Google Drive ثم الصق الرابط هنا</small>
+                </div>
+
+                <!-- ===== NEW: DOWNLOAD LINK FIELD ===== -->
+                <div class="form-group">
+                    <label>🔗 رابط تحميل إضافي (Google Drive/MediaFire)</label>
+                    <input type="url" id="quickModLink" placeholder="https://drive.google.com/...">
+                    <small>إذا كان المود كبيراً، استخدم رابط خارجي بدلاً من رفع الملف</small>
+                </div>
+
                 <div style="display:flex;gap:15px;margin:15px 0;justify-content:center;">
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;border-radius:30px;background:#0a0a0a;border:1px solid rgba(255,51,51,0.2);">
                         <input type="radio" name="modType" value="free" checked onchange="togglePrice()"> 🎁 مجاني
@@ -597,7 +614,6 @@ let currentUser = null, mods = [], resourcePacks = [], users = [], ideas = [];
 let token = localStorage.getItem('sarnanto_token');
 let selectedModFile = null, selectedRPFile = null;
 
-// ===== CONFETTI (legendary moments) =====
 function confetti() {
     const colors = ['#ff3333','#ffaa00','#00ff88','#3388ff','#ffffff'];
     for (let i = 0; i < 40; i++) {
@@ -616,7 +632,6 @@ function confetti() {
     }
 }
 
-// ===== ANIMATED COUNTERS =====
 function animateCount(id, target) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -636,7 +651,6 @@ function animateCount(id, target) {
     requestAnimationFrame(tick);
 }
 
-// ===== RIPPLE EFFECT =====
 document.addEventListener('click', (e) => {
     const target = e.target.closest('.btn,.nav-link,.card,.tab-btn,.login-tab');
     if (!target) return;
@@ -651,7 +665,6 @@ document.addEventListener('click', (e) => {
     setTimeout(() => ripple.remove(), 650);
 });
 
-// ===== TOAST =====
 function showToast(msg, type = 'success') {
     const container = document.getElementById("toastContainer");
     const toast = document.createElement("div");
@@ -667,7 +680,6 @@ function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, m =
 function formatDate(dateStr) { if (!dateStr) return ''; return new Date(dateStr).toLocaleDateString('ar-SA'); }
 function formatFileSize(bytes) { if (bytes < 1024) return bytes + ' B'; if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'; return (bytes / (1024 * 1024)).toFixed(1) + ' MB'; }
 
-// ===== LOGIN FUNCTIONS =====
 function switchLoginTab(tab) {
     document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
     document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
@@ -748,7 +760,6 @@ function logoutUser() {
     switchLoginTab('login');
 }
 
-// ===== BANNED OVERLAY =====
 function showBannedOverlay(reason, expiry, permanent) {
     document.getElementById("bannedOverlay").classList.add("active");
     document.getElementById("loginOverlay").classList.add("hidden");
@@ -768,7 +779,6 @@ function showBannedOverlay(reason, expiry, permanent) {
     }
 }
 
-// ===== SECTION NAVIGATION =====
 function showSection(section) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
@@ -805,7 +815,6 @@ function handleFileSelect(input, uploadId) {
     nameEl.innerText = `✅ ${file.name} (${formatFileSize(file.size)})`;
 }
 
-// ===== DRAG & DROP =====
 document.addEventListener('DOMContentLoaded', () => {
     ['modFileUpload','rpFileUpload'].forEach(id => {
         const el = document.getElementById(id); if (!el) return;
@@ -830,7 +839,6 @@ function toggleRPPrice() {
     document.getElementById('rpPriceField').style.display = isPaid ? 'block' : 'none';
 }
 
-// ===== API FUNCTIONS =====
 async function loadMods() {
     try {
         const response = await fetch(`${API_BASE}/api/mods`);
@@ -843,7 +851,6 @@ async function loadMods() {
             updateStats();
             document.getElementById('syncStatus').innerHTML = '✅ متزامن | ' + mods.length + ' مود | ' + resourcePacks.length + ' ريسورسباك';
         } else {
-            // Fallback: try to load from localStorage if server fails
             const cached = localStorage.getItem('sarnanto_mods');
             if (cached) {
                 mods = JSON.parse(cached);
@@ -854,7 +861,6 @@ async function loadMods() {
         }
     } catch(e) { 
         console.error('Error loading mods:', e);
-        // Try cache
         const cached = localStorage.getItem('sarnanto_mods');
         if (cached) {
             mods = JSON.parse(cached);
@@ -912,7 +918,6 @@ async function loadIdeas() {
 function filterMods() { displayMods(); }
 function filterRPs() { displayRPs(); }
 
-// ===== DISPLAY FUNCTIONS =====
 function renderSpotlight() {
     const el = document.getElementById('spotlightContainer');
     if (!el) return;
@@ -924,7 +929,8 @@ function renderSpotlight() {
             <div class="spotlight-label">🌟 مود الأسبوع</div>
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
                 <div>
-                    <div style="font-size:1.4rem;font-weight:900;color:#fff;">${escapeHtml(top.name)}</div>
+                    ${top.iconUrl ? `<img src="${escapeHtml(top.iconUrl)}" style="width:60px;height:60px;border-radius:10px;object-fit:cover;display:inline-block;vertical-align:middle;margin-left:10px;">` : ''}
+                    <div style="font-size:1.4rem;font-weight:900;color:#fff;display:inline-block;">${escapeHtml(top.name)}</div>
                     <div style="color:#888;margin-top:4px;">⭐ ${top.averageRating || 0} · ❤️ ${top.likes || 0} · 📥 ${top.downloads || 0}</div>
                 </div>
                 ${top.isFree ? `<button class="btn btn-success" onclick="downloadMod('${top.id}')">📥 تحميل مجاني</button>` : `<button class="btn btn-primary" onclick="buyMod('${top.id}','${escapeHtml(top.name)}',${top.price})">💳 شراء ($${top.price})</button>`}
@@ -953,11 +959,13 @@ function displayMods() {
         <div class="mod-card ${isTrending ? 'trending' : ''}" style="animation-delay:${Math.min(idx,8) * 0.06}s">
             ${isNew ? '<div class="new-ribbon">✨ جديد</div>' : ''}
             ${isTrending ? '<div class="trending-badge">🔥 الأكثر شعبية</div>' : ''}
+            ${m.iconUrl ? `<img src="${escapeHtml(m.iconUrl)}" class="mod-icon" alt="${escapeHtml(m.name)}" onerror="this.style.display='none'">` : ''}
             <div class="mod-header">
                 <div>
                     <div class="mod-name">${escapeHtml(m.name)}</div>
                     <div class="mod-meta">📂 ${escapeHtml(m.category || 'عام')} | 🎮 ${escapeHtml(m.mcVersion || '1.20+')}</div>
                     ${m.fileName ? `<div class="mod-meta">📁 ${escapeHtml(m.fileName)}</div>` : ''}
+                    ${m.downloadLink ? `<div class="mod-meta">🔗 <a href="${escapeHtml(m.downloadLink)}" target="_blank" style="color:#3388ff;">رابط تحميل خارجي</a></div>` : ''}
                 </div>
                 <span class="mod-badge ${m.isFree ? 'badge-free' : 'badge-paid'}">${m.isFree ? '🎁 مجاني' : '💰 $' + m.price}</span>
             </div>
@@ -970,6 +978,7 @@ function displayMods() {
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
                 ${m.isFree ? `<button class="btn btn-success" onclick="downloadMod('${m.id}')" style="flex:1;">📥 تحميل مجاني</button>` : `<button class="btn btn-primary" onclick="buyMod('${m.id}','${escapeHtml(m.name)}',${m.price})" style="flex:1;">💳 شراء ($${m.price})</button>`}
+                ${m.downloadLink ? `<a href="${escapeHtml(m.downloadLink)}" target="_blank" class="btn btn-blue" style="flex:1;">🔗 رابط تحميل</a>` : ''}
                 <button class="btn like-btn ${isLiked ? 'liked' : ''}" onclick="likeMod('${m.id}')">❤️</button>
                 <button class="share-btn" onclick="shareItem('mod','${m.id}','${escapeHtml(m.name)}')" title="نسخ رابط المشاركة">🔗</button>
             </div>
@@ -988,7 +997,7 @@ function displayMods() {
 
 function isRecent(dateStr) {
     if (!dateStr) return false;
-    return (Date.now() - new Date(dateStr).getTime()) < 1000 * 60 * 60 * 72; // 72h
+    return (Date.now() - new Date(dateStr).getTime()) < 1000 * 60 * 60 * 72;
 }
 
 function shareItem(type, id, name) {
@@ -1029,11 +1038,13 @@ function displayRPs() {
         <div class="mod-card ${isTrending ? 'trending' : ''}" style="animation-delay:${Math.min(idx,8) * 0.06}s">
             ${isNew ? '<div class="new-ribbon">✨ جديد</div>' : ''}
             ${isTrending ? '<div class="trending-badge">🔥 الأكثر شعبية</div>' : ''}
+            ${r.iconUrl ? `<img src="${escapeHtml(r.iconUrl)}" class="mod-icon" alt="${escapeHtml(r.name)}" onerror="this.style.display='none'">` : ''}
             <div class="mod-header">
                 <div>
                     <div class="mod-name">${escapeHtml(r.name)}</div>
                     <div class="mod-meta">📂 ${escapeHtml(r.category || 'عام')} | 🎮 ${escapeHtml(r.mcVersion || '1.20+')}</div>
                     ${r.fileName ? `<div class="mod-meta">📁 ${escapeHtml(r.fileName)}</div>` : ''}
+                    ${r.downloadLink ? `<div class="mod-meta">🔗 <a href="${escapeHtml(r.downloadLink)}" target="_blank" style="color:#3388ff;">رابط تحميل خارجي</a></div>` : ''}
                 </div>
                 <span class="mod-badge ${r.isFree ? 'badge-free' : 'badge-rp'}">${r.isFree ? '🎁 مجاني' : '💰 $' + r.price}</span>
             </div>
@@ -1046,6 +1057,7 @@ function displayRPs() {
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
                 ${r.isFree ? `<button class="btn btn-success" onclick="downloadRP('${r.id}')" style="flex:1;">📥 تحميل مجاني</button>` : `<button class="btn btn-blue" onclick="buyRP('${r.id}','${escapeHtml(r.name)}',${r.price})" style="flex:1;">💳 شراء ($${r.price})</button>`}
+                ${r.downloadLink ? `<a href="${escapeHtml(r.downloadLink)}" target="_blank" class="btn btn-blue" style="flex:1;">🔗 رابط تحميل</a>` : ''}
                 <button class="btn like-btn ${isLiked ? 'liked' : ''}" onclick="likeRP('${r.id}')">❤️</button>
                 <button class="share-btn" onclick="shareItem('rp','${r.id}','${escapeHtml(r.name)}')" title="نسخ رابط المشاركة">🔗</button>
             </div>
@@ -1074,8 +1086,10 @@ function displayAdminMods() {
     container.innerHTML = mods.map(m => `
         <div style="background:#0a0a0a;padding:15px;margin:8px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <div>
+                ${m.iconUrl ? `<img src="${escapeHtml(m.iconUrl)}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:inline-block;vertical-align:middle;margin-left:10px;" onerror="this.style.display='none'">` : ''}
                 <strong style="color:#ff8888;">${escapeHtml(m.name)}</strong>
                 <span style="color:#888;font-size:0.85rem;"> — ${m.isFree ? '🎁 مجاني' : '💰 $' + m.price}</span>
+                ${m.downloadLink ? `<span style="color:#3388ff;font-size:0.8rem;">🔗 رابط خارجي</span>` : ''}
                 <div style="color:#888;font-size:0.8rem;margin-top:5px;">📥 ${m.downloads || 0} | ⭐ ${m.averageRating || 0} | 💬 ${m.comments?.length || 0}</div>
             </div>
             <button class="btn btn-danger" onclick="deleteMod('${m.id}')" style="padding:8px 16px;">🗑️ حذف</button>
@@ -1090,8 +1104,10 @@ function displayAdminRPs() {
     container.innerHTML = resourcePacks.map(r => `
         <div style="background:#0a0a0a;padding:15px;margin:8px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <div>
+                ${r.iconUrl ? `<img src="${escapeHtml(r.iconUrl)}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:inline-block;vertical-align:middle;margin-left:10px;" onerror="this.style.display='none'">` : ''}
                 <strong style="color:#3388ff;">${escapeHtml(r.name)}</strong>
                 <span style="color:#888;font-size:0.85rem;"> — ${r.isFree ? '🎁 مجاني' : '💰 $' + r.price}</span>
+                ${r.downloadLink ? `<span style="color:#3388ff;font-size:0.8rem;">🔗 رابط خارجي</span>` : ''}
                 <div style="color:#888;font-size:0.8rem;margin-top:5px;">📥 ${r.downloads || 0} | ⭐ ${r.averageRating || 0} | 💬 ${r.comments?.length || 0}</div>
             </div>
             <button class="btn btn-danger" onclick="deleteRP('${r.id}')" style="padding:8px 16px;">🗑️ حذف</button>
@@ -1178,7 +1194,6 @@ function updateStats() {
     }).catch(() => {});
 }
 
-// ===== MOD INTERACTIONS =====
 async function rateMod(modId, rating) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
@@ -1228,7 +1243,6 @@ function buyMod(modId, modName, price) {
     showToast(`🔴 جاري تحويلك إلى PayPal...`);
 }
 
-// ===== RP INTERACTIONS =====
 async function rateRP(rpId, rating) {
     if (!currentUser) { showToast("❌ يجب تسجيل الدخول أولاً", 'error'); return; }
     try {
@@ -1278,7 +1292,6 @@ function buyRP(rpId, rpName, price) {
     showToast(`🔴 جاري تحويلك إلى PayPal...`);
 }
 
-// ===== IDEAS =====
 async function addIdea() {
     const title = document.getElementById("ideaTitle").value.trim();
     const description = document.getElementById("ideaDesc").value.trim();
@@ -1305,7 +1318,6 @@ async function voteIdea(ideaId) {
     } catch(e) { showToast("❌ فشل التصويت", 'error'); }
 }
 
-// ===== PUBLISH FUNCTIONS =====
 async function uploadFileWithProgress(file, endpoint, progressId) {
     const formData = new FormData();
     formData.append('file', file);
@@ -1345,6 +1357,9 @@ async function publishMod() {
     const mcVersion = document.getElementById("quickModMCVersion").value || '1.20+';
     const modType = document.querySelector('input[name="modType"]:checked').value;
     const price = document.getElementById("quickModPrice").value;
+    const iconUrl = document.getElementById("quickModIcon").value.trim();
+    const downloadLink = document.getElementById("quickModLink").value.trim();
+    
     if (!name) { showToast("❌ اسم المود مطلوب", 'warning'); return; }
     if (modType === "paid" && (!price || price <= 0)) { showToast("❌ السعر مطلوب", 'warning'); return; }
 
@@ -1362,7 +1377,7 @@ async function publishMod() {
         const response = await fetch(`${API_BASE}/api/mods`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ name, desc, category, mcVersion, price: modType === "free" ? "0" : price, isFree: modType === "free", fileName, fileUrl })
+            body: JSON.stringify({ name, desc, category, mcVersion, price: modType === "free" ? "0" : price, isFree: modType === "free", fileName, fileUrl, iconUrl, downloadLink })
         });
         if (response.ok) {
             showToast(`🚀 تم نشر المود ${name}`);
@@ -1370,6 +1385,8 @@ async function publishMod() {
             document.getElementById("quickModName").value = "";
             document.getElementById("quickModDesc").value = "";
             document.getElementById("quickModPrice").value = "";
+            document.getElementById("quickModIcon").value = "";
+            document.getElementById("quickModLink").value = "";
             document.getElementById("modFileName").innerText = "";
             selectedModFile = null;
             loadMods();
@@ -1384,6 +1401,9 @@ async function publishRP() {
     const mcVersion = document.getElementById("quickRPVersion").value || '1.20+';
     const rpType = document.querySelector('input[name="rpType"]:checked').value;
     const price = document.getElementById("quickRPPrice").value;
+    const iconUrl = document.getElementById("quickModIcon").value.trim();
+    const downloadLink = document.getElementById("quickModLink").value.trim();
+    
     if (!name) { showToast("❌ اسم الريسورسباك مطلوب", 'warning'); return; }
     if (rpType === "paid" && (!price || price <= 0)) { showToast("❌ السعر مطلوب", 'warning'); return; }
 
@@ -1401,7 +1421,7 @@ async function publishRP() {
         const response = await fetch(`${API_BASE}/api/resourcepacks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ name, desc, category, mcVersion, price: rpType === "free" ? "0" : price, isFree: rpType === "free", fileName, fileUrl })
+            body: JSON.stringify({ name, desc, category, mcVersion, price: rpType === "free" ? "0" : price, isFree: rpType === "free", fileName, fileUrl, iconUrl, downloadLink })
         });
         if (response.ok) {
             showToast(`🚀 تم نشر الريسورسباك ${name}`);
@@ -1409,6 +1429,8 @@ async function publishRP() {
             document.getElementById("quickRPName").value = "";
             document.getElementById("quickRPDesc").value = "";
             document.getElementById("quickRPPrice").value = "";
+            document.getElementById("quickModIcon").value = "";
+            document.getElementById("quickModLink").value = "";
             document.getElementById("rpFileName").innerText = "";
             selectedRPFile = null;
             loadRPs();
@@ -1416,7 +1438,6 @@ async function publishRP() {
     } catch(e) { showToast("❌ فشل النشر", 'error'); }
 }
 
-// ===== ADMIN =====
 async function deleteMod(modId) {
     if (!confirm("هل أنت متأكد من حذف هذا المود؟")) return;
     try {
@@ -1455,7 +1476,6 @@ async function toggleBan(userId) {
     } catch(e) { showToast("❌ فشل", 'error'); }
 }
 
-// ===== SUPPORT & DONATE =====
 function sendSupport() {
     const email = document.getElementById("supportEmail").value;
     const msg = document.getElementById("supportMsg").value;
@@ -1478,7 +1498,6 @@ function donateCustom() {
     showToast(`❤️ شكراً لدعمك بـ $${amount}!`);
 }
 
-// ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('syncStatus').innerHTML = '<div class="loading-spinner"></div><span>جاري الاتصال بالخادم...</span>';
     
