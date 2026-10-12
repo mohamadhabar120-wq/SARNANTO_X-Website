@@ -30,10 +30,10 @@ const upload = multer({
         const type = req.params.type;
         if (type === 'mod') {
             if (file.originalname.endsWith('.jar') || file.originalname.endsWith('.zip')) cb(null, true);
-            else cb(new Error('يُسمح فقط بملفات .jar أو .zip'));
+            else cb(new Error('Only .jar or .zip files allowed'));
         } else if (type === 'rp') {
             if (file.originalname.endsWith('.zip')) cb(null, true);
-            else cb(new Error('يُسمح فقط بملفات .zip'));
+            else cb(new Error('Only .zip files allowed'));
         } else {
             cb(null, true);
         }
@@ -114,10 +114,10 @@ function nextUserId() { return db.users.length ? Math.max(...db.users.map(u => u
 
 function authMiddleware(req, res, next) {
     const token = req.headers.authorization;
-    if (!token) return res.status(401).json({ error: "غير مصرح بالحركة" });
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
 
     const user = db.users.find(u => u.token === token);
-    if (!user) return res.status(401).json({ error: "رمز الجلسة غير صالح" });
+    if (!user) return res.status(401).json({ error: "Invalid token" });
     if (user.banned) {
         return res.status(403).json({
             error: "🚫 الحساب محظور",
@@ -136,10 +136,10 @@ app.post('/api/register', async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) return res.status(400).json({ error: "❌ جميع الحقول مطلوبة" });
     if (password.length < 6) return res.status(400).json({ error: "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل" });
-    const existingUser = db.users.find(u => u.email === email.toLowerCase().trim());
+    const existingUser = db.users.find(u => u.email === email);
     if (existingUser) return res.status(400).json({ error: "❌ البريد الإلكتروني مستخدم بالفعل" });
     const newUser = {
-        id: nextUserId(), name: String(name).slice(0, 50), email: String(email).toLowerCase().trim().slice(0, 80), password: String(password),
+        id: nextUserId(), name, email, password,
         isAdmin: false, banned: false,
         banReason: null, banExpiry: null, banPermanent: false,
         createdAt: new Date().toISOString()
@@ -154,9 +154,9 @@ app.post('/api/register', async (req, res) => {
 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = db.users.find(u => u.email === String(email).toLowerCase().trim());
+    const user = db.users.find(u => u.email === email);
     if (!user) return res.status(401).json({ error: "❌ البريد غير موجود" });
-    if (user.password !== String(password)) return res.status(401).json({ error: "❌ كلمة مرور خاطئة" });
+    if (user.password !== password) return res.status(401).json({ error: "❌ كلمة مرور خاطئة" });
 
     if (user.banned) {
         return res.status(403).json({
@@ -209,7 +209,7 @@ app.get('/api/me', (req, res) => {
 });
 
 app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "لم يتم رفع أي ملف" });
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const type = req.params.type;
     const uniqueName = generateUploadName(req.file.originalname);
 
@@ -243,7 +243,7 @@ app.post('/api/upload/:type', upload.single('file'), async (req, res) => {
         });
     } catch (e) {
         console.error('Upload error:', e);
-        res.status(500).json({ error: 'فشل رفع الملف: ' + (e.message || 'خطأ غير معروف') });
+        res.status(500).json({ error: 'فشل رفع الملف: ' + (e.message || 'خطأ غير معروف بالخادم') });
     }
 });
 
@@ -253,12 +253,12 @@ app.post('/api/mods', authMiddleware, async (req, res) => {
     const { name, price, desc, isFree, category, version, mcVersion, fileName, fileUrl, iconUrl, downloadLink } = req.body;
     if (!name || !name.trim()) return res.status(400).json({ error: "❌ اسم المود مطلوب" });
     const newMod = {
-        id: generateId(), name: String(name).trim().slice(0, 80),
-        price: parseFloat(price) || 0, desc: String(desc || 'بدون وصف').trim().slice(0, 500),
+        id: generateId(), name: String(name).slice(0, 80),
+        price: parseFloat(price) || 0, desc: String(desc || 'بدون وصف').slice(0, 500),
         isFree: isFree === 'true' || isFree === true,
-        category: String(category || 'عام').slice(0, 30), version: String(version || '1.0').slice(0, 20),
-        mcVersion: String(mcVersion || '1.20+').slice(0, 20), fileName: String(fileName || '').slice(0, 100), fileUrl: String(fileUrl || ''),
-        iconUrl: String(iconUrl || ''), downloadLink: String(downloadLink || ''),
+        category: category || 'عام', version: version || '1.0',
+        mcVersion: mcVersion || '1.20+', fileName: fileName || '', fileUrl: fileUrl || '',
+        iconUrl: iconUrl || '', downloadLink: downloadLink || '',
         downloads: 0, ratings: [],
         averageRating: 0, comments: [], likes: 0, likedBy: [],
         createdAt: new Date().toISOString()
@@ -269,7 +269,7 @@ app.post('/api/mods', authMiddleware, async (req, res) => {
 });
 
 app.delete('/api/mods/:id', authMiddleware, async (req, res) => {
-    if (!req.user.isAdmin) return res.status(403).json({ error: "خاص بالأدمن فقط" });
+    if (!req.user.isAdmin) return res.status(403).json({ error: "Admin only" });
     const id = req.params.id;
     db.mods = db.mods.filter(m => m.id !== id);
     await saveDB(db);
@@ -282,12 +282,12 @@ app.post('/api/resourcepacks', authMiddleware, async (req, res) => {
     const { name, price, desc, isFree, category, version, mcVersion, fileName, fileUrl, iconUrl, downloadLink } = req.body;
     if (!name || !name.trim()) return res.status(400).json({ error: "❌ اسم الريسورسباك مطلوب" });
     const newRP = {
-        id: generateId(), name: String(name).trim().slice(0, 80),
-        price: parseFloat(price) || 0, desc: String(desc || 'بدون وصف').trim().slice(0, 500),
+        id: generateId(), name: String(name).slice(0, 80),
+        price: parseFloat(price) || 0, desc: String(desc || 'بدون وصف').slice(0, 500),
         isFree: isFree === 'true' || isFree === true,
-        category: String(category || 'عام').slice(0, 30), version: String(version || '1.0').slice(0, 20),
-        mcVersion: String(mcVersion || '1.20+').slice(0, 20), fileName: String(fileName || '').slice(0, 100), fileUrl: String(fileUrl || ''),
-        iconUrl: String(iconUrl || ''), downloadLink: String(downloadLink || ''),
+        category: category || 'عام', version: version || '1.0',
+        mcVersion: mcVersion || '1.20+', fileName: fileName || '', fileUrl: fileUrl || '',
+        iconUrl: iconUrl || '', downloadLink: downloadLink || '',
         downloads: 0, ratings: [],
         averageRating: 0, comments: [], likes: 0, likedBy: [],
         createdAt: new Date().toISOString()
@@ -298,7 +298,7 @@ app.post('/api/resourcepacks', authMiddleware, async (req, res) => {
 });
 
 app.delete('/api/resourcepacks/:id', authMiddleware, async (req, res) => {
-    if (!req.user.isAdmin) return res.status(403).json({ error: "خاص بالأدمن فقط" });
+    if (!req.user.isAdmin) return res.status(403).json({ error: "Admin only" });
     const id = req.params.id;
     db.resourcePacks = db.resourcePacks.filter(r => r.id !== id);
     await saveDB(db);
@@ -341,7 +341,7 @@ app.post('/api/mods/:id/comment', authMiddleware, async (req, res) => {
     if (!text || !text.trim()) return res.status(400).json({ error: "❌ اكتب تعليقاً" });
     const mod = db.mods.find(m => m.id === id);
     if (!mod) return res.status(404).json({ error: "المود غير موجود" });
-    mod.comments.push({ userName: req.user.name, text: String(text).trim().slice(0, 300), timestamp: new Date().toISOString() });
+    mod.comments.push({ userName: req.user.name, text: text.trim().slice(0, 300), timestamp: new Date().toISOString() });
     await saveDB(db);
     res.json({ success: true });
 });
@@ -382,7 +382,7 @@ app.post('/api/resourcepacks/:id/comment', authMiddleware, async (req, res) => {
     if (!text || !text.trim()) return res.status(400).json({ error: "❌ اكتب تعليقاً" });
     const rp = db.resourcePacks.find(r => r.id === id);
     if (!rp) return res.status(404).json({ error: "الريسورسباك غير موجود" });
-    rp.comments.push({ userName: req.user.name, text: String(text).trim().slice(0, 300), timestamp: new Date().toISOString() });
+    rp.comments.push({ userName: req.user.name, text: text.trim().slice(0, 300), timestamp: new Date().toISOString() });
     await saveDB(db);
     res.json({ success: true });
 });
@@ -419,8 +419,8 @@ app.post('/api/ideas', authMiddleware, async (req, res) => {
     const { title, description, category } = req.body;
     if (!title || !title.trim()) return res.status(400).json({ error: "❌ أدخل عنوان الفكرة" });
     db.ideas.push({
-        id: generateId(), title: String(title).trim().slice(0, 100),
-        description: String(description || '').trim().slice(0, 500), category: String(category || 'عام').slice(0, 30),
+        id: generateId(), title: title.trim(),
+        description: (description || '').trim(), category: category || 'عام',
         votedBy: [], votes: 0, status: 'pending', createdAt: new Date().toISOString()
     });
     await saveDB(db);
@@ -440,7 +440,7 @@ app.post('/api/ideas/:id/vote', authMiddleware, async (req, res) => {
 });
 
 app.put('/api/ideas/:id/status', authMiddleware, async (req, res) => {
-    if (!req.user.isAdmin) return res.status(403).json({ error: "خاص بالأدمن فقط" });
+    if (!req.user.isAdmin) return res.status(403).json({ error: "Admin only" });
     const idea = db.ideas.find(i => i.id === req.params.id);
     if (!idea) return res.status(404).json({ error: "الفكرة غير موجودة" });
     const { status } = req.body;
@@ -451,7 +451,7 @@ app.put('/api/ideas/:id/status', authMiddleware, async (req, res) => {
 });
 
 app.get('/api/users', authMiddleware, (req, res) => {
-    if (!req.user.isAdmin) return res.status(403).json({ error: "خاص بالأدمن فقط" });
+    if (!req.user.isAdmin) return res.status(403).json({ error: "Admin only" });
     res.json({ users: db.users.map(u => ({
         id: u.id, name: u.name, email: u.email,
         isAdmin: u.isAdmin, banned: u.banned,
@@ -460,7 +460,7 @@ app.get('/api/users', authMiddleware, (req, res) => {
 });
 
 app.put('/api/users/:id/ban', authMiddleware, async (req, res) => {
-    if (!req.user.isAdmin) return res.status(403).json({ error: "خاص بالأدمن فقط" });
+    if (!req.user.isAdmin) return res.status(403).json({ error: "Admin only" });
     const id = parseInt(req.params.id);
     const user = db.users.find(u => u.id === id);
     if (!user) return res.status(404).json({ error: "المستخدم غير موجود" });
@@ -469,7 +469,7 @@ app.put('/api/users/:id/ban', authMiddleware, async (req, res) => {
     const { banned, banReason, banExpiry, banPermanent } = req.body;
     user.banned = !!banned;
     if (user.banned) {
-        user.banReason = String(banReason || "تم الحظر من قبل الإدارة").slice(0, 150);
+        user.banReason = banReason || "تم الحظر من قبل الإدارة";
         user.banPermanent = !!banPermanent;
         user.banExpiry = user.banPermanent ? null : (banExpiry || null);
     } else {
